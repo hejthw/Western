@@ -1,11 +1,12 @@
 using System.Collections;
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.Controls;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     #region Variables: Dependecies
     [Header("Dependecies")]
@@ -30,6 +31,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _velocity;
     private Vector3 gravityVector = new Vector3(0, 0, 0);
     #endregion
+
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        if (base.IsOwner)
+        {
+            // Активируем камеру только для владельца
+            cinemachineCamera.gameObject.SetActive(true);
+        }
+        else
+        {
+            // Отключаем скрипт и камеру для чужих персонажей
+            cinemachineCamera.gameObject.SetActive(false);
+            enabled = false;
+        }
+    }
     
     [SerializeField] private PlayerState playerState =  PlayerState.STATE_IDLE;
     
