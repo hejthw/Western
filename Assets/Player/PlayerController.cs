@@ -58,7 +58,7 @@ public class PlayerController : NetworkBehaviour
     
     private void Start()
     {
-        currentSpeed = 0;
+        currentSpeed = 5;
     }
     
     private void Update()

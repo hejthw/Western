@@ -11,6 +11,7 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 *.log
+/Recovery/
 
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1
@@ -31,8 +32,11 @@
 # Jetbrains Rider personal-layer settings
 *.DotSettings.user
 
-# Visual Studio cache directory
+# Visual Studio & idea cache directory
 .vs/
+.vscode/
+.vsconfig
+.idea/
 
 # Gradle cache directory
 .gradle/
@@ -54,6 +58,7 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
+*.slnx
 
 # Unity3D generated meta files
 *.pidb.meta
