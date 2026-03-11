@@ -6,9 +6,9 @@ public class PlayerControllerr : NetworkBehaviour
 {
     [SerializeField] private CinemachineCamera cinemachineCamera;
 
-    public PlayerPhysicsBridge Physics { get; private set; }
+    public PlayerPhysics Physics { get; private set; }
 
-    void Awake() => Physics = GetComponent<PlayerPhysicsBridge>();
+    void Awake() => Physics = GetComponent<PlayerPhysics>();
 
     public override void OnStartClient()
     {
@@ -19,8 +19,8 @@ public class PlayerControllerr : NetworkBehaviour
 
     private void DisableLocalComponents()
     {
-        GetComponent<PlayerInputBridge>().enabled  = false;
-        GetComponent<PlayerPhysicsBridge>().enabled = false;
+        GetComponent<PlayerInput>().enabled  = false;
+        GetComponent<PlayerPhysics>().enabled = false;
         enabled = false;
     }
 }

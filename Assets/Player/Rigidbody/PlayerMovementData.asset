@@ -16,9 +16,9 @@ MonoBehaviour:
   sprintSpeed: 10
   sprintAcceleration: 75
   walkAcceleration: 75
-  jumpForce: 5
-  groundDrag: 5
-  airDrag: 10
+  walkToSprintTranstitionSpeed: 75
+  SprintToWalkTranstitionSpeed: 75
+  jumpForce: 6
   groundCheckDistance: 0.15
   whatIsGround:
     serializedVersion: 2
