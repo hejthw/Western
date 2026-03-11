@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// SO, со всеми числами, задающими движение
+/// </summary>
 [CreateAssetMenu(fileName = "PlayerMovementData", menuName = "ScriptableObjects/PlayerMovementData")]
 public class PlayerMovementData : ScriptableObject
 {

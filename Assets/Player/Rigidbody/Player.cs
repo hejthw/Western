@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Чистый класс, в котором пока ничего особого нет, но с добавлением прочих фич, думаю можно будет сюда что-то добавить(мб расчет урона или что-то такое)
+/// </summary>
+
 public class Player
 {
     private readonly PlayerMovementData _data;

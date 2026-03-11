@@ -3,6 +3,9 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Получение input'a из компонента PlayerInput
+/// </summary>
 
 public class PlayerInput : MonoBehaviour
 {

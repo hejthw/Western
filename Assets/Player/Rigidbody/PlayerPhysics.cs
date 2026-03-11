@@ -1,12 +1,16 @@
 using Unity.Cinemachine;
 using UnityEngine;
 
+/// <summary>
+/// Класс, отвечающий за RigidBody и его логику.
+/// </summary>
+
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerPhysics : MonoBehaviour
 {
     [SerializeField] private PlayerMovementData data;
     [SerializeField] private CinemachineCamera  cinemachineCamera;
-    [SerializeField] private Transform groundCheck;
+    [SerializeField] private Transform groundCheck; // точка, где спавниться сфера для просчета IsGrounded
 
     private Player _player;
 
