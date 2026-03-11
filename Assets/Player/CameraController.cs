@@ -34,14 +34,13 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         if (enableHeadBob) HeadBob();
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Start()
     {
         _cameraOriginalPos = camTransform.localPosition;
-        Debug.Log(_cameraOriginalPos);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void OnEnable()
