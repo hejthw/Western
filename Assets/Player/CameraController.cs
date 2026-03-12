@@ -7,14 +7,15 @@ public class CameraController : MonoBehaviour
 {
     #region Variables: Dependecies
     [Header("Dependecies")]
-    [SerializeField] private PlayerController pC;
+    [SerializeField] private PlayerPhysics pp;
+    private PlayerInput _input;
     [SerializeField] private CinemachineCamera cC;
     #endregion
     
     #region Variables: FOV
     [Header("FOV")]
-    public int normalFov = 70;
-    public int sprintFov = 90;
+    public int normalFov = 80;
+    public int sprintFov = 85;
     public float fovLerpDuration = 50f;
     
     private bool shouldChangeFov = false;
@@ -23,9 +24,9 @@ public class CameraController : MonoBehaviour
     #region Variables: HeadBob
     [Header("HeadBob")]
     public bool enableHeadBob = true;
-    public Vector3 headBobVector = Vector3.zero;
+    public Vector3 headBobVector = new Vector3(0.001f, 0.08f, 0.01f);
     public Transform camTransform;
-    public float headBobSpeed = 20f;
+    public float headBobSpeed = 5f;
     
     private float timer;
     private Vector3 _cameraOriginalPos;
@@ -34,32 +35,36 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         if (enableHeadBob) HeadBob();
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    void Awake()
+    {
+        _input = GetComponent<PlayerInput>();
     }
 
     void Start()
     {
         _cameraOriginalPos = camTransform.localPosition;
-        Debug.Log(_cameraOriginalPos);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
-
+    
     void OnEnable()
     {
-        PlayerEvent.OnSprint.AddListener(FovChange);
+        _input.OnSprintEvent += FovChange;
         // PlayerEvent.OnWalk.AddListener(HeadBobbing);
     }
-
+    
     void OnDisable()
     {
-        PlayerEvent.OnSprint.RemoveListener(FovChange);
+        _input.OnSprintEvent -= FovChange;
         // PlayerEvent.OnWalk.RemoveListener(HeadBobbing);
     }
 
     private void HeadBob()
     {
-        if (pC.GetPlayerState == PlayerState.STATE_WALK
-            || pC.GetPlayerState == PlayerState.STATE_SPRINT)
+        if (pp.CurrentState == PlayerState.STATE_WALK
+            || pp.CurrentState == PlayerState.STATE_SPRINT)
         {
             timer += Time.deltaTime * headBobSpeed;
             camTransform.localPosition = _cameraOriginalPos + new Vector3(
@@ -73,7 +78,7 @@ public class CameraController : MonoBehaviour
             camTransform.localPosition = Vector3.Lerp(camTransform.localPosition, _cameraOriginalPos, Time.deltaTime * headBobSpeed);
         }
     }
-
+    
     private void FovChange()
     {
         shouldChangeFov = (!shouldChangeFov);
@@ -85,11 +90,11 @@ public class CameraController : MonoBehaviour
         else
             StartCoroutine(FovLerp(sprintFov, normalFov, fovLerpDuration));
     }
-
+    
     private IEnumerator FovLerp(int startFov, int endFov, float lerpDuration)
     {
         float speed = 1 / lerpDuration;
-
+    
         for (float i = 0; i < 1.0f; i += speed)
         {
             var temp = Mathf.Lerp(startFov, endFov, i);
