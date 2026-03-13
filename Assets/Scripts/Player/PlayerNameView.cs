@@ -8,7 +8,6 @@ using UnityEngine;
 public class PlayerNameView : NetworkBehaviour
 {
     [SerializeField] private TMP_Text text;
-    public static Transform localPlayerTransform;
 
     public override void OnStartClient()
     {
@@ -17,7 +16,6 @@ public class PlayerNameView : NetworkBehaviour
         if (IsOwner)
         {
             text.gameObject.SetActive(false);
-            localPlayerTransform = transform;
             string myName = SteamFriends.GetPersonaName();
             text.text = myName;
             SetPlayerName(myName);

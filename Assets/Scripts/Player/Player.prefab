@@ -81,6 +81,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerNameplate
   Camera: {fileID: 4685515460504658230}
+  playerTransform: {fileID: 7746524461877522775}
 --- !u!1 &4782091303354485408
 GameObject:
   m_ObjectHideFlags: 0

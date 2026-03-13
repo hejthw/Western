@@ -2,16 +2,16 @@ using Unity.Cinemachine;
 using FishNet.Object;
 using UnityEngine;
 
-public class PlayerNameplate : NetworkBehaviour
+public class PlayerNameplate : MonoBehaviour
 {
     [SerializeField] private CinemachineCamera Camera;
-    private Transform localPlayerTransform;
-
+    public Transform playerTransform;
+    
+    
     void LateUpdate()
     {
         if (Camera == null) return;
         
-        if (localPlayerTransform == null) return;
-        transform.LookAt(localPlayerTransform.position);
+        transform.LookAt(playerTransform);
     }
 }
