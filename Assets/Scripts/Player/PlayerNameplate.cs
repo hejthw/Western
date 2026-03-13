@@ -1,14 +1,17 @@
 using Unity.Cinemachine;
+using FishNet.Object;
 using UnityEngine;
 
-public class PlayerNameplate : MonoBehaviour
+public class PlayerNameplate : NetworkBehaviour
 {
     [SerializeField] private CinemachineCamera Camera;
+    private Transform localPlayerTransform;
 
     void LateUpdate()
     {
         if (Camera == null) return;
         
-        transform.LookAt(transform.position + Camera.transform.rotation * Vector3.forward, Camera.transform.rotation * Vector3.up);
+        if (localPlayerTransform == null) return;
+        transform.LookAt(localPlayerTransform.position);
     }
 }
