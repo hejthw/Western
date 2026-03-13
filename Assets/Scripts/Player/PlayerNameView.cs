@@ -15,9 +15,11 @@ public class PlayerNameView : NetworkBehaviour
 
         if (IsOwner)
         {
+            text.gameObject.SetActive(false);
+            
             string myName = SteamFriends.GetPersonaName();
             text.text = myName;
-            SetPlayerNameForObservers(myName);
+            SetPlayerName(myName);
         }
     }
     
