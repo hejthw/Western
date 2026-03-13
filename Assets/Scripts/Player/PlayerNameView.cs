@@ -17,7 +17,20 @@ public class PlayerNameView : NetworkBehaviour
         {
             string myName = SteamFriends.GetPersonaName();
             text.text = myName;
+            SetPlayerNameForObservers(myName);
         }
+    }
+    
+    [ServerRpc]
+    private void SetPlayerName(string playerName)
+    {
+        SetPlayerNameForObservers(playerName);
+    }
+
+    [ObserversRpc(BufferLast = true)]
+    private void SetPlayerNameForObservers(string playerName)
+    {
+        text.text = playerName;
     }
 
 }
