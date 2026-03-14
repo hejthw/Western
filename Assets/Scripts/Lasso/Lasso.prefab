@@ -153,6 +153,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35ff8940c2fb2384ca33c7c14b3f8e51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Lasso
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
   throwSpeed: 35
   returnSpeed: 18
-  pullForceMultiplier: 1
+  pullSpeed: 12
+  isAttached: 0

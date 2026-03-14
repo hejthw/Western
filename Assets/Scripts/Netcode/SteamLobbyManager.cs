@@ -9,7 +9,7 @@ public class SteamLobbyManager : MonoBehaviour
     private Callback<LobbyEnter_t> lobbyEntered;
     private Callback<GameLobbyJoinRequested_t> gameLobbyJoinRequested;
 
-    private CSteamID m_currentLobbyID; // ID текущего лобби (для приглашений)
+    private CSteamID m_currentLobbyID; 
 
     private void Start()
     {
@@ -23,7 +23,7 @@ public class SteamLobbyManager : MonoBehaviour
         lobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
         gameLobbyJoinRequested = Callback<GameLobbyJoinRequested_t>.Create(OnGameLobbyJoinRequested);
 
-        Debug.Log("SteamLobbyManager инициализирован, коллбэки зарегистрированы");
+        Debug.Log("SteamLobbyManager initialized");
     }
 
     public void HostGame()
@@ -35,23 +35,23 @@ public class SteamLobbyManager : MonoBehaviour
     {
         if (result.m_eResult != EResult.k_EResultOK)
         {
-            Debug.LogError("Не удалось создать лобби: " + result.m_eResult);
+            Debug.LogError("Failed to create a lobby " + result.m_eResult);
             return;
         }
 
         m_currentLobbyID = new CSteamID(result.m_ulSteamIDLobby);
-        Debug.Log($"Лобби создано! ID: {m_currentLobbyID}");
+        Debug.Log($"Lobby created ID: {m_currentLobbyID}");
 
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, "HostAddress", SteamUser.GetSteamID().ToString());
 
         if (InstanceFinder.ServerManager.StartConnection())
         {
             InstanceFinder.ClientManager.StartConnection();
-            Debug.Log("Хост игры запущен!");
+            Debug.Log("Host active");
         }
         else
         {
-            Debug.LogError("Не удалось запустить сервер FishNet.");
+            Debug.LogError("Cant connect to fishnet");
         }
     }
 
@@ -64,15 +64,15 @@ public class SteamLobbyManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Неверный ID лобби.");
+            Debug.LogError("Wrong ID");
         }
     }
 
     private void OnLobbyEntered(LobbyEnter_t result)
     {
         CSteamID lobbyId = new CSteamID(result.m_ulSteamIDLobby);
-        m_currentLobbyID = lobbyId; // сохраняем ID (полезно и для клиента)
-        Debug.Log("Присоединились к лобби.");
+        m_currentLobbyID = lobbyId; 
+
 
         string hostSteamIdString = SteamMatchmaking.GetLobbyData(lobbyId, "HostAddress");
         if (ulong.TryParse(hostSteamIdString, out ulong hostSteamId))
@@ -82,37 +82,36 @@ public class SteamLobbyManager : MonoBehaviour
 
             if (InstanceFinder.ClientManager.StartConnection())
             {
-                Debug.Log("Клиент подключается к хосту...");
+                Debug.Log("Client connecting to host...");
             }
             else
             {
-                Debug.LogError("Не удалось запустить клиента FishNet.");
+                Debug.LogError("Cant laucnh FishNet.");
             }
         }
         else
         {
-            Debug.LogError("Не удалось получить SteamID хоста из данных лобби.");
+            Debug.LogError("Cant get host Steamid");
         }
     }
 
-    // Приглашение от друга
+    
     private void OnGameLobbyJoinRequested(GameLobbyJoinRequested_t param)
     {
-        Debug.Log($"Получен запрос на присоединение к лобби: {param.m_steamIDLobby}");
+      
         SteamMatchmaking.JoinLobby(param.m_steamIDLobby);
     }
 
-    // Кнопка "Пригласить друга"
+  
     public void InviteFriend()
     {
         if (m_currentLobbyID.IsValid())
         {
             SteamFriends.ActivateGameOverlayInviteDialog(m_currentLobbyID);
-            Debug.Log("Открыто окно приглашения друзей");
         }
         else
         {
-            Debug.LogError("Нет активного лобби для приглашения");
+            Debug.LogError("No active lobby");
         }
     }
 }

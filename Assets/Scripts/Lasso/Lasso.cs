@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FishNet.Object;
 
-public class Lasso : MonoBehaviour
+public class Lasso : NetworkBehaviour
 {
     [Header("Настройки")]
     public float throwSpeed = 35f;
@@ -11,23 +12,23 @@ public class Lasso : MonoBehaviour
     private Rigidbody rb;
     private LassoController controller;
 
-    private bool isFlying = false;
-    private bool isAttached = false;
-    private bool isReturning = false;
+    public bool isAttached;
+    private bool isFlying;
+    private bool isReturning;
     private GameObject attachedTarget;
-
     private FixedJoint currentJoint;
     private float throwTime;
 
-    void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         controller = GetComponentInParent<LassoController>();
-        if (controller == null) controller = FindObjectOfType<LassoController>();
     }
 
     public void Throw(Vector3 direction)
     {
+        if (!IsOwner) return;
+
         transform.SetParent(null);
         gameObject.SetActive(true);
 
@@ -41,12 +42,16 @@ public class Lasso : MonoBehaviour
         isReturning = false;
         attachedTarget = null;
 
-        if (currentJoint != null) Destroy(currentJoint);
+        if (currentJoint != null)
+        {
+            Destroy(currentJoint);
+            currentJoint = null;
+        }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (!isFlying) return;
+        if (!IsOwner || !isFlying) return;
         if (Time.time - throwTime < 0.25f) return;
 
         isFlying = false;
@@ -54,7 +59,7 @@ public class Lasso : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
 
         if (collision.gameObject.CompareTag("Grabbable") &&
-            collision.gameObject.TryGetComponent<Rigidbody>(out Rigidbody targetRb))
+            collision.gameObject.TryGetComponent(out Rigidbody targetRb))
         {
             attachedTarget = collision.gameObject;
             isAttached = true;
@@ -65,7 +70,6 @@ public class Lasso : MonoBehaviour
             currentJoint = gameObject.AddComponent<FixedJoint>();
             currentJoint.connectedBody = targetRb;
             currentJoint.breakForce = Mathf.Infinity;
-            currentJoint.enableCollision = false;
 
             controller.OnLassoAttached(attachedTarget);
         }
@@ -76,20 +80,19 @@ public class Lasso : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
+        if (!IsOwner) return;
+
         if (isReturning)
         {
-            Vector3 dirToPlayer = controller.transform.position - transform.position;
-            float distance = dirToPlayer.magnitude;
-
-            if (distance < 1.5f)
+            Vector3 dir = controller.transform.position - transform.position;
+            if (dir.sqrMagnitude < 2.25f)
             {
                 ReturnToPlayer();
                 return;
             }
-
-            rb.linearVelocity = dirToPlayer.normalized * returnSpeed;
+            rb.linearVelocity = dir.normalized * returnSpeed;
         }
         else if (isAttached && Keyboard.current[Key.G].isPressed)
         {
@@ -101,8 +104,8 @@ public class Lasso : MonoBehaviour
     {
         if (!isAttached || attachedTarget == null || !rb.isKinematic) return;
 
-        Vector3 dirToPlayer = controller.transform.position - transform.position;
-        rb.MovePosition(transform.position + dirToPlayer.normalized * pullSpeed * Time.fixedDeltaTime);
+        Vector3 dir = controller.transform.position - transform.position;
+        rb.MovePosition(transform.position + dir.normalized * pullSpeed * Time.fixedDeltaTime);
     }
 
     private void ReturnToPlayer()
@@ -110,7 +113,11 @@ public class Lasso : MonoBehaviour
         isReturning = false;
         isAttached = false;
 
-        if (currentJoint != null) Destroy(currentJoint);
+        if (currentJoint != null)
+        {
+            Destroy(currentJoint);
+            currentJoint = null;
+        }
 
         rb.isKinematic = true;
         rb.linearVelocity = Vector3.zero;
