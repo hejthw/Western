@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlayerNameView : NetworkBehaviour
 {
     [SerializeField] private TMP_Text text;
-
+    
     public override void OnStartClient()
     {
         base.OnStartClient();
