@@ -23,7 +23,6 @@ public class LassoController : NetworkBehaviour
         lasso = transform.Find("Lasso")?.gameObject;
         if (lasso != null)
             lassoScript = lasso.GetComponent<Lasso>() ?? lasso.AddComponent<Lasso>();
-
     }
 
     private void Update()
@@ -32,13 +31,13 @@ public class LassoController : NetworkBehaviour
 
         if (Keyboard.current[throwKey].wasPressedThisFrame)
         {
-            if (!lassoScript.isAttached)
+            if (!lassoScript.isAttached.Value)
                 ThrowLasso();
             else
                 ReturnLasso();
         }
 
-        if (Keyboard.current[pullKey].isPressed && lassoScript.isAttached)
+        if (Keyboard.current[pullKey].isPressed && lassoScript.isAttached.Value)
             lassoScript.PullTowardsPlayer();
     }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 
 public class Lasso : NetworkBehaviour
 {
@@ -12,12 +13,13 @@ public class Lasso : NetworkBehaviour
     private Rigidbody rb;
     private LassoController controller;
 
-    public bool isAttached;
     private bool isFlying;
     private bool isReturning;
     private GameObject attachedTarget;
     private FixedJoint currentJoint;
     private float throwTime;
+
+    public readonly SyncVar<bool> isAttached = new SyncVar<bool>();
 
     private void Awake()
     {
@@ -38,7 +40,7 @@ public class Lasso : NetworkBehaviour
 
         isFlying = true;
         throwTime = Time.time;
-        isAttached = false;
+        isAttached.Value = false;
         isReturning = false;
         attachedTarget = null;
 
@@ -62,7 +64,7 @@ public class Lasso : NetworkBehaviour
             collision.gameObject.TryGetComponent(out Rigidbody targetRb))
         {
             attachedTarget = collision.gameObject;
-            isAttached = true;
+            isAttached.Value = true;
 
             rb.isKinematic = true;
             transform.position = collision.contacts[0].point;
@@ -94,7 +96,7 @@ public class Lasso : NetworkBehaviour
             }
             rb.linearVelocity = dir.normalized * returnSpeed;
         }
-        else if (isAttached && Keyboard.current[Key.G].isPressed)
+        else if (isAttached.Value && Keyboard.current[Key.G].isPressed)
         {
             PullTowardsPlayer();
         }
@@ -102,7 +104,7 @@ public class Lasso : NetworkBehaviour
 
     public void PullTowardsPlayer()
     {
-        if (!isAttached || attachedTarget == null || !rb.isKinematic) return;
+        if (!isAttached.Value || attachedTarget == null || !rb.isKinematic) return;
 
         Vector3 dir = controller.transform.position - transform.position;
         rb.MovePosition(transform.position + dir.normalized * pullSpeed * Time.fixedDeltaTime);
@@ -111,7 +113,7 @@ public class Lasso : NetworkBehaviour
     private void ReturnToPlayer()
     {
         isReturning = false;
-        isAttached = false;
+        isAttached.Value = false;
 
         if (currentJoint != null)
         {
@@ -132,9 +134,9 @@ public class Lasso : NetworkBehaviour
 
     public void DetachAndReturn()
     {
-        if (!isAttached) return;
+        if (!isAttached.Value) return;
 
-        isAttached = false;
+        isAttached.Value = false;
         isReturning = true;
 
         if (currentJoint != null)
