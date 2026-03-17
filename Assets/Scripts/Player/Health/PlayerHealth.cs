@@ -33,6 +33,7 @@ public class PlayerHealth : NetworkBehaviour
 
     private void on_health(int prev, int next, bool asServer)
     {
+        Debug.Log($"on_health | asServer={asServer} | IsOwner={IsOwner} | IsClientInitialized={IsClientInitialized} | next={next}");
         if (asServer) return;
         if (IsOwner)
         {
