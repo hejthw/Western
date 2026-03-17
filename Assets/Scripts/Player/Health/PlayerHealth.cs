@@ -14,12 +14,14 @@ public class PlayerHealth : NetworkBehaviour
 
     private void Awake()
     {
-        _health.OnChange += on_health;
+
     }
 
     public override void OnStartNetwork()
     {
         base.OnStartNetwork();
+        
+        _health.OnChange += on_health;
         
         if (IsServerInitialized)
             _health.Value = maxHealth;
