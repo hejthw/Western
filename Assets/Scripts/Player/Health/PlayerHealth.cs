@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private int maxHealth = 100;
+    [SerializeField] private GameObject _localUI;
     private readonly SyncVar<int> _health = new SyncVar<int>();
     
     public event UnityAction<int> onHealthChange;
@@ -23,6 +24,12 @@ public class PlayerHealth : NetworkBehaviour
         
         if (IsServerInitialized)
             _health.Value = maxHealth;
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        _localUI.SetActive(IsOwner);
     }
 
     private void on_health(int prev, int next, bool asServer)
