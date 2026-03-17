@@ -45,8 +45,13 @@ public class PlayerController : NetworkBehaviour
 
     private void Test()
     {
-        if (!IsServerInitialized) return;
-        
-        Health.TakeDamage(10);
+        if (!IsOwner) return;
+        TakeDamageTest(10);
+    }
+
+    [ServerRpc]
+    private void TakeDamageTest(int damage)
+    {
+        Health.TakeDamage(damage);
     }
 }
