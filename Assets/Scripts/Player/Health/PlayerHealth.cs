@@ -2,11 +2,15 @@ using FishNet.Object;
 using Unity.Cinemachine;
 using UnityEngine;
 using FishNet.Object.Synchronizing;
+using System;
+using UnityEngine.Events;
 
 public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private int maxHealth = 100;
     private readonly SyncVar<int> _health = new SyncVar<int>();
+    
+    public event UnityAction<int> onHealthChange;
 
     private void Awake()
     {
@@ -25,6 +29,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         if (!asServer)
         {
+            onHealthChange?.Invoke(next);
             Debug.Log($"CLIENT HP:{prev} - {next}");
         }
         else
