@@ -1234,6 +1234,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 0}
   maxHealth: 100
+  _localUI: {fileID: 5375274108382611991}
 --- !u!114 &657205347255209784
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,9 +9,8 @@ public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private GameObject _localUI;
-    private readonly SyncVar<int> _health = new SyncVar<int>();
     
-    public event UnityAction<int> onHealthChange;
+    private readonly SyncVar<int> _health = new SyncVar<int>();
 
     private void Awake()
     {
@@ -34,9 +33,11 @@ public class PlayerHealth : NetworkBehaviour
 
     private void on_health(int prev, int next, bool asServer)
     {
-        if (!asServer && IsOwner)
+        if (asServer) return;
+        if (IsOwner)
         {
             PlayerEvents.RaiseHealthChange(next);
+            Debug.Log($"Health changed to {next}");
         }
         else
         {

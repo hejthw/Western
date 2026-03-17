@@ -8,8 +8,6 @@ public class PlayerHealthView : MonoBehaviour
 {
     public TMP_Text HealthText;
     
-    public PlayerHealth playerHealth;
-    
     private void OnEnable()
     {
         PlayerEvents.OnLocalHealthChange += HandleHealthChange;
