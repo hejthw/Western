@@ -1,7 +1,6 @@
 using FishNet.Object;
 using Unity.Cinemachine;
 using UnityEngine;
-using FishNet.Object.Synchronizing;
 
 public class PlayerController : NetworkBehaviour
 {

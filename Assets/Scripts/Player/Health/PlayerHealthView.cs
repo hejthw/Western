@@ -1,7 +1,4 @@
-using FishNet.Object;
-using Unity.Cinemachine;
 using UnityEngine;
-using FishNet.Object.Synchronizing;
 using TMPro;
 
 public class PlayerHealthView : MonoBehaviour

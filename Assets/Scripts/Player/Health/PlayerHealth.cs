@@ -1,9 +1,6 @@
 using FishNet.Object;
-using Unity.Cinemachine;
 using UnityEngine;
 using FishNet.Object.Synchronizing;
-using System;
-using UnityEngine.Events;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -11,11 +8,6 @@ public class PlayerHealth : NetworkBehaviour
     [SerializeField] private GameObject _localUI;
     
     private readonly SyncVar<int> _health = new SyncVar<int>();
-
-    private void Awake()
-    {
-
-    }
 
     public override void OnStartNetwork()
     {
@@ -37,6 +29,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         Debug.Log($"on_health | asServer={asServer} | IsOwner={IsOwner} | IsClientInitialized={IsClientInitialized} | next={next}");
         if (asServer) return;
+        if (!IsOwner) return;
         PlayerEvents.RaiseHealthChange(next);
         Debug.Log($"Health changed to {next}");
     }

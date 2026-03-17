@@ -398,7 +398,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthView
   HealthText: {fileID: 5821367178410223587}
-  playerHealth: {fileID: 6462810797751770924}
 --- !u!1 &5552545527216410489
 GameObject:
   m_ObjectHideFlags: 0
@@ -1184,13 +1183,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraControllerr
   pp: {fileID: 3873198404099586706}
   cC: {fileID: 4685515460504658230}
-  normalFov: 80
-  sprintFov: 85
-  fovLerpDuration: 50
-  enableHeadBob: 1
-  headBobVector: {x: 0.001, y: 0.08, z: 0.01}
+  camData: {fileID: 11400000, guid: b8fddfa6fb70dcf10ae455c9db36d9a5, type: 2}
   camTransform: {fileID: 7746524461877522775}
-  headBobSpeed: 5
 --- !u!114 &2479261188838793012
 MonoBehaviour:
   m_ObjectHideFlags: 0
