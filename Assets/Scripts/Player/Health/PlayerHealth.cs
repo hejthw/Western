@@ -27,14 +27,12 @@ public class PlayerHealth : NetworkBehaviour
 
     private void on_health(int prev, int next, bool asServer)
     {
-        if (!asServer)
+        if (!asServer && IsOwner)
         {
-            onHealthChange?.Invoke(next);
-            Debug.Log($"CLIENT HP:{prev} - {next}");
+            PlayerEvents.RaiseHealthChange(next);
         }
         else
         {
-            Debug.Log($"SERVER HP:{prev} - {next}");
         }
     }
 
