@@ -37,14 +37,8 @@ public class PlayerHealth : NetworkBehaviour
     {
         Debug.Log($"on_health | asServer={asServer} | IsOwner={IsOwner} | IsClientInitialized={IsClientInitialized} | next={next}");
         if (asServer) return;
-        if (IsOwner)
-        {
-            PlayerEvents.RaiseHealthChange(next);
-            Debug.Log($"Health changed to {next}");
-        }
-        else
-        {
-        }
+        PlayerEvents.RaiseHealthChange(next);
+        Debug.Log($"Health changed to {next}");
     }
 
     [Server]
