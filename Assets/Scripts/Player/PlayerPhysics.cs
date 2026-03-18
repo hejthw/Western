@@ -13,6 +13,7 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] private Transform groundCheck; // точка, где спавниться сфера для просчета IsGrounded
 
     private Player _player;
+    private PlayerStamina _stamina;
 
     private Rigidbody _rb;
     private PlayerInput _input;
@@ -26,6 +27,7 @@ public class PlayerPhysics : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _input = GetComponent<PlayerInput>();
+        _stamina = GetComponent<PlayerStamina>();
 
         _player = new Player(data);
     }
@@ -47,7 +49,8 @@ public class PlayerPhysics : MonoBehaviour
             data.groundCheckDistance,
             data.whatIsGround);
 
-        _player.ChangeMaxSpeed(_input.SprintHeld, Time.deltaTime);
+        bool canSprint = _input.SprintHeld && !_stamina.IsEmpty;
+        _player.ChangeMaxSpeed(canSprint, Time.deltaTime);
 
         CurrentState = _player.ResolvePlayerState(
             _input.MoveInput != Vector2.zero,

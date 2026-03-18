@@ -17,7 +17,7 @@ public class PlayerHealthView : MonoBehaviour
 
     private void HandleHealthChange(int health)
     {
-        HealthText.text = health.ToString();
+        HealthText.text = $"Health: {health.ToString()}";
     }
     
 }

@@ -16,6 +16,8 @@ MonoBehaviour:
   sprintSpeed: 10
   sprintAcceleration: 75
   walkAcceleration: 75
+  maxStamina: 100
+  staminaLerpDuration: 3500
   jumpForce: 4
   groundCheckDistance: 0.15
   whatIsGround:

@@ -12,6 +12,12 @@ public class PlayerMovementData : ScriptableObject
     public float sprintAcceleration = 100f;
     public float walkAcceleration = 100f;
     
+    [Header("Stamina")]
+    public float maxStamina = 100f;
+    public float drainPerSecond = 20f;
+    public float regenPerSecond = 10f;
+    public float regenDelay    = 1.5f;
+    
     [Header("Jump")] public float jumpForce = 10f;
 
     [Header("Physics")] 
