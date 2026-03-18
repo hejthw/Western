@@ -35,11 +35,13 @@ public class PlayerPhysics : MonoBehaviour
     private void OnEnable()
     {
         _input.JumpPressedEvent += Jump;
+        _input.OnCrouchEvent += Crouch;
     }
 
     private void OnDisable()
     {
         _input.JumpPressedEvent -= Jump;
+        _input.OnCrouchEvent -= Crouch;
     }
 
     void Update()
@@ -49,7 +51,7 @@ public class PlayerPhysics : MonoBehaviour
             data.groundCheckDistance,
             data.whatIsGround);
 
-        bool canSprint = _input.SprintHeld && !_stamina.IsEmpty;
+        bool canSprint = _input.SprintHeld && !_stamina.IsEmpty && !_input.CrouchHeld;
         _player.ChangeMaxSpeed(canSprint, Time.deltaTime);
 
         CurrentState = _player.ResolvePlayerState(
@@ -109,6 +111,13 @@ public class PlayerPhysics : MonoBehaviour
 
         return (forward.normalized * _input.MoveInput.y
               + right.normalized   * _input.MoveInput.x).normalized;
+    }
+
+    private void Crouch()
+    {
+        Vector3 scale = transform.localScale;
+        scale.y = _input.CrouchHeld ? 0.5f : 1f;
+        transform.localScale = scale;
     }
 
     // public void AddExternalForce(Vector3 force, ForceMode mode = ForceMode.Impulse)
