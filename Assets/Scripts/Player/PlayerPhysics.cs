@@ -20,6 +20,8 @@ public class PlayerPhysics : MonoBehaviour
 
     private bool _isJumping;
     
+    private CapsuleCollider _collider;
+    
     public bool IsGrounded { get; private set; }
     public PlayerState CurrentState { get; private set; }
 
@@ -28,7 +30,7 @@ public class PlayerPhysics : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _input = GetComponent<PlayerInput>();
         _stamina = GetComponent<PlayerStamina>();
-
+        _collider = GetComponent<CapsuleCollider>();
         _player = new Player(data);
     }
 
@@ -115,9 +117,16 @@ public class PlayerPhysics : MonoBehaviour
 
     private void Crouch()
     {
-        Vector3 scale = transform.localScale;
-        scale.y = _input.CrouchHeld ? 0.5f : 1f;
-        transform.localScale = scale;
+        if (_input.CrouchHeld)
+        {
+            _collider.height = 1f;
+            _collider.center = new Vector3(0f, 0.5f, 0f);
+        }
+        else
+        {
+            _collider.height = 2f;
+            _collider.center = new Vector3(0f, 0f, 0f);
+        }
     }
 
     // public void AddExternalForce(Vector3 force, ForceMode mode = ForceMode.Impulse)

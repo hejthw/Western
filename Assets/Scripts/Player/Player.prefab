@@ -232,7 +232,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.23864338, y: -0.7555225, z: -0.3740979, w: 0.48196054}
+  m_LocalRotation: {x: -0.23656026, y: -0.76305723, z: -0.41126034, w: 0.43891665}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -297,7 +297,7 @@ MonoBehaviour:
   ReferenceFrame: 0
   RecenterTarget: 0
   PanAxis:
-    Value: -114.93102
+    Value: -120.18428
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -307,7 +307,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -52.684742
+    Value: -56.646133
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1382,6 +1382,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: d862853dda2c3566fb738a368d7bae17, type: 2}
   cinemachineCamera: {fileID: 4685515460504658230}
   groundCheck: {fileID: 7726969895422599793}
+  _collider: {fileID: 0}
 --- !u!114 &6462810797751770924
 MonoBehaviour:
   m_ObjectHideFlags: 0
