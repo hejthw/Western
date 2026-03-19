@@ -9,7 +9,9 @@ public class Revolver : NetworkBehaviour
     public RevolverData revolverData;
     [SerializeField] private PlayerInput _input;
     
-    public float fireTimer;
+    [SerializeField] private Transform muzzle; 
+    
+    private float fireTimer;
 
     private void OnEnable()
     {
@@ -33,9 +35,9 @@ public class Revolver : NetworkBehaviour
 
         if (fireTimer <= 0f)
         {
-            ShootServer(revolverData.damage, transform.position, transform.forward);
+            ShootServer(revolverData.damage, muzzle.position, muzzle.forward);
             fireTimer = revolverData.timeBeforeShot;
-            Debug.Log("Shot");
+            Debug.DrawRay(muzzle.position, muzzle.forward * 100f, Color.red, 2f);
         }
     }
 
@@ -51,6 +53,7 @@ public class Revolver : NetworkBehaviour
         if (Physics.Raycast(position, direction, out RaycastHit hit)
             && hit.transform.TryGetComponent(out PlayerHealth enemyHealth))
         {
+            Debug.Log(hit.transform.name);
             enemyHealth.TakeDamage(damageToGive);
         }
     }
