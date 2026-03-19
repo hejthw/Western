@@ -3,7 +3,7 @@ using TMPro;
 
 public class PlayerHealthView : MonoBehaviour
 {
-    public TMP_Text HealthText;
+    [SerializeField] private TMP_Text HealthText;
     
     private void OnEnable()
     {

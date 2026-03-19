@@ -1,17 +1,13 @@
 using UnityEngine;
-using Unity.Cinemachine;
-using System.Collections;
-using Unity.VisualScripting;
 
 public class HeadBob: MonoBehaviour
 {
     [SerializeField] private PlayerPhysics pp;
-    public Transform camTransform;
+    [SerializeField] private Transform camTransform;
     public CameraData camData;
     
     private float timer;
     private Vector3 _cameraOriginalPos;
-
     
     void Start()
     {

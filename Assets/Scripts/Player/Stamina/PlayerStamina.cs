@@ -6,7 +6,7 @@ public class PlayerStamina : MonoBehaviour
 {
     [SerializeField] private PlayerMovementData _data;
 
-    private PlayerInput _input;
+    [SerializeField] private PlayerInput _input;
     private Coroutine _staminaCoroutine;
     
     public event Action OnStaminaEmpty;
@@ -16,7 +16,6 @@ public class PlayerStamina : MonoBehaviour
 
     void Awake()
     {
-        _input = GetComponent<PlayerInput>();
         Current = _data.maxStamina;
     }
 

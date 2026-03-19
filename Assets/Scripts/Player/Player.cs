@@ -1,13 +1,10 @@
 using UnityEngine;
-using System.Collections;
-
 
 public class Player
 {
     private readonly PlayerMovementData _data;
     private float _currentSpeed;
     private Vector3 _momentum;
-
     
     public Player(PlayerMovementData data)
     {

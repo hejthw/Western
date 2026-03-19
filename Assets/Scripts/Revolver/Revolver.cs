@@ -7,20 +7,19 @@ using UnityEngine;
 public class Revolver : NetworkBehaviour
 {
     public RevolverData revolverData;
-    [SerializeField] private PlayerInput _input;
-    
+    [SerializeField] private PlayerInput input;
     [SerializeField] private Transform muzzle; 
     
-    private float fireTimer;
+    private float _fireTimer;
 
     private void OnEnable()
     {
-        _input.OnAttackEvent += Shoot;
+        input.OnAttackEvent += Shoot;
     }
     
     private void OnDisable()
     {
-        _input.OnAttackEvent -= Shoot;
+        input.OnAttackEvent -= Shoot;
     }
 
     void Update()
@@ -33,18 +32,18 @@ public class Revolver : NetworkBehaviour
         if (!IsOwner)
             return;
 
-        if (fireTimer <= 0f)
+        if (_fireTimer <= 0f)
         {
             ShootServer(revolverData.damage, muzzle.position, muzzle.forward);
-            fireTimer = revolverData.timeBeforeShot;
+            _fireTimer = revolverData.timeBeforeShot;
             Debug.DrawRay(muzzle.position, muzzle.forward * 100f, Color.red, 2f);
         }
     }
 
     private void Delay()
     {
-        if (fireTimer > 0)
-            fireTimer -= Time.deltaTime;
+        if (_fireTimer > 0)
+            _fireTimer -= Time.deltaTime;
     }
 
     [ServerRpc]

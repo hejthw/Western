@@ -6,26 +6,26 @@ public class PlayerController : NetworkBehaviour
 {
     [SerializeField] private CinemachineCamera cinemachineCamera;
 
-    public PlayerPhysics Physics { get; private set; }
-    public PlayerHealth Health { get; private set; }
-    
-    public PlayerInput Input { get; private set; }
+    [SerializeField] private PlayerPhysics physics;
+    [SerializeField] private PlayerHealth health;
+
+    [SerializeField] private PlayerInput input;
 
     void Awake()
     {
-        Physics = GetComponent<PlayerPhysics>();
-        Health = GetComponent<PlayerHealth>();
-        Input = GetComponent<PlayerInput>();
+        physics = GetComponent<PlayerPhysics>();
+        health = GetComponent<PlayerHealth>();
+        input = GetComponent<PlayerInput>();
     }
 
     private void OnEnable()
     {
-        Input.OnTestEvent += Test;
+        input.OnTestEvent += Test;
     }
     
     private void OnDisable()
     {
-        Input.OnTestEvent -= Test;
+        input.OnTestEvent -= Test;
     }
     
     public override void OnStartClient()
@@ -51,6 +51,6 @@ public class PlayerController : NetworkBehaviour
     [ServerRpc]
     private void TakeDamageTest(int damage)
     {
-        Health.TakeDamage(damage);
+        health.TakeDamage(damage);
     }
 }
