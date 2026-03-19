@@ -1,22 +1,17 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections;
-using Unity.VisualScripting;
 
 public class FOV : MonoBehaviour
 {
-    private PlayerInput _input;
+    [SerializeField] private PlayerInput _input;
     [SerializeField] private CinemachineCamera cC;
     [SerializeField] private PlayerStamina _stamina;
+    
     private Coroutine _fovCoroutine;
     
     public CameraData camData;
     
-    void Awake()
-    {
-        _input = GetComponent<PlayerInput>();
-    }
-
     void Start()
     {
         Cursor.visible = false;

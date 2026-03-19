@@ -11,39 +11,31 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] private PlayerMovementData data;
     [SerializeField] private CinemachineCamera  cinemachineCamera;
     [SerializeField] private Transform groundCheck; // точка, где спавниться сфера для просчета IsGrounded
-
-    private Player _player;
-    private PlayerStamina _stamina;
-
-    private Rigidbody _rb;
-    private PlayerInput _input;
-
-    private bool _isJumping;
+    [SerializeField] private PlayerStamina stamina;
     
-    private CapsuleCollider _collider;
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private PlayerInput input;
+    [SerializeField] private CapsuleCollider col;
+    
+    private Player _player;
+    
+    private bool _isJumping;
     
     public bool IsGrounded { get; private set; }
     public PlayerState CurrentState { get; private set; }
 
-    void Awake()
-    {
-        _rb = GetComponent<Rigidbody>();
-        _input = GetComponent<PlayerInput>();
-        _stamina = GetComponent<PlayerStamina>();
-        _collider = GetComponent<CapsuleCollider>();
-        _player = new Player(data);
-    }
+    private void Awake() => _player = new Player(data);
 
     private void OnEnable()
     {
-        _input.JumpPressedEvent += Jump;
-        _input.OnCrouchEvent += Crouch;
+        input.JumpPressedEvent += Jump;
+        input.OnCrouchEvent += Crouch;
     }
 
     private void OnDisable()
     {
-        _input.JumpPressedEvent -= Jump;
-        _input.OnCrouchEvent -= Crouch;
+        input.JumpPressedEvent -= Jump;
+        input.OnCrouchEvent -= Crouch;
     }
 
     void Update()
@@ -53,14 +45,14 @@ public class PlayerPhysics : MonoBehaviour
             data.groundCheckDistance,
             data.whatIsGround);
 
-        bool canSprint = _input.SprintHeld && !_stamina.IsEmpty && !_input.CrouchHeld;
+        bool canSprint = input.SprintHeld && !stamina.IsEmpty && !input.CrouchHeld;
         _player.ChangeMaxSpeed(canSprint, Time.deltaTime);
 
         CurrentState = _player.ResolvePlayerState(
-            _input.MoveInput != Vector2.zero,
+            input.MoveInput != Vector2.zero,
             IsGrounded,
-            _input.SprintHeld,
-            _rb.linearVelocity.y);
+            input.SprintHeld,
+            rb.linearVelocity.y);
     }
 
     void FixedUpdate()
@@ -78,9 +70,9 @@ public class PlayerPhysics : MonoBehaviour
 
         float yVelocity = (IsGrounded && !_isJumping)
             ? 0f
-            : _rb.linearVelocity.y;
+            : rb.linearVelocity.y;
 
-        _rb.linearVelocity = new Vector3(momentum.x, yVelocity, momentum.z);
+        rb.linearVelocity = new Vector3(momentum.x, yVelocity, momentum.z);
     }
 
     private void Jump()
@@ -88,35 +80,35 @@ public class PlayerPhysics : MonoBehaviour
         if (!IsGrounded) return;
         _isJumping = true;
         
-        _rb.linearVelocity = new Vector3(
-            _rb.linearVelocity.x, 0f, _rb.linearVelocity.z);
-        _rb.AddForce(Vector3.up * data.jumpForce, ForceMode.Impulse);
+        rb.linearVelocity = new Vector3(
+            rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        rb.AddForce(Vector3.up * data.jumpForce, ForceMode.Impulse);
     }
 
     private Vector3 GetMoveDirection()
     {
-        if (_input.MoveInput == Vector2.zero) return Vector3.zero;
+        if (input.MoveInput == Vector2.zero) return Vector3.zero;
 
         Vector3 forward = cinemachineCamera.transform.forward;
         Vector3 right = cinemachineCamera.transform.right;
         forward.y = 0;
         right.y = 0;
 
-        return (forward.normalized * _input.MoveInput.y
-              + right.normalized   * _input.MoveInput.x).normalized;
+        return (forward.normalized * input.MoveInput.y
+              + right.normalized   * input.MoveInput.x).normalized;
     }
 
     private void Crouch()
     {
-        if (_input.CrouchHeld)
+        if (input.CrouchHeld)
         {
-            _collider.height = 1f;
-            _collider.center = new Vector3(0f, 0.5f, 0f);
+            col.height = 1f;
+            col.center = new Vector3(0f, 0.5f, 0f);
         }
         else
         {
-            _collider.height = 2f;
-            _collider.center = new Vector3(0f, 0f, 0f);
+            col.height = 2f;
+            col.center = new Vector3(0f, 0f, 0f);
         }
     }
 

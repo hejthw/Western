@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 using FishNet.Object;
 
 public class PickupController : NetworkBehaviour
@@ -23,7 +22,6 @@ public class PickupController : NetworkBehaviour
 
     private void Start()
     {
-        
         cameraTransform = transform.Find("CameraJoint/PlayerCamera")?.transform;
 
         if (cameraTransform == null)
