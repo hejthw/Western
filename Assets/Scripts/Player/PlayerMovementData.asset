@@ -14,10 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovementData
   walkSpeed: 5
   sprintSpeed: 10
-  sprintAcceleration: 75
-  walkAcceleration: 75
+  sprintAcceleration: 4
+  walkAcceleration: 4
+  turnSpeed: 25
+  brakingForce: 20
   maxStamina: 100
-  staminaLerpDuration: 3500
+  drainPerSecond: 20
+  regenPerSecond: 10
+  regenDelay: 1.5
   jumpForce: 4
   groundCheckDistance: 0.15
   whatIsGround:

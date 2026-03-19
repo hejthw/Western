@@ -72,25 +72,15 @@ public class PlayerPhysics : MonoBehaviour
     {
         if (_isJumping && !IsGrounded)
             _isJumping = false;
-        
-        Vector3 dir = GetMoveDirection();
 
-        if (dir == Vector3.zero)
-        {
-            _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, 0f);
-            return;
-        }
-        
-        Vector3 targetVelocity = dir * _player.CurrentSpeed;
-        
+        Vector3 desiredDir = GetMoveDirection();
+        Vector3 momentum   = _player.UpdateMomentum(desiredDir, Time.fixedDeltaTime);
+
         float yVelocity = (IsGrounded && !_isJumping)
-            ? 0f                      // если на земле = прижимаем к поверхности (надо для наклонных поверхностей)
-            : _rb.linearVelocity.y;   // в воздухе или в прыжке = остается как есть
-        
-        _rb.linearVelocity = new Vector3(
-            targetVelocity.x,
-            yVelocity,
-            targetVelocity.z);
+            ? 0f
+            : _rb.linearVelocity.y;
+
+        _rb.linearVelocity = new Vector3(momentum.x, yVelocity, momentum.z);
     }
 
     private void Jump()

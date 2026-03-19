@@ -17,4 +17,4 @@ MonoBehaviour:
   fovLerpDuration: 1
   enableHeadBob: 1
   headBobVector: {x: 0.001, y: 0.08, z: 0.01}
-  headBobSpeed: 5
+  headBobSpeed: 6
