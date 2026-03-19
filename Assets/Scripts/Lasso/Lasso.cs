@@ -66,6 +66,12 @@ public class Lasso : NetworkBehaviour
             attachedTarget = collision.gameObject;
             isAttached.Value = true;
 
+            var targetNetObj = targetRb.GetComponent<NetworkObject>();
+            if (targetNetObj != null)
+            {
+                ServerRequestOwnership(targetNetObj);
+            }
+
             rb.isKinematic = true;
             transform.position = collision.contacts[0].point;
 
@@ -143,6 +149,15 @@ public class Lasso : NetworkBehaviour
         {
             Destroy(currentJoint);
             currentJoint = null;
+        }
+    }
+    [ServerRpc(RequireOwnership = false)]
+    private void ServerRequestOwnership(NetworkObject target)
+    {
+        if (target != null && !target.IsOwner)
+        {
+            target.GiveOwnership(base.Owner);
+            Debug.Log($"Передан authority объекта {target.name} клиенту {base.Owner}");
         }
     }
 }

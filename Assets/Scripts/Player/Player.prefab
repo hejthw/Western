@@ -1010,6 +1010,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1967255280890548578, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
+      propertyPath: _clientAuthoritative
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3614300672675387674, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
