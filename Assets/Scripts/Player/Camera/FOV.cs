@@ -45,7 +45,7 @@ public class FOV : MonoBehaviour
 
     private void FovChange()
     {
-        bool sprintFovActive = _input.SprintHeld && !_stamina.IsEmpty;
+        bool sprintFovActive = _input.SprintHeld && !_stamina.IsEmpty && _input.IsMoving();
 
         if (_fovCoroutine != null)
             StopCoroutine(_fovCoroutine);

@@ -35,7 +35,7 @@ public class PlayerStamina : MonoBehaviour
     
     private IEnumerator DrainRoutine()
     {
-        while (_input.SprintHeld && !_input.CrouchHeld && Current > 0f)
+        while (_input.SprintHeld && !_input.CrouchHeld && Current > 0f && _input.IsMoving())
         {
             Current = Mathf.Max(Current - _data.drainPerSecond * Time.deltaTime, 0f);
             PlayerEvents.RaiseStaminaChange(Current);

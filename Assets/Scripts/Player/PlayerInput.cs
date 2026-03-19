@@ -37,8 +37,8 @@ public class PlayerInput : MonoBehaviour
         if (value.Get<float>() > 0.5f) JumpPressedEvent?.Invoke();
     }
 
+    public bool IsMoving() => MoveInput != Vector2.zero;
     
-
     public void OnTestAction(InputValue value)
     {
         OnTestEvent?.Invoke();

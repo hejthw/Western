@@ -16,7 +16,7 @@ MonoBehaviour:
   sprintSpeed: 10
   sprintAcceleration: 4
   walkAcceleration: 4
-  turnSpeed: 25
+  turnSpeed: 60
   brakingForce: 20
   maxStamina: 100
   drainPerSecond: 20
