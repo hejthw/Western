@@ -24,7 +24,7 @@ public class PickupController : NetworkBehaviour
     private void Start()
     {
         
-        cameraTransform = transform.Find("Joint/PlayerCamera")?.transform;
+        cameraTransform = transform.Find("CameraJoint/PlayerCamera")?.transform;
 
         if (cameraTransform == null)
             Debug.LogError("PickupController: cameraTransform не найден! Проверь иерархию игрока.");
