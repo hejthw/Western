@@ -98,8 +98,9 @@ public class PlayerPhysics : MonoBehaviour
         if (_input.MoveInput == Vector2.zero) return Vector3.zero;
 
         Vector3 forward = cinemachineCamera.transform.forward;
-        Vector3 right   = cinemachineCamera.transform.right;
-        forward.y = 0; right.y = 0;
+        Vector3 right = cinemachineCamera.transform.right;
+        forward.y = 0;
+        right.y = 0;
 
         return (forward.normalized * _input.MoveInput.y
               + right.normalized   * _input.MoveInput.x).normalized;

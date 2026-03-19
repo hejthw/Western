@@ -11,7 +11,7 @@ public class PlayerMovementData : ScriptableObject
     public float sprintSpeed = 10f;
     public float sprintAcceleration = 100f;
     public float walkAcceleration = 100f;
-    public float turnSpeed    = 8f;
+    public float turnSpeed = 8f;
     public float brakingForce = 4f; 
     
     [Header("Stamina")]

@@ -16,8 +16,8 @@ public class PlayerStamina : MonoBehaviour
 
     void Awake()
     {
-        _input   = GetComponent<PlayerInput>();
-        Current  = _data.maxStamina;
+        _input = GetComponent<PlayerInput>();
+        Current = _data.maxStamina;
     }
 
     void OnEnable()  => _input.OnSprintEvent += OnSprintChanged;
