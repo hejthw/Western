@@ -17,6 +17,7 @@ public class PlayerInput : MonoBehaviour
     public event Action OnSprintEvent;
     public event Action OnTestEvent;
     public event Action OnCrouchEvent;
+    public event Action OnPickupEvent;
 
     public void OnMove(InputValue value) => MoveInput = value.Get<Vector2>();
 
@@ -42,5 +43,10 @@ public class PlayerInput : MonoBehaviour
     public void OnTestAction(InputValue value)
     {
         OnTestEvent?.Invoke();
+    }
+    public void OnPickup(InputValue value)
+    {
+        if (value.Get<float>() > 0.5f)
+            OnPickupEvent?.Invoke();
     }
 }
