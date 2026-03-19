@@ -13,11 +13,14 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] private Transform groundCheck; // точка, где спавниться сфера для просчета IsGrounded
 
     private Player _player;
+    private PlayerStamina _stamina;
 
     private Rigidbody _rb;
     private PlayerInput _input;
 
     private bool _isJumping;
+    
+    private CapsuleCollider _collider;
     
     public bool IsGrounded { get; private set; }
     public PlayerState CurrentState { get; private set; }
@@ -26,18 +29,21 @@ public class PlayerPhysics : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _input = GetComponent<PlayerInput>();
-
+        _stamina = GetComponent<PlayerStamina>();
+        _collider = GetComponent<CapsuleCollider>();
         _player = new Player(data);
     }
 
     private void OnEnable()
     {
         _input.JumpPressedEvent += Jump;
+        _input.OnCrouchEvent += Crouch;
     }
 
     private void OnDisable()
     {
         _input.JumpPressedEvent -= Jump;
+        _input.OnCrouchEvent -= Crouch;
     }
 
     void Update()
@@ -47,7 +53,8 @@ public class PlayerPhysics : MonoBehaviour
             data.groundCheckDistance,
             data.whatIsGround);
 
-        _player.ChangeMaxSpeed(_input.SprintHeld, Time.deltaTime);
+        bool canSprint = _input.SprintHeld && !_stamina.IsEmpty && !_input.CrouchHeld;
+        _player.ChangeMaxSpeed(canSprint, Time.deltaTime);
 
         CurrentState = _player.ResolvePlayerState(
             _input.MoveInput != Vector2.zero,
@@ -65,25 +72,15 @@ public class PlayerPhysics : MonoBehaviour
     {
         if (_isJumping && !IsGrounded)
             _isJumping = false;
-        
-        Vector3 dir = GetMoveDirection();
 
-        if (dir == Vector3.zero)
-        {
-            _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, 0f);
-            return;
-        }
-        
-        Vector3 targetVelocity = dir * _player.CurrentSpeed;
-        
+        Vector3 desiredDir = GetMoveDirection();
+        Vector3 momentum   = _player.UpdateMomentum(desiredDir, Time.fixedDeltaTime);
+
         float yVelocity = (IsGrounded && !_isJumping)
-            ? 0f                      // если на земле = прижимаем к поверхности (надо для наклонных поверхностей)
-            : _rb.linearVelocity.y;   // в воздухе или в прыжке = остается как есть
-        
-        _rb.linearVelocity = new Vector3(
-            targetVelocity.x,
-            yVelocity,
-            targetVelocity.z);
+            ? 0f
+            : _rb.linearVelocity.y;
+
+        _rb.linearVelocity = new Vector3(momentum.x, yVelocity, momentum.z);
     }
 
     private void Jump()
@@ -101,11 +98,26 @@ public class PlayerPhysics : MonoBehaviour
         if (_input.MoveInput == Vector2.zero) return Vector3.zero;
 
         Vector3 forward = cinemachineCamera.transform.forward;
-        Vector3 right   = cinemachineCamera.transform.right;
-        forward.y = 0; right.y = 0;
+        Vector3 right = cinemachineCamera.transform.right;
+        forward.y = 0;
+        right.y = 0;
 
         return (forward.normalized * _input.MoveInput.y
               + right.normalized   * _input.MoveInput.x).normalized;
+    }
+
+    private void Crouch()
+    {
+        if (_input.CrouchHeld)
+        {
+            _collider.height = 1f;
+            _collider.center = new Vector3(0f, 0.5f, 0f);
+        }
+        else
+        {
+            _collider.height = 2f;
+            _collider.center = new Vector3(0f, 0f, 0f);
+        }
     }
 
     // public void AddExternalForce(Vector3 force, ForceMode mode = ForceMode.Impulse)
