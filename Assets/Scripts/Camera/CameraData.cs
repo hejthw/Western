@@ -9,7 +9,11 @@ public class CameraData : ScriptableObject
     public float fovLerpDuration = 50f;
     
     [Header("HeadBob")]
-    public bool enableHeadBob = true;
-    public Vector3 headBobVector = new Vector3(0.001f, 0.08f, 0.01f);
-    public float headBobSpeed = 5f;
+    public float walkBobFrequency = 1.4f;
+    public float sprintBobFrequency = 2.2f;
+    public float walkBobAmplitude = 0.3f;
+    public float sprintBobAmplitude = 0.55f;
+    [Header("HeadBob Smoothing")]
+    public float bobTransitionSpeed = 8f;
+    public float settleSpeed = 6f;
 }

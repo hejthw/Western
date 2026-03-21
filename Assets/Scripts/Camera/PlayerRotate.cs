@@ -2,7 +2,7 @@ using FishNet.Object;
 using UnityEngine;
 using Unity.Cinemachine;
 
-public class YAxisRotationFromCamera : NetworkBehaviour
+public class PlayerRotate : NetworkBehaviour
 {
     [SerializeField] private CinemachinePanTilt panTilt;
     [SerializeField] private Transform transform;
@@ -14,9 +14,9 @@ public class YAxisRotationFromCamera : NetworkBehaviour
             enabled = false;
     }
     
-    void Update()
+    void FixedUpdate()
     {
-            float yaw = panTilt.PanAxis.Value;
-            transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        float yaw = panTilt.PanAxis.Value;
+        transform.rotation = Quaternion.Euler(0f, yaw, 0f);
     }
 }
