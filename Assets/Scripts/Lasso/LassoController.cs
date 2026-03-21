@@ -13,7 +13,6 @@ public class LassoController : MonoBehaviour
 
     private GameObject lasso;
     private Lasso lassoScript;
-    private bool isAttached = false;
 
     void Start()
     {
@@ -21,28 +20,32 @@ public class LassoController : MonoBehaviour
             cameraTransform = transform.Find("Joint/PlayerCamera")?.transform;
 
         lasso = transform.Find("Lasso")?.gameObject;
-        if (lasso == null) return;
-
-        lassoScript = lasso.GetComponent<Lasso>();
-        if (lassoScript == null)
-            lassoScript = lasso.AddComponent<Lasso>();
-
-        lasso.SetActive(false);
+        if (lasso != null)
+            lassoScript = lasso.GetComponent<Lasso>() ?? lasso.AddComponent<Lasso>();
     }
 
     void Update()
     {
+        if (lassoScript == null) return;
+
         if (Keyboard.current[throwKey].wasPressedThisFrame)
         {
-            if (!isAttached)
+            if (!lassoScript.isAttached)
                 ThrowLasso();
             else
-                ReturnLasso();
+                lassoScript.DetachAndReturn();
         }
 
-        if (Keyboard.current[pullKey].isPressed && isAttached)
+        // Hold G — притягивание (только для обычных объектов)
+        if (Keyboard.current[pullKey].isPressed && lassoScript.isAttached && !lassoScript.isLightObjectAttached)
         {
             lassoScript.PullTowardsPlayer();
+        }
+
+        // Одиночное нажатие G — дёрг для LightObject
+        if (Keyboard.current[pullKey].wasPressedThisFrame && lassoScript.isAttached && lassoScript.isLightObjectAttached)
+        {
+            lassoScript.YankAndDetach();
         }
     }
 
@@ -57,19 +60,9 @@ public class LassoController : MonoBehaviour
         lasso.transform.rotation = Quaternion.LookRotation(direction);
 
         lassoScript.Throw(direction);
-        isAttached = false;
     }
 
-    private void ReturnLasso()
-    {
-        if (lassoScript != null)
-        {
-            lassoScript.DetachAndReturn();
-            isAttached = false;
-        }
-    }
-
-    public void OnLassoAttached(GameObject target) { isAttached = true; }
+    public void OnLassoAttached(GameObject target) { }
     public void OnLassoMiss() { }
-    public void OnLassoReturned() { isAttached = false; }
+    public void OnLassoReturned() { }
 }
