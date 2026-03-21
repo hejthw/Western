@@ -476,7 +476,7 @@ MonoBehaviour:
     Scale: {x: 0.5, y: 0.3, z: 0.05}
     IsValid: 1
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 1
+  WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
@@ -494,7 +494,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584274978547032248
+  _initializedTimestamp: -8584274956472992608
 --- !u!54 &5411739868912013025
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1022,7 +1022,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584274978547032248
+  _initializedTimestamp: -8584274956472992608
 --- !u!114 &868698912939469854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1383,7 +1383,7 @@ MonoBehaviour:
   - {fileID: 6589580627724631239}
   - {fileID: 3801565093934317144}
   - {fileID: 6462810797751770924}
-  - {fileID: 0}
+  - {fileID: 6215445965447647855}
   - {fileID: 8370486624532304144}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects:
@@ -1396,7 +1396,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584274978547032248
+  _initializedTimestamp: -8584274956472992608
 --- !u!114 &6589580627724631239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1553,9 +1553,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431606639cbd41999ad9410b4b0b3b37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::YAxisRotationFromCamera
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 4737990210302664583}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 4737990210302664583}
   panTilt: {fileID: 52770516580935128}
   transform: {fileID: 3998414238054622849}
 --- !u!114 &8370486624532304144
