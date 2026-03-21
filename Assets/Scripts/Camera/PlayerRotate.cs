@@ -17,6 +17,7 @@ public class PlayerRotate : NetworkBehaviour
     void FixedUpdate()
     {
         float yaw = panTilt.PanAxis.Value;
-        transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+        float pitch = panTilt.TiltAxis.Value;
+        transform.rotation = Quaternion.Euler(pitch, yaw, 0f);
     }
 }

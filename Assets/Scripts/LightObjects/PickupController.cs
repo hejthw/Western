@@ -65,15 +65,13 @@ public class PickupController : NetworkBehaviour
             Debug.Log("Raycast ничего не попал (проверь дистанцию и LayerMask)");
             return;
         }
-
-        // Сначала проверяем IPickupable — приоритет выше
+        
         if (hit.collider.TryGetComponent(out IPickupable pickupable))
         {
             InteractServerRpc(hit.collider.GetComponent<NetworkObject>());
             return;
         }
-
-        // Обычный лёгкий предмет
+        
         if (hit.collider.TryGetComponent(out LightObject lightObj))
         {
             heldObject = hit.collider.gameObject;
