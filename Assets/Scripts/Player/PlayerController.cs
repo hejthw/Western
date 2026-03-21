@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : NetworkBehaviour
 {
-    [SerializeField] private CinemachineCamera cinemachineCamera;
+    public CinemachineCamera cinemachineCamera;
 
     [SerializeField] private PlayerPhysics physics;
     [SerializeField] private PlayerHealth health;

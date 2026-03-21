@@ -154,6 +154,7 @@ GameObject:
   - component: {fileID: 3854793694373561982}
   - component: {fileID: 1493751386926634616}
   - component: {fileID: 7630292203656044341}
+  - component: {fileID: 537094630950130939}
   m_Layer: 0
   m_Name: Revolver
   m_TagString: Untagged
@@ -199,6 +200,8 @@ MonoBehaviour:
   revolverData: {fileID: 11400000, guid: e2d994d400840eb18a2f9b484a48b590, type: 2}
   muzzle: {fileID: 2159295183715185914}
   revolverPickupPrefab: {fileID: 8413722035173566249, guid: 14b3e53dfc050b086bc824112e177970, type: 3}
+  bulletTrailPrefab: {fileID: 6154115337682793468, guid: 50d69fbdfa76860698fd698f7a44944a, type: 3}
+  trailMaxDistance: 100
 --- !u!114 &7630292203656044341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,6 +257,18 @@ MonoBehaviour:
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
   _initializedTimestamp: -8584274956472992608
+--- !u!114 &537094630950130939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4853093127990864730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97a34cfdb49d4cebab0a2274cf40e25a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RevolverRecoil
 --- !u!1 &5567564159767479882
 GameObject:
   m_ObjectHideFlags: 0

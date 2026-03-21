@@ -13,4 +13,13 @@ MonoBehaviour:
   m_Name: RevolverData
   m_EditorClassIdentifier: Assembly-CSharp::RevolverData
   damage: 100
-  timeBeforeShot: 1
+  timeBeforeShot: 0.2
+  bullets: 6
+  timeBeforeDespawn: 30
+  recoilUp: 20
+  recoilSideMax: 4
+  sprayMultiplier: 2.8
+  sprayRandomness: 3.5
+  resetDelay: 0.8
+  recoverySpeed: 6
+  recoilApplySpeed: 18

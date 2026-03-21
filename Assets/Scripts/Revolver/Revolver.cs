@@ -11,6 +11,10 @@ public class Revolver : NetworkBehaviour
     private PlayerInput _input;
     private PlayerController _playerController;
     private float _fireTimer;
+    private RevolverRecoil _recoil;
+    
+    [SerializeField] private BulletTrail bulletTrailPrefab;  // добавить поле
+    [SerializeField] private float trailMaxDistance = 100f; 
 
     private readonly SyncVar<int> _bullets = new SyncVar<int>(new SyncTypeSettings());
 
@@ -33,28 +37,29 @@ public class Revolver : NetworkBehaviour
     [ObserversRpc(BufferLast = true)]
     private void AttachClientRpc(int playerNetObjId)
     {
-        // Поиск NetworkObject игрока по его ObjectID
         if (!NetworkManager.ClientManager.Objects.Spawned.TryGetValue(
                 playerNetObjId, out NetworkObject playerNetObj))
         {
             Debug.LogError($"[Client] Объект с id {playerNetObjId} не найден!");
             return;
         }
-        
-        // Привязка оружия к holdPoint
+
         var controller = playerNetObj.GetComponent<PlayerController>();
         transform.SetParent(controller.weaponHoldPoint);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-        
-        // Если IsOwner => подписываем на события инпута
+
         if (!playerNetObj.IsOwner) return;
+
+        // Инициализируем отдачу через контроллер — камера берётся изнутри
+        _recoil = GetComponent<RevolverRecoil>();
+        _recoil?.Init(revolverData, controller);  // ← controller вместо Camera.main
 
         _input = playerNetObj.GetComponent<PlayerInput>();
         if (_input != null)
         {
             _input.OnAttackEvent += Shoot;
-            _input.OnDropEvent += Drop;
+            _input.OnDropEvent   += Drop;
         }
     }
 
@@ -66,7 +71,9 @@ public class Revolver : NetworkBehaviour
         // Отписка от инпута
         base.OnStopClient();
         if (!IsOwner || _input == null) return;
-    
+        
+        _recoil?.ResetImmediate(); 
+        
         _input.OnAttackEvent -= Shoot;
         _input.OnDropEvent -= Drop;
     }
@@ -85,16 +92,31 @@ public class Revolver : NetworkBehaviour
     private void Shoot()
     {
         if (!IsOwner || _fireTimer > 0f) return;
-        if (_bullets.Value <= 0)
-        {
-            Debug.Log("No bullets");
-            return;
-        }
+        if (_bullets.Value <= 0) { Debug.Log("No bullets"); return; }
 
-        ShootServerRpc(revolverData.damage, muzzle.position, muzzle.forward);
-        Debug.Log("remain bullets: " + _bullets.Value);
+        _recoil?.AddRecoil();
+
+        Vector3 origin    = muzzle.position;
+        Vector3 direction = muzzle.forward;
+
+        ShootServerRpc(revolverData.damage, origin, direction);
         _fireTimer = revolverData.timeBeforeShot;
-        Debug.DrawRay(muzzle.position, muzzle.forward * 100f, Color.red, 2f);
+
+        // Трейл — только на клиенте, серверу не нужен
+        SpawnTrail(origin, direction);
+    }
+
+    private void SpawnTrail(Vector3 origin, Vector3 direction)
+    {
+        if (bulletTrailPrefab == null) return;
+
+        // Определяем точку попадания так же, как на сервере
+        Vector3 endPoint = Physics.Raycast(origin, direction, out RaycastHit hit, trailMaxDistance)
+            ? hit.point
+            : origin + direction * trailMaxDistance;
+
+        BulletTrail trail = Instantiate(bulletTrailPrefab, origin, Quaternion.identity);
+        trail.Show(origin, endPoint);
     }
     
     /// <summary>
