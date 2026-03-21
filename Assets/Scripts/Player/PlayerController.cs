@@ -4,12 +4,26 @@ using UnityEngine;
 
 public class PlayerController : NetworkBehaviour
 {
-    [SerializeField] private CinemachineCamera cinemachineCamera;
+    public CinemachineCamera cinemachineCamera;
 
     [SerializeField] private PlayerPhysics physics;
     [SerializeField] private PlayerHealth health;
 
     [SerializeField] private PlayerInput input;
+
+    [SerializeField] public Transform weaponHoldPoint;
+
+    private Revolver _currentWeapon;
+    
+    public void EquipWeapon(Revolver weapon)
+    {
+        _currentWeapon = weapon;
+    }
+
+    public void UnequipWeapon()
+    {
+        _currentWeapon = null;
+    }
 
     void Awake()
     {

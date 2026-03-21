@@ -1,59 +1,167 @@
-using System;
 using FishNet.Object;
-using TMPro;
-using Steamworks;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 public class Revolver : NetworkBehaviour
 {
     public RevolverData revolverData;
-    [SerializeField] private PlayerInput input;
-    [SerializeField] private Transform muzzle; 
-    
+    [SerializeField] private Transform muzzle;
+    [SerializeField] private NetworkObject revolverPickupPrefab;
+
+    private PlayerInput _input;
+    private PlayerController _playerController;
     private float _fireTimer;
+    private RevolverRecoil _recoil;
+    
+    [SerializeField] private BulletTrail bulletTrailPrefab;  // добавить поле
+    [SerializeField] private float trailMaxDistance = 100f; 
 
-    private void OnEnable()
+    private readonly SyncVar<int> _bullets = new SyncVar<int>(new SyncTypeSettings());
+
+    /// <summary>Вызывается сервером из RevolverPickup для переноса патронов</summary>
+    public void SetBullets(int count)
     {
-        input.OnAttackEvent += Shoot;
+        _bullets.Value = count;
     }
     
-    private void OnDisable()
+    public void AttachToPlayer(PlayerController playerController)
     {
-        input.OnAttackEvent -= Shoot;
+        _playerController = playerController;
+        int playerObjId = playerController.GetComponent<NetworkObject>().ObjectId;
+        AttachClientRpc(playerObjId);
     }
 
-    void Update()
+    /// <summary>
+    /// Привязывает револьвер к holdPoint клиента и подписывает на события playerInput.
+    /// </summary>
+    [ObserversRpc(BufferLast = true)]
+    private void AttachClientRpc(int playerNetObjId)
     {
-        Delay();
-    }
-
-    private void Shoot()
-    {
-        if (!IsOwner)
-            return;
-
-        if (_fireTimer <= 0f)
+        if (!NetworkManager.ClientManager.Objects.Spawned.TryGetValue(
+                playerNetObjId, out NetworkObject playerNetObj))
         {
-            ShootServer(revolverData.damage, muzzle.position, muzzle.forward);
-            _fireTimer = revolverData.timeBeforeShot;
-            Debug.DrawRay(muzzle.position, muzzle.forward * 100f, Color.red, 2f);
+            Debug.LogError($"[Client] Объект с id {playerNetObjId} не найден!");
+            return;
+        }
+
+        var controller = playerNetObj.GetComponent<PlayerController>();
+        transform.SetParent(controller.weaponHoldPoint);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+
+        if (!playerNetObj.IsOwner) return;
+
+        // Инициализируем отдачу через контроллер — камера берётся изнутри
+        _recoil = GetComponent<RevolverRecoil>();
+        _recoil?.Init(revolverData, controller);  // ← controller вместо Camera.main
+
+        _input = playerNetObj.GetComponent<PlayerInput>();
+        if (_input != null)
+        {
+            _input.OnAttackEvent += Shoot;
+            _input.OnDropEvent   += Drop;
         }
     }
 
-    private void Delay()
+    /// <summary>
+    /// Вызывается, когда обьект деспавниться на клиенте.
+    /// </summary>
+    public override void OnStopClient()
     {
+        // Отписка от инпута
+        base.OnStopClient();
+        if (!IsOwner || _input == null) return;
+        
+        _recoil?.ResetImmediate(); 
+        
+        _input.OnAttackEvent -= Shoot;
+        _input.OnDropEvent -= Drop;
+    }
+
+    
+    private void Update()
+    {
+        // таймер выстрела
         if (_fireTimer > 0)
             _fireTimer -= Time.deltaTime;
     }
 
-    [ServerRpc]
-    private void ShootServer(int damageToGive, Vector3 position, Vector3 direction)
+    /// <summary>
+    /// Локально проверяет таймер и патроны и отправляет в ServerRpc
+    /// </summary>
+    private void Shoot()
     {
-        if (Physics.Raycast(position, direction, out RaycastHit hit)
-            && hit.transform.TryGetComponent(out PlayerHealth enemyHealth))
+        if (!IsOwner || _fireTimer > 0f) return;
+        if (_bullets.Value <= 0) { Debug.Log("No bullets"); return; }
+
+        _recoil?.AddRecoil();
+
+        Vector3 origin    = muzzle.position;
+        Vector3 direction = muzzle.forward;
+
+        ShootServerRpc(revolverData.damage, origin, direction);
+        _fireTimer = revolverData.timeBeforeShot;
+
+        // Трейл — только на клиенте, серверу не нужен
+        SpawnTrail(origin, direction);
+    }
+
+    private void SpawnTrail(Vector3 origin, Vector3 direction)
+    {
+        if (bulletTrailPrefab == null) return;
+
+        // Определяем точку попадания так же, как на сервере
+        Vector3 endPoint = Physics.Raycast(origin, direction, out RaycastHit hit, trailMaxDistance)
+            ? hit.point
+            : origin + direction * trailMaxDistance;
+
+        BulletTrail trail = Instantiate(bulletTrailPrefab, origin, Quaternion.identity);
+        trail.Show(origin, endPoint);
+    }
+    
+    /// <summary>
+    /// Применяет Raycast на сервере
+    /// </summary>
+    [ServerRpc]
+    private void ShootServerRpc(int damage, Vector3 pos, Vector3 dir)
+    {
+        if (_bullets.Value <= 0) return;
+
+        _bullets.Value--;
+
+        if (Physics.Raycast(pos, dir, out RaycastHit hit)
+            && hit.transform.TryGetComponent(out PlayerHealth health))
         {
-            Debug.Log(hit.transform.name);
-            enemyHealth.TakeDamage(damageToGive);
+            health.TakeDamage(damage);
         }
     }
+
+    /// <summary>
+    /// Отправка на сервер запроса для спавна пикапа
+    /// </summary>
+    private void Drop()
+    {
+        if (!IsOwner) return;
+        DropServerRpc(transform.position, transform.rotation);
+    }
+
+    /// <summary>
+    /// Cпавн пикапа с сохранением кол-ва патрон.
+    /// </summary>
+    [ServerRpc]
+    private void DropServerRpc(Vector3 pos, Quaternion rot)
+    {
+        if (_playerController != null)
+            _playerController.UnequipWeapon();
+
+        NetworkObject pickup = Instantiate(revolverPickupPrefab, pos, rot);
+        NetworkManager.ServerManager.Spawn(pickup);
+
+        // передаём текущие патроны в пикап
+        pickup.GetComponent<RevolverPickup>().SetBullets(_bullets.Value);
+
+        NetworkObject.Despawn();
+    }
+
+
 }
