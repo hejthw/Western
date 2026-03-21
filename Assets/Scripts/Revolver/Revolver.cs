@@ -1,59 +1,107 @@
-using System;
 using FishNet.Object;
-using TMPro;
-using Steamworks;
 using UnityEngine;
 
 public class Revolver : NetworkBehaviour
 {
     public RevolverData revolverData;
-    [SerializeField] private PlayerInput input;
-    [SerializeField] private Transform muzzle; 
-    
+    [SerializeField] private Transform muzzle;
+    [SerializeField] private NetworkObject revolverPickupPrefab;
+
+    private PlayerInput _input;
+    private PlayerController _playerController;
     private float _fireTimer;
-
-    private void OnEnable()
-    {
-        input.OnAttackEvent += Shoot;
-    }
     
-    private void OnDisable()
+    // Revolver.cs
+    public void AttachToPlayer(PlayerController playerController)
     {
-        input.OnAttackEvent -= Shoot;
+        Debug.Log("[Server] AttachToPlayer вызван");
+        _playerController = playerController;
+        int playerObjId = playerController.GetComponent<NetworkObject>().ObjectId;
+        Debug.Log($"[Server] Отправляем AttachClientRpc с playerObjId: {playerObjId}");
+        AttachClientRpc(playerObjId);
     }
 
-    void Update()
+    [ObserversRpc(BufferLast = true)]
+    private void AttachClientRpc(int playerNetObjId)
     {
-        Delay();
-    }
-
-    private void Shoot()
-    {
-        if (!IsOwner)
-            return;
-
-        if (_fireTimer <= 0f)
+        if (!NetworkManager.ClientManager.Objects.Spawned.TryGetValue(
+                playerNetObjId, out NetworkObject playerNetObj))
         {
-            ShootServer(revolverData.damage, muzzle.position, muzzle.forward);
-            _fireTimer = revolverData.timeBeforeShot;
-            Debug.DrawRay(muzzle.position, muzzle.forward * 100f, Color.red, 2f);
+            Debug.LogError($"[Client] Объект с id {playerNetObjId} не найден!");
+            return;
+        }
+
+        var controller = playerNetObj.GetComponent<PlayerController>();
+        transform.SetParent(controller.weaponHoldPoint);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+
+        // Проверяем через владельца NetworkObject игрока, а не IsOwner оружия
+        bool isLocalPlayer = playerNetObj.IsOwner;
+        Debug.Log($"[Client] isLocalPlayer: {isLocalPlayer}");
+        if (!isLocalPlayer) return;
+
+        _input = playerNetObj.GetComponent<PlayerInput>();
+        Debug.Log($"[Client] PlayerInput найден: {_input != null}");
+
+        if (_input != null)
+        {
+            _input.OnAttackEvent += Shoot;
+            _input.OnDropEvent += Drop;
+            Debug.Log("[Client] Подписка выполнена");
         }
     }
 
-    private void Delay()
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        if (!IsOwner || _input == null) return;
+
+        _input.OnAttackEvent -= Shoot;
+        _input.OnDropEvent -= Drop;
+    }
+
+    private void Update()
     {
         if (_fireTimer > 0)
             _fireTimer -= Time.deltaTime;
     }
 
-    [ServerRpc]
-    private void ShootServer(int damageToGive, Vector3 position, Vector3 direction)
+    // Revolver.cs
+    private void Shoot()
     {
-        if (Physics.Raycast(position, direction, out RaycastHit hit)
-            && hit.transform.TryGetComponent(out PlayerHealth enemyHealth))
+        Debug.Log($"[Revolver] Shoot вызван. IsOwner: {IsOwner}, _fireTimer: {_fireTimer}");
+        if (!IsOwner || _fireTimer > 0f) return;
+        Debug.Log("[Revolver] Стреляем!");
+        ShootServerRpc(revolverData.damage, muzzle.position, muzzle.forward);
+        _fireTimer = revolverData.timeBeforeShot;
+        Debug.DrawRay(muzzle.position, muzzle.forward * 100f, Color.red, 2f);
+    }
+
+    private void Drop()
+    {
+        if (!IsOwner) return;
+        DropServerRpc(transform.position, transform.rotation);
+    }
+
+    [ServerRpc]
+    private void DropServerRpc(Vector3 pos, Quaternion rot)
+    {
+        if (_playerController != null)
+            _playerController.UnequipWeapon();
+
+        NetworkObject pickup = Instantiate(revolverPickupPrefab, pos, rot);
+        NetworkManager.ServerManager.Spawn(pickup);
+        NetworkObject.Despawn();
+    }
+
+    [ServerRpc]
+    private void ShootServerRpc(int damage, Vector3 pos, Vector3 dir)
+    {
+        if (Physics.Raycast(pos, dir, out RaycastHit hit)
+            && hit.transform.TryGetComponent(out PlayerHealth health))
         {
-            Debug.Log(hit.transform.name);
-            enemyHealth.TakeDamage(damageToGive);
+            health.TakeDamage(damage);
         }
     }
 }

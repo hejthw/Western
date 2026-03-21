@@ -11,6 +11,20 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] private PlayerInput input;
 
+    [SerializeField] public Transform weaponHoldPoint;
+
+    private Revolver _currentWeapon;
+    
+    public void EquipWeapon(Revolver weapon)
+    {
+        _currentWeapon = weapon;
+    }
+
+    public void UnequipWeapon()
+    {
+        _currentWeapon = null;
+    }
+
     void Awake()
     {
         physics = GetComponent<PlayerPhysics>();
