@@ -7,14 +7,18 @@ public class Lasso : MonoBehaviour
     public float throwSpeed = 35f;
     public float returnSpeed = 18f;
     public float pullSpeed = 12f;
+    public float yankImpulseForce = 25f;
 
     private Rigidbody rb;
     private LassoController controller;
 
-    private bool isFlying = false;
-    private bool isAttached = false;
-    private bool isReturning = false;
+    private bool isFlying;
+    private bool isReturning;
     private GameObject attachedTarget;
+
+    // ← Эти два поля теперь public
+    public bool isAttached;
+    public bool isLightObjectAttached;
 
     private FixedJoint currentJoint;
     private float throwTime;
@@ -23,7 +27,6 @@ public class Lasso : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         controller = GetComponentInParent<LassoController>();
-        if (controller == null) controller = FindObjectOfType<LassoController>();
     }
 
     public void Throw(Vector3 direction)
@@ -40,6 +43,7 @@ public class Lasso : MonoBehaviour
         isAttached = false;
         isReturning = false;
         attachedTarget = null;
+        isLightObjectAttached = false;
 
         if (currentJoint != null) Destroy(currentJoint);
     }
@@ -58,6 +62,7 @@ public class Lasso : MonoBehaviour
         {
             attachedTarget = collision.gameObject;
             isAttached = true;
+            isLightObjectAttached = attachedTarget.GetComponent<LightObject>() != null;
 
             rb.isKinematic = true;
             transform.position = collision.contacts[0].point;
@@ -81,17 +86,14 @@ public class Lasso : MonoBehaviour
         if (isReturning)
         {
             Vector3 dirToPlayer = controller.transform.position - transform.position;
-            float distance = dirToPlayer.magnitude;
-
-            if (distance < 1.5f)
+            if (dirToPlayer.sqrMagnitude < 2.25f)
             {
                 ReturnToPlayer();
                 return;
             }
-
             rb.linearVelocity = dirToPlayer.normalized * returnSpeed;
         }
-        else if (isAttached && Keyboard.current[Key.G].isPressed)
+        else if (isAttached && !isLightObjectAttached && Keyboard.current[Key.G].isPressed)
         {
             PullTowardsPlayer();
         }
@@ -105,12 +107,38 @@ public class Lasso : MonoBehaviour
         rb.MovePosition(transform.position + dirToPlayer.normalized * pullSpeed * Time.fixedDeltaTime);
     }
 
+    public void YankAndDetach()
+    {
+        if (!isAttached || attachedTarget == null) return;
+
+        isAttached = false;
+
+        if (currentJoint != null)
+        {
+            Destroy(currentJoint);
+            currentJoint = null;
+        }
+
+        if (isLightObjectAttached && attachedTarget.TryGetComponent<Rigidbody>(out Rigidbody targetRb))
+        {
+            Vector3 yankDir = (controller.transform.position - attachedTarget.transform.position).normalized;
+            targetRb.AddForce(yankDir * yankImpulseForce, ForceMode.Impulse);
+        }
+
+        ReturnToPlayer();
+    }
+
     private void ReturnToPlayer()
     {
         isReturning = false;
         isAttached = false;
+        isLightObjectAttached = false;
 
-        if (currentJoint != null) Destroy(currentJoint);
+        if (currentJoint != null)
+        {
+            Destroy(currentJoint);
+            currentJoint = null;
+        }
 
         rb.isKinematic = true;
         rb.linearVelocity = Vector3.zero;
@@ -127,13 +155,9 @@ public class Lasso : MonoBehaviour
     {
         if (!isAttached) return;
 
-        isAttached = false;
-        isReturning = true;
-
-        if (currentJoint != null)
-        {
-            Destroy(currentJoint);
-            currentJoint = null;
-        }
+        if (isLightObjectAttached)
+            YankAndDetach();
+        else
+            ReturnToPlayer();
     }
 }

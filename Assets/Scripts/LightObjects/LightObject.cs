@@ -1,27 +1,24 @@
-using UnityEngine;
+﻿using UnityEngine;
 using FishNet.Object;
 
 public class LightObject : NetworkBehaviour
 {
-    
-    public bool fragile = false;          
+    public bool fragile = false;
 
     private Rigidbody rb;
-    private NetworkObject netObj;
+    private bool wasThrown = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        netObj = GetComponent<NetworkObject>();
     }
 
-   
     public void OnPickup()
     {
         if (rb != null) rb.isKinematic = true;
+        wasThrown = false;
     }
 
-   
     public void OnThrow(Vector3 throwForce)
     {
         if (rb != null)
@@ -29,17 +26,16 @@ public class LightObject : NetworkBehaviour
             rb.isKinematic = false;
             rb.AddForce(throwForce, ForceMode.Impulse);
         }
-
-        if (fragile)
-        {
-            DespawnObject();
-        }
+        wasThrown = true;
     }
 
-    private void DespawnObject()
+    private void OnCollisionEnter(Collision collision)
     {
+        if (!wasThrown || !fragile) return;
+
+       
         if (IsServer)
-            netObj.Despawn();
+            GetComponent<NetworkObject>().Despawn();
         else
             DespawnServerRpc();
     }
@@ -47,7 +43,6 @@ public class LightObject : NetworkBehaviour
     [ServerRpc]
     private void DespawnServerRpc()
     {
-        if (netObj != null)
-            netObj.Despawn();
+        GetComponent<NetworkObject>().Despawn();
     }
 }
