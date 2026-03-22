@@ -13,6 +13,8 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] public Transform weaponHoldPoint;
 
+    private bool _isDied;
+
     private Revolver _currentWeapon;
     
     public void EquipWeapon(Revolver weapon)
@@ -35,11 +37,18 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable()
     {
         input.OnTestEvent += Test;
+        PlayerEvents.OnDeadEvent += DisableMovement;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
+        PlayerEvents.OnDeadEvent -= DisableMovement;
+    }
+
+    private void DisableMovement(bool isDead)
+    {
+        physics.enabled = !isDead;
     }
     
     public override void OnStartClient()

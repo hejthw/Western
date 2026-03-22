@@ -6,6 +6,8 @@ public static  class PlayerEvents
     
     public static event Action<float> OnLocalStaminaChange;
     
+    public static event Action<bool> OnDeadEvent;
+    
     public static void RaiseHealthChange(int amount)
     {
         OnLocalHealthChange?.Invoke(amount);
@@ -14,5 +16,10 @@ public static  class PlayerEvents
     public static void RaiseStaminaChange(float amount)
     {
         OnLocalStaminaChange?.Invoke(amount);
+    }
+
+    public static void RaiseDeadEvent(bool isDead)
+    {
+        OnDeadEvent?.Invoke(isDead);
     }
 }
