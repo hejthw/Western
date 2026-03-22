@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraData
   normalFov: 80
   sprintFov: 85
-  fovLerpDuration: 1
-  walkBobFrequency: 3
-  sprintBobFrequency: 4
+  fovLerpDuration: 0.3
+  walkBobFrequency: 4
+  sprintBobFrequency: 6
   walkBobAmplitude: 0.3
   sprintBobAmplitude: 0.55
   bobTransitionSpeed: 8
