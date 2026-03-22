@@ -1,7 +1,9 @@
+using System;
 using FishNet.Object;
 using UnityEngine;
 using FishNet.Object.Synchronizing;
 using System.Collections;
+using Random = UnityEngine.Random;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -12,6 +14,8 @@ public class PlayerHealth : NetworkBehaviour
 
     private readonly SyncVar<int> _health = new SyncVar<int>();
     private readonly SyncVar<bool> _isDead = new SyncVar<bool>();
+
+    
 
     public override void OnStartNetwork()
     {
@@ -105,12 +109,12 @@ public class PlayerHealth : NetworkBehaviour
 
     private void OnDied(bool asServer)
     {
-        //
+        PlayerEvents.RaiseDeadEvent(true);
     }
 
     private void OnRespawned(bool asServer)
     {
-        //
+        PlayerEvents.RaiseDeadEvent(false);
     }
 
     private Vector3 GetSpawnPosition()
