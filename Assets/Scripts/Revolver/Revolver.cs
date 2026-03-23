@@ -127,26 +127,24 @@ public class Revolver : NetworkBehaviour
     private void ShootServerRpc(int damage, Vector3 pos, Vector3 dir)
     {
         if (_bullets.Value <= 0) return;
+
         _bullets.Value--;
-        
-        RaycastHit[] hits = Physics.RaycastAll(pos, dir, Mathf.Infinity,
-            _hitboxMask, QueryTriggerInteraction.Collide);
 
-        if (hits.Length == 0) return;
-        
-        System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+        if (!Physics.Raycast(pos, dir, out RaycastHit hit, Mathf.Infinity, _hitboxMask)) return;
 
-        foreach (var hit in hits)
+        // Попали в хитбокс
+        if (hit.transform.TryGetComponent(out Hitbox hitbox))
         {
-            Debug.Log($"RaycastAll hit: {hit.transform.name} | Layer: {LayerMask.LayerToName(hit.transform.gameObject.layer)}");
-
-            if (hit.transform.TryGetComponent(out Hitbox hitbox))
-            {
-                int finalDamage = Mathf.RoundToInt(damage * hitbox.GetMultiplier());
-                hitbox.OwnerHealth.TakeDamage(finalDamage);
-                return;
-            }
+            int finalDamage = Mathf.RoundToInt(damage * hitbox.GetMultiplier());
+            hitbox.OwnerHealth.TakeDamage(finalDamage);
+            return;
         }
+
+        // // Фолбэк — попали в старый коллайдер напрямую (на случай переходного периода)
+        // if (hit.transform.TryGetComponent(out PlayerHealth health))
+        // {
+        //     health.TakeDamage(damage);
+        // }
     }
 
     /// <summary>
