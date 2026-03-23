@@ -130,8 +130,11 @@ public class Revolver : NetworkBehaviour
 
         _bullets.Value--;
 
-        if (!Physics.Raycast(pos, dir, out RaycastHit hit, Mathf.Infinity, _hitboxMask)) return;
+        if (!Physics.Raycast(pos, dir, out RaycastHit hit, Mathf.Infinity, _hitboxMask, QueryTriggerInteraction.Collide)) return;
 
+        
+        Debug.Log($"Hit: {hit.collider.gameObject.name} | Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+        
         // Попали в хитбокс
         if (hit.transform.TryGetComponent(out Hitbox hitbox))
         {
