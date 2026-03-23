@@ -130,11 +130,12 @@ public class Revolver : NetworkBehaviour
 
         _bullets.Value--;
 
-        if (!Physics.Raycast(pos, dir, out RaycastHit hit, Mathf.Infinity, _hitboxMask)) return;
+        if (!Physics.Raycast(pos, dir, out RaycastHit hit, Mathf.Infinity, _hitboxMask, QueryTriggerInteraction.Collide)) return;
 
         // Попали в хитбокс
         if (hit.transform.TryGetComponent(out Hitbox hitbox))
         {
+            Debug.Log(hit.transform.name);
             int finalDamage = Mathf.RoundToInt(damage * hitbox.GetMultiplier());
             hitbox.OwnerHealth.TakeDamage(finalDamage);
             return;
