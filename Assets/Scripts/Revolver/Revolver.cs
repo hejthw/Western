@@ -140,11 +140,11 @@ public class Revolver : NetworkBehaviour
             return;
         }
 
-        // Фолбэк — попали в старый коллайдер напрямую (на случай переходного периода)
-        if (hit.transform.TryGetComponent(out PlayerHealth health))
-        {
-            health.TakeDamage(damage);
-        }
+        // // Фолбэк — попали в старый коллайдер напрямую (на случай переходного периода)
+        // if (hit.transform.TryGetComponent(out PlayerHealth health))
+        // {
+        //     health.TakeDamage(damage);
+        // }
     }
 
     /// <summary>
