@@ -65,7 +65,7 @@ public class Revolver : NetworkBehaviour
         if (_input != null)
         {
             _input.OnAttackEvent += Shoot;
-            _input.OnDropEvent   += Drop;
+            _input.OnDropEvent += Drop;
         }
     }
 
@@ -83,7 +83,6 @@ public class Revolver : NetworkBehaviour
         _input.OnAttackEvent -= Shoot;
         _input.OnDropEvent -= Drop;
     }
-
     
     private void Update()
     {
@@ -102,7 +101,7 @@ public class Revolver : NetworkBehaviour
 
         _recoil?.AddRecoil();
 
-        Vector3 origin    = muzzle.position;
+        Vector3 origin = muzzle.position;
         Vector3 direction = muzzle.forward;
 
         ShootServerRpc(revolverData.damage, origin, direction);
@@ -127,27 +126,18 @@ public class Revolver : NetworkBehaviour
     private void ShootServerRpc(int damage, Vector3 pos, Vector3 dir)
     {
         if (_bullets.Value <= 0) return;
-
         _bullets.Value--;
-
+        
         if (!Physics.Raycast(pos, dir, out RaycastHit hit, Mathf.Infinity, _hitboxMask, QueryTriggerInteraction.Collide)) return;
-
         
-        Debug.Log($"Hit: {hit.collider.gameObject.name} | Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+        Debug.Log($"Hit: {hit.collider.gameObject.name}");
         
-        // Попали в хитбокс
-        if (hit.transform.TryGetComponent(out Hitbox hitbox))
-        {
-            int finalDamage = Mathf.RoundToInt(damage * hitbox.GetMultiplier());
-            hitbox.OwnerHealth.TakeDamage(finalDamage);
-            return;
-        }
+        // Hitbox.cs на родителе
+        var hitbox = hit.collider.GetComponentInParent<Hitbox>();
+        if (hitbox == null) return;
 
-        // // Фолбэк — попали в старый коллайдер напрямую (на случай переходного периода)
-        // if (hit.transform.TryGetComponent(out PlayerHealth health))
-        // {
-        //     health.TakeDamage(damage);
-        // }
+        int finalDamage = Mathf.RoundToInt(damage * hitbox.GetMultiplier());
+        hitbox.OwnerHealth.TakeDamage(finalDamage);
     }
 
     /// <summary>
@@ -176,6 +166,4 @@ public class Revolver : NetworkBehaviour
 
         NetworkObject.Despawn();
     }
-
-
 }
