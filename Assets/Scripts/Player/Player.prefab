@@ -441,8 +441,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.100451574, y: 0.05309185, z: 0.0053679994, w: 0.9935099}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.35359845, y: 0.14735036, z: 0.056511402, w: 0.92198837}
+  m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -519,7 +519,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: 6.1178017
+    Value: 18.16022
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -529,7 +529,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -11.546849
+    Value: -41.96536
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -2034,10 +2034,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.06700085
-  m_Height: 0.8209308
+  m_Radius: 0.22586203
+  m_Height: 1.6873356
   m_Direction: 1
-  m_Center: {x: -0.05204995, y: -0.4139331, z: -0.35176158}
+  m_Center: {x: -0.21091115, y: 0.019269466, z: -0.35176158}
 --- !u!114 &8433666430488224306
 MonoBehaviour:
   m_ObjectHideFlags: 0
