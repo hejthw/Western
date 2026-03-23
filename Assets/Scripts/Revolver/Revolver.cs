@@ -13,10 +13,17 @@ public class Revolver : NetworkBehaviour
     private float _fireTimer;
     private RevolverRecoil _recoil;
     
-    [SerializeField] private BulletTrail bulletTrailPrefab;  // добавить поле
+    private LayerMask _hitboxMask;
+    
+    [SerializeField] private BulletTrail bulletTrailPrefab;
     [SerializeField] private float trailMaxDistance = 100f; 
 
     private readonly SyncVar<int> _bullets = new SyncVar<int>(new SyncTypeSettings());
+    
+    private void Awake()
+    {
+        _hitboxMask = LayerMask.GetMask("Hitbox");
+    }
 
     /// <summary>Вызывается сервером из RevolverPickup для переноса патронов</summary>
     public void SetBullets(int count)
@@ -50,10 +57,9 @@ public class Revolver : NetworkBehaviour
         transform.localRotation = Quaternion.identity;
 
         if (!playerNetObj.IsOwner) return;
-
-        // Инициализируем отдачу через контроллер — камера берётся изнутри
+        
         _recoil = GetComponent<RevolverRecoil>();
-        _recoil?.Init(revolverData, controller);  // ← controller вместо Camera.main
+        _recoil?.Init(revolverData, controller);
 
         _input = playerNetObj.GetComponent<PlayerInput>();
         if (_input != null)
@@ -101,16 +107,14 @@ public class Revolver : NetworkBehaviour
 
         ShootServerRpc(revolverData.damage, origin, direction);
         _fireTimer = revolverData.timeBeforeShot;
-
-        // Трейл — только на клиенте, серверу не нужен
+        
         SpawnTrail(origin, direction);
     }
 
     private void SpawnTrail(Vector3 origin, Vector3 direction)
     {
         if (bulletTrailPrefab == null) return;
-
-        // Определяем точку попадания так же, как на сервере
+        
         Vector3 endPoint = Physics.Raycast(origin, direction, out RaycastHit hit, trailMaxDistance)
             ? hit.point
             : origin + direction * trailMaxDistance;
@@ -119,9 +123,6 @@ public class Revolver : NetworkBehaviour
         trail.Show(origin, endPoint);
     }
     
-    /// <summary>
-    /// Применяет Raycast на сервере
-    /// </summary>
     [ServerRpc]
     private void ShootServerRpc(int damage, Vector3 pos, Vector3 dir)
     {
@@ -129,8 +130,18 @@ public class Revolver : NetworkBehaviour
 
         _bullets.Value--;
 
-        if (Physics.Raycast(pos, dir, out RaycastHit hit)
-            && hit.transform.TryGetComponent(out PlayerHealth health))
+        if (!Physics.Raycast(pos, dir, out RaycastHit hit, Mathf.Infinity, _hitboxMask)) return;
+
+        // Попали в хитбокс
+        if (hit.transform.TryGetComponent(out Hitbox hitbox))
+        {
+            int finalDamage = Mathf.RoundToInt(damage * hitbox.GetMultiplier());
+            hitbox.OwnerHealth.TakeDamage(finalDamage);
+            return;
+        }
+
+        // Фолбэк — попали в старый коллайдер напрямую (на случай переходного периода)
+        if (hit.transform.TryGetComponent(out PlayerHealth health))
         {
             health.TakeDamage(damage);
         }

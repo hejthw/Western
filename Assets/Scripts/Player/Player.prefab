@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7635756975032730099}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3893533216122570917}
   - component: {fileID: 8167217220686844217}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HitboxHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,7 +131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1197285668554286959}
   - component: {fileID: 302193181318801680}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HitboxRightLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -670,7 +670,7 @@ GameObject:
   m_Component:
   - component: {fileID: 49917984252149227}
   - component: {fileID: 8423067534187238863}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HitboxLeftHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -725,7 +725,7 @@ GameObject:
   m_Component:
   - component: {fileID: 517394750337878378}
   - component: {fileID: 991236317219792814}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HitboxTorso
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1302,7 +1302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3453323292305759508}
   - component: {fileID: 5572108918758645262}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HitboxLeftLeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1917,7 +1917,7 @@ GameObject:
   m_Component:
   - component: {fileID: 89345230495589935}
   - component: {fileID: 2788779547050480921}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HitboxRightHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}

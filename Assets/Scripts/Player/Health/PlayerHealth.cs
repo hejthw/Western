@@ -14,9 +14,7 @@ public class PlayerHealth : NetworkBehaviour
 
     private readonly SyncVar<int> _health = new SyncVar<int>();
     private readonly SyncVar<bool> _isDead = new SyncVar<bool>();
-
     
-
     public override void OnStartNetwork()
     {
         base.OnStartNetwork();
