@@ -78,6 +78,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3893533216122570917}
   - component: {fileID: 8167217220686844217}
+  - component: {fileID: 7163304290275713824}
   m_Layer: 6
   m_Name: HitboxHead
   m_TagString: Untagged
@@ -121,6 +122,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.21462849, y: 0.2637713, z: 0.22517109}
   m_Center: {x: 0.0058305413, y: -0.36811435, z: 0.38741446}
+--- !u!114 &7163304290275713824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1846419054402922373}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14134dc7e28483b99dc54ee0a588abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hitbox
+  hitboxType: 0
+  ownerHealth: {fileID: 6462810797751770924}
 --- !u!1 &2036903984489868689
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +146,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1197285668554286959}
   - component: {fileID: 302193181318801680}
+  - component: {fileID: 8554521574257840777}
   m_Layer: 6
   m_Name: HitboxRightLeg
   m_TagString: Untagged
@@ -176,6 +192,20 @@ CapsuleCollider:
   m_Height: 1.0461977
   m_Direction: 1
   m_Center: {x: 0.24603847, y: -0.38000834, z: 0}
+--- !u!114 &8554521574257840777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036903984489868689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14134dc7e28483b99dc54ee0a588abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hitbox
+  hitboxType: 3
+  ownerHealth: {fileID: 6462810797751770924}
 --- !u!1 &2833332934280891694
 GameObject:
   m_ObjectHideFlags: 0
@@ -670,6 +700,7 @@ GameObject:
   m_Component:
   - component: {fileID: 49917984252149227}
   - component: {fileID: 8423067534187238863}
+  - component: {fileID: 8492802040263819317}
   m_Layer: 6
   m_Name: HitboxLeftHand
   m_TagString: Untagged
@@ -715,6 +746,20 @@ CapsuleCollider:
   m_Height: 0.8209308
   m_Direction: 1
   m_Center: {x: -0.05204995, y: -0.4139331, z: -0.35176158}
+--- !u!114 &8492802040263819317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5116922595024775588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14134dc7e28483b99dc54ee0a588abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hitbox
+  hitboxType: 2
+  ownerHealth: {fileID: 6462810797751770924}
 --- !u!1 &5327568027396607055
 GameObject:
   m_ObjectHideFlags: 0
@@ -725,6 +770,7 @@ GameObject:
   m_Component:
   - component: {fileID: 517394750337878378}
   - component: {fileID: 991236317219792814}
+  - component: {fileID: 3476688100235659529}
   m_Layer: 6
   m_Name: HitboxTorso
   m_TagString: Untagged
@@ -768,6 +814,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.41365325, y: 0.58029115, z: 0.29216385}
   m_Center: {x: -0.004827231, y: -0.39624852, z: 0.42091084}
+--- !u!114 &3476688100235659529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5327568027396607055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14134dc7e28483b99dc54ee0a588abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hitbox
+  hitboxType: 1
+  ownerHealth: {fileID: 6462810797751770924}
 --- !u!1 &5375274108382611991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1302,6 +1362,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3453323292305759508}
   - component: {fileID: 5572108918758645262}
+  - component: {fileID: 5984517137854520504}
   m_Layer: 6
   m_Name: HitboxLeftLeg
   m_TagString: Untagged
@@ -1347,6 +1408,20 @@ CapsuleCollider:
   m_Height: 1.0461977
   m_Direction: 1
   m_Center: {x: 0.24603847, y: -0.38000834, z: 0}
+--- !u!114 &5984517137854520504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6741484574031347934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14134dc7e28483b99dc54ee0a588abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hitbox
+  hitboxType: 3
+  ownerHealth: {fileID: 6462810797751770924}
 --- !u!1 &7075362909638396278
 GameObject:
   m_ObjectHideFlags: 0
@@ -1917,6 +1992,7 @@ GameObject:
   m_Component:
   - component: {fileID: 89345230495589935}
   - component: {fileID: 2788779547050480921}
+  - component: {fileID: 8433666430488224306}
   m_Layer: 6
   m_Name: HitboxRightHand
   m_TagString: Untagged
@@ -1962,6 +2038,20 @@ CapsuleCollider:
   m_Height: 0.8209308
   m_Direction: 1
   m_Center: {x: -0.05204995, y: -0.4139331, z: -0.35176158}
+--- !u!114 &8433666430488224306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7766854876694965244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14134dc7e28483b99dc54ee0a588abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hitbox
+  hitboxType: 2
+  ownerHealth: {fileID: 6462810797751770924}
 --- !u!1001 &421283244982108841
 PrefabInstance:
   m_ObjectHideFlags: 0
