@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: fae5d135cbef698ee8793c2b38442e6a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -179,7 +179,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: fae5d135cbef698ee8793c2b38442e6a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -322,7 +322,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: fae5d135cbef698ee8793c2b38442e6a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -410,8 +410,8 @@ GameObject:
   - component: {fileID: 8413722035173566249}
   - component: {fileID: 5411739868912013025}
   - component: {fileID: 2187101919937094104}
-  - component: {fileID: 6312234268889286714}
   - component: {fileID: 6220897268445605181}
+  - component: {fileID: -6165799545388264745}
   m_Layer: 3
   m_Name: RevolverPickup
   m_TagString: Grabbable
@@ -468,7 +468,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 4
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 4901004164235315853
+  <AssetPathHash>k__BackingField: 17208747199809621164
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 3.12, y: 2.51, z: -5.44}
@@ -483,7 +483,7 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 2187101919937094104}
-  - {fileID: 6312234268889286714}
+  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -538,23 +538,6 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 8413722035173566249}
   _networkObjectCache: {fileID: 8413722035173566249}
   fragile: 0
---- !u!114 &6312234268889286714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6823838371541301684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0f76545f871c4cc4bad7f2a8e35abf46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RevolverPickup
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 8413722035173566249}
-  _networkObjectCache: {fileID: 8413722035173566249}
-  revolverWeaponPrefab: {fileID: 7630292203656044341, guid: 8e71e9f88a4be6fea8f26343c04417e3, type: 3}
-  revolverData: {fileID: 11400000, guid: e2d994d400840eb18a2f9b484a48b590, type: 2}
 --- !u!65 &6220897268445605181
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -576,3 +559,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.1543884, y: 2.4969115, z: 20.070066}
   m_Center: {x: 0.10140467, y: -0.019033749, z: -0.58383465}
+--- !u!114 &-6165799545388264745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6823838371541301684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cc261748dd443538e05525517fc4c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RevolverPickupProj
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8413722035173566249}
+  _networkObjectCache: {fileID: 0}
+  revolverWeaponPrefab: {fileID: 7630292203656044341, guid: d13e2ab1dc41b84b188358e6be240470, type: 3}
+  revolverData: {fileID: 11400000, guid: e2d994d400840eb18a2f9b484a48b590, type: 2}

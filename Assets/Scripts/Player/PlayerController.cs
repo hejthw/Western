@@ -1,5 +1,6 @@
 using FishNet.Object;
 using Unity.Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : NetworkBehaviour
@@ -16,15 +17,32 @@ public class PlayerController : NetworkBehaviour
     private bool _isDied;
 
     private Revolver _currentWeapon;
+    private RevolverProjectile _currentGun;
+    
+    public bool IsArmed {get ; private set;}
+    
+    public void EquipGun(RevolverProjectile weapon)
+    {
+        _currentGun = weapon;
+        IsArmed = true;
+    }
+
+    public void UnequipGun()
+    {
+        _currentGun = null;
+        IsArmed = false;
+    }
     
     public void EquipWeapon(Revolver weapon)
     {
         _currentWeapon = weapon;
+        IsArmed = true;
     }
 
     public void UnequipWeapon()
     {
         _currentWeapon = null;
+        IsArmed = false;
     }
 
     void Awake()
