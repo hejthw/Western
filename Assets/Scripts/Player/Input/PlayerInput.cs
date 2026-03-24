@@ -20,6 +20,7 @@ public class PlayerInput : MonoBehaviour
     public event Action OnAttackEvent;
     public event Action OnPickupEvent;
     public event Action OnDropEvent;
+    public event Action<int> OnSlotKeyPressed;
 
     public void OnMove(InputValue value) => MoveInput = value.Get<Vector2>();
 
@@ -66,4 +67,19 @@ public class PlayerInput : MonoBehaviour
         if (value.Get<float>() > 0.5f)
             OnDropEvent?.Invoke();
     }
+    public void OnSlot1(InputValue value)
+    {
+        if (value.Get<float>() > 0.5f) OnSlotKeyPressed?.Invoke(0);
+    }
+
+    public void OnSlot2(InputValue value)
+    {
+        if (value.Get<float>() > 0.5f) OnSlotKeyPressed?.Invoke(1);
+    }
+
+    public void OnSlot3(InputValue value)
+    {
+        if (value.Get<float>() > 0.5f) OnSlotKeyPressed?.Invoke(2);
+    }
+
 }

@@ -40,6 +40,19 @@ public class LightObject : NetworkBehaviour
             DespawnServerRpc();
     }
 
+    public byte[] SaveState()
+    {
+        return new byte[] { (byte)(fragile ? 1 : 0) };
+    }
+
+    public void LoadState(byte[] state)
+    {
+        if (state != null && state.Length > 0)
+            fragile = state[0] == 1;
+        else
+            fragile = false;
+    }
+
     [ServerRpc]
     private void DespawnServerRpc()
     {
