@@ -10,13 +10,11 @@ public class PlayerHealth : NetworkBehaviour
     [SerializeField] private int maxHealth = 100;
     [SerializeField] private float respawnDelay = 3f;
     [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private GameObject _localUI;
+    [SerializeField] private GameObject localUI;
 
     private readonly SyncVar<int> _health = new SyncVar<int>();
     private readonly SyncVar<bool> _isDead = new SyncVar<bool>();
-
     
-
     public override void OnStartNetwork()
     {
         base.OnStartNetwork();
@@ -34,7 +32,7 @@ public class PlayerHealth : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-        _localUI.SetActive(IsOwner);
+        localUI.SetActive(IsOwner);
     }
 
     private void OnHealthChanged(int prev, int next, bool asServer)
@@ -109,12 +107,12 @@ public class PlayerHealth : NetworkBehaviour
 
     private void OnDied(bool asServer)
     {
-        PlayerEvents.RaiseDeadEvent(true);
+        if (IsOwner) PlayerEvents.RaiseDeadEvent(true);
     }
 
     private void OnRespawned(bool asServer)
     {
-        PlayerEvents.RaiseDeadEvent(false);
+        if (IsOwner) PlayerEvents.RaiseDeadEvent(false);
     }
 
     private Vector3 GetSpawnPosition()

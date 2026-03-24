@@ -13,10 +13,17 @@ public class Revolver : NetworkBehaviour
     private float _fireTimer;
     private RevolverRecoil _recoil;
     
-    [SerializeField] private BulletTrail bulletTrailPrefab;  // добавить поле
+    private LayerMask _hitboxMask;
+    
+    [SerializeField] private BulletTrail bulletTrailPrefab;
     [SerializeField] private float trailMaxDistance = 100f; 
 
     private readonly SyncVar<int> _bullets = new SyncVar<int>(new SyncTypeSettings());
+    
+    private void Awake()
+    {
+        _hitboxMask = LayerMask.GetMask("Hitbox");
+    }
 
     /// <summary>Вызывается сервером из RevolverPickup для переноса патронов</summary>
     public void SetBullets(int count)
@@ -50,16 +57,15 @@ public class Revolver : NetworkBehaviour
         transform.localRotation = Quaternion.identity;
 
         if (!playerNetObj.IsOwner) return;
-
-        // Инициализируем отдачу через контроллер — камера берётся изнутри
+        
         _recoil = GetComponent<RevolverRecoil>();
-        _recoil?.Init(revolverData, controller);  // ← controller вместо Camera.main
+        _recoil?.Init(revolverData, controller);
 
         _input = playerNetObj.GetComponent<PlayerInput>();
         if (_input != null)
         {
             _input.OnAttackEvent += Shoot;
-            _input.OnDropEvent   += Drop;
+            _input.OnDropEvent += Drop;
         }
     }
 
@@ -77,7 +83,6 @@ public class Revolver : NetworkBehaviour
         _input.OnAttackEvent -= Shoot;
         _input.OnDropEvent -= Drop;
     }
-
     
     private void Update()
     {
@@ -96,21 +101,19 @@ public class Revolver : NetworkBehaviour
 
         _recoil?.AddRecoil();
 
-        Vector3 origin    = muzzle.position;
+        Vector3 origin = muzzle.position;
         Vector3 direction = muzzle.forward;
 
         ShootServerRpc(revolverData.damage, origin, direction);
         _fireTimer = revolverData.timeBeforeShot;
-
-        // Трейл — только на клиенте, серверу не нужен
+        
         SpawnTrail(origin, direction);
     }
 
     private void SpawnTrail(Vector3 origin, Vector3 direction)
     {
         if (bulletTrailPrefab == null) return;
-
-        // Определяем точку попадания так же, как на сервере
+        
         Vector3 endPoint = Physics.Raycast(origin, direction, out RaycastHit hit, trailMaxDistance)
             ? hit.point
             : origin + direction * trailMaxDistance;
@@ -119,21 +122,22 @@ public class Revolver : NetworkBehaviour
         trail.Show(origin, endPoint);
     }
     
-    /// <summary>
-    /// Применяет Raycast на сервере
-    /// </summary>
     [ServerRpc]
     private void ShootServerRpc(int damage, Vector3 pos, Vector3 dir)
     {
         if (_bullets.Value <= 0) return;
-
         _bullets.Value--;
+        
+        if (!Physics.Raycast(pos, dir, out RaycastHit hit, Mathf.Infinity, _hitboxMask, QueryTriggerInteraction.Collide)) return;
+        
+        Debug.Log($"Hit: {hit.collider.gameObject.name}");
+        
+        // Hitbox.cs на родителе
+        var hitbox = hit.collider.GetComponentInParent<Hitbox>();
+        if (hitbox == null) return;
 
-        if (Physics.Raycast(pos, dir, out RaycastHit hit)
-            && hit.transform.TryGetComponent(out PlayerHealth health))
-        {
-            health.TakeDamage(damage);
-        }
+        int finalDamage = Mathf.RoundToInt(damage * hitbox.GetMultiplier());
+        hitbox.OwnerHealth.TakeDamage(finalDamage);
     }
 
     /// <summary>
@@ -162,6 +166,4 @@ public class Revolver : NetworkBehaviour
 
         NetworkObject.Despawn();
     }
-
-
 }

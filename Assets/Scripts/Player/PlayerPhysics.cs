@@ -5,7 +5,6 @@ using UnityEngine;
 /// Класс, отвечающий за RigidBody и его логику.
 /// </summary>
 
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerPhysics : MonoBehaviour
 {
     [SerializeField] private PlayerMovementData data;
@@ -15,7 +14,7 @@ public class PlayerPhysics : MonoBehaviour
     
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerInput input;
-    [SerializeField] private CapsuleCollider col;
+    [SerializeField] private Collider col;
     
     private Player _player;
     
@@ -100,16 +99,16 @@ public class PlayerPhysics : MonoBehaviour
 
     private void Crouch()
     {
-        if (input.CrouchHeld)
-        {
-            col.height = 1f;
-            col.center = new Vector3(0f, 0.5f, 0f);
-        }
-        else
-        {
-            col.height = 2f;
-            col.center = new Vector3(0f, 0f, 0f);
-        }
+        // if (input.CrouchHeld)
+        // {
+        //     col.height = 1f;
+        //     col.center = new Vector3(0f, 0.5f, 0f);
+        // }
+        // else
+        // {
+        //     col.height = 2f;
+        //     col.center = new Vector3(0f, 0f, 0f);
+        // }
     }
 
     // public void AddExternalForce(Vector3 force, ForceMode mode = ForceMode.Impulse)
