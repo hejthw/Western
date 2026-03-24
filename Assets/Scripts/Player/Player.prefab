@@ -1700,7 +1700,7 @@ MonoBehaviour:
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
+  WasActiveDuringEdit: 1
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
@@ -1903,7 +1903,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4737990210302664583}
   holdPoint: {fileID: 6083787823477241146}
   throwForce: 12
-  pickupDistance: 5
+  pickupDistance: 2
   pickupLayer:
     serializedVersion: 2
     m_Bits: 8

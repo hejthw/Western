@@ -43,9 +43,10 @@ public class RevolverPickup : NetworkBehaviour, IPickupable
         var playerController = player.GetComponent<PlayerController>();
         if (playerController == null) 
         {
-            Debug.LogError("PlayerController не найден!"); 
             return; 
         }
+
+        if (playerController.IsArmed) return;
 
         var playerNetObj = player.GetComponent<NetworkObject>();
 
@@ -63,7 +64,7 @@ public class RevolverPickup : NetworkBehaviour, IPickupable
         revolver.SetBullets(_bullets.Value);
         revolver.AttachToPlayer(playerController);
         playerController.EquipWeapon(revolver);
-
+        
         NetworkObject.Despawn();
     }
     
