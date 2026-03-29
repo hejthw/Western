@@ -53,8 +53,9 @@ public class PlayerInput : MonoBehaviour
     
     public void OnTestAction(InputValue value)
     {
-        OnTestEvent?.Invoke();
+        PlayerEvents.RaiseTestEvent();
     }
+    
     public void OnPickup(InputValue value)
     {
         if (value.Get<float>() > 0.5f)

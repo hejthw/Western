@@ -9,6 +9,12 @@ public static  class PlayerEvents
     public static event Action<bool> OnDeadEvent;
     
     public static event Action<bool> OnKnockoutEvent;
+    public static event Action TestEvent;
+
+    public static void RaiseTestEvent()
+    {
+        TestEvent?.Invoke();
+    }
     
     public static void RaiseHealthChange(int amount)
     {
