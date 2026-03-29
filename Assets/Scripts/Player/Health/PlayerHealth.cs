@@ -13,6 +13,7 @@ public class PlayerHealth : NetworkBehaviour
     [SerializeField] private GameObject localUI;
 
     private readonly SyncVar<int> _health = new SyncVar<int>();
+    private readonly SyncVar<bool> _isKnockout = new SyncVar<bool>();
     private readonly SyncVar<bool> _isDead = new SyncVar<bool>();
     
     public override void OnStartNetwork()
@@ -21,6 +22,7 @@ public class PlayerHealth : NetworkBehaviour
 
         _health.OnChange += OnHealthChanged;
         _isDead.OnChange += OnDeadChanged;
+        _isKnockout.OnChange += OnKnockoutChanged;
 
         if (IsServerInitialized)
         {
@@ -42,12 +44,24 @@ public class PlayerHealth : NetworkBehaviour
         PlayerEvents.RaiseHealthChange(next);
     }
 
+    private void OnKnockoutChanged(bool prev, bool next, bool asServer)
+    {
+        if (!IsOwner) return;
+        
+        if (next)
+            PlayerEvents.RaiseKnockoutEvent(true);
+        else 
+            PlayerEvents.RaiseKnockoutEvent(false);
+    }
+
     private void OnDeadChanged(bool prev, bool next, bool asServer)
     {
+        if (!IsOwner) return;
+        
         if (next)
-            OnDied(asServer);
+            PlayerEvents.RaiseDeadEvent(true);
         else
-            OnRespawned(asServer);
+            PlayerEvents.RaiseDeadEvent(false);
     }
 
     [Server]
@@ -58,7 +72,7 @@ public class PlayerHealth : NetworkBehaviour
         _health.Value -= amount;
 
         if (_health.Value <= 0)
-            Die();
+            _isKnockout.Value = true;
     }
 
     [Server]
@@ -104,16 +118,7 @@ public class PlayerHealth : NetworkBehaviour
         transform.position = position;
         Debug.Log($"{gameObject.name} respawned at {position}");
     }
-
-    private void OnDied(bool asServer)
-    {
-        if (IsOwner) PlayerEvents.RaiseDeadEvent(true);
-    }
-
-    private void OnRespawned(bool asServer)
-    {
-        if (IsOwner) PlayerEvents.RaiseDeadEvent(false);
-    }
+    
 
     private Vector3 GetSpawnPosition()
     {

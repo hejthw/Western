@@ -20,7 +20,7 @@ public class PlayerHealthView : MonoBehaviour
         if (health != 0)
             HealthText.text = $"Health: {health.ToString()}";
         else
-            HealthText.text = "You are Dead!";
+            HealthText.text = "Knockout!";
     }
     
 }

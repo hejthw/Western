@@ -1,3 +1,4 @@
+using System.Collections;
 using FishNet.Object;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
@@ -13,9 +14,14 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private PlayerInput input;
 
     [SerializeField] public Transform weaponHoldPoint;
-
+    
+    // вынести отсюда
+    private Rigidbody rb;
+    private PlayerRotate playerRotate;
+    [SerializeField] private float kinematicDelay = 4f;
+    
     private bool _isDied;
-
+    
     private Revolver _currentWeapon;
     private RevolverProjectile _currentGun;
     
@@ -50,23 +56,41 @@ public class PlayerController : NetworkBehaviour
         physics = GetComponent<PlayerPhysics>();
         health = GetComponent<PlayerHealth>();
         input = GetComponent<PlayerInput>();
+        rb = GetComponent<Rigidbody>();
+        playerRotate = GetComponent<PlayerRotate>();
+        
     }
 
     private void OnEnable()
     {
         input.OnTestEvent += Test;
-        PlayerEvents.OnDeadEvent += DisableMovement;
+        PlayerEvents.OnKnockoutEvent += DisableMovement;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
-        PlayerEvents.OnDeadEvent -= DisableMovement;
+        PlayerEvents.OnKnockoutEvent -= DisableMovement;
     }
 
+    // вынести отсюда
     private void DisableMovement(bool isDead)
     {
         physics.enabled = !isDead;
+        rb.freezeRotation = !isDead;
+        playerRotate.enabled = !isDead;
+
+        if (isDead)
+            StartCoroutine(EnableKinematicDelayed());
+        else
+            rb.isKinematic = false;
+    }
+
+    // вынести отсюда
+    private IEnumerator EnableKinematicDelayed()
+    {
+        yield return new WaitForSeconds(kinematicDelay);
+        rb.isKinematic = true;
     }
     
     public override void OnStartClient()
