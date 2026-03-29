@@ -37,26 +37,17 @@ public class KnockoutView : MonoBehaviour
     private void OnEnable()
     {
         PlayerEvents.NextTargetEvent += OnNextTarget;
-        PlayerEvents.OnKnockoutEvent += OnKnockout;
+        PlayerEvents.PrevTargetEvent += OnPrevTarget;
     }
 
     private void OnDisable()
     {
-        PlayerEvents.PrevTargetEvent -= OnNextTarget;
-        PlayerEvents.OnKnockoutEvent -= OnKnockout;
+        PlayerEvents.NextTargetEvent -= OnNextTarget;
+        PlayerEvents.PrevTargetEvent -= OnPrevTarget;
     }
 
-    private void OnNextTarget()
-    {
-        if (!_isInKnockout) return;
-        CycleTarget(1);
-    }
-
-    private void OnPrevTarget()
-    {
-        if (!_isInKnockout) return;
-        CycleTarget(-1);
-    }
+    private void OnNextTarget() => CycleTarget(1);
+    private void OnPrevTarget() => CycleTarget(-1);
 
     private void LateUpdate()
     {
