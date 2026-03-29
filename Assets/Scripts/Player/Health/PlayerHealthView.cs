@@ -17,7 +17,9 @@ public class PlayerHealthView : MonoBehaviour
 
     private void HandleHealthChange(int health)
     {
-        if (health != 0)
+        if (health == -1)
+            HealthText.text = "Dead";
+        else if (health != 0)
             HealthText.text = $"Health: {health.ToString()}";
         else
             HealthText.text = "Knockout!";

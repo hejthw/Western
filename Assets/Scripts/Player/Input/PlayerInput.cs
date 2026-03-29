@@ -13,21 +13,21 @@ public class PlayerInput : MonoBehaviour
     public bool SprintHeld { get; private set; }
     public bool CrouchHeld { get ; private set;}
     
-    public bool isKnockout { get ; private set ; }
+    public bool isDead { get ; private set ; }
 
     private void OnEnable()
     {
-        PlayerEvents.OnKnockoutEvent += bred;
+        PlayerEvents.OnDeadEvent += bred;
     }
 
     private void OnDisable()
     {
-        PlayerEvents.OnKnockoutEvent -= bred;
+        PlayerEvents.OnDeadEvent -= bred;
     }
 
     private void bred(bool a)
     {
-        isKnockout = a;
+        isDead = a;
     }
     
     public event Action JumpPressedEvent;
@@ -61,7 +61,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (value.Get<float>() > 0.5f)
         {
-            if (isKnockout)
+            if (isDead)
                 PlayerEvents.RaisePrevTargetEvent();
             else OnAttackEvent?.Invoke();
         }

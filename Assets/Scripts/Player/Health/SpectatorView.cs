@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Cinemachine;
 using System.Collections.Generic;
 
-public class KnockoutView : MonoBehaviour
+public class SpectatorView : MonoBehaviour
 {
     [SerializeField] private CinemachineCamera firstPersonCamera;
     [SerializeField] private CinemachineCamera knockoutCamera;
@@ -15,7 +15,6 @@ public class KnockoutView : MonoBehaviour
     
     [SerializeField] private Transform _knockoutPivot;
     
-    // Тег для поиска игроков на сцене
     [SerializeField] private string playerTag = "Player";
     
     private Transform _knockoutJoint;

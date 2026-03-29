@@ -3,6 +3,7 @@ using FishNet.Object;
 using UnityEngine;
 using FishNet.Object.Synchronizing;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using Random = UnityEngine.Random;
 
 public class PlayerHealth : NetworkBehaviour
@@ -98,7 +99,7 @@ public class PlayerHealth : NetworkBehaviour
     private void Death()
     {
         _isDead.Value = true;
-        _health.Value = 0;
+        _health.Value = -1;
     }
     
     [Server]
