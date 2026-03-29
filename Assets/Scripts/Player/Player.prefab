@@ -2124,7 +2124,7 @@ MonoBehaviour:
   health: {fileID: 6462810797751770924}
   input: {fileID: 2479261188838793012}
   weaponHoldPoint: {fileID: 6787961388630782479}
-  kinematicDelay: 1
+  kinematicDelay: 5
 --- !u!114 &2479261188838793012
 MonoBehaviour:
   m_ObjectHideFlags: 0
