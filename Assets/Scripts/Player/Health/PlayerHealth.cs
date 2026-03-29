@@ -8,7 +8,8 @@ using Random = UnityEngine.Random;
 public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private int maxHealth = 100;
-    [SerializeField] private float respawnDelay = 3f;
+    [SerializeField] private float respawnDelay = 50f;
+    [SerializeField] private float  knockoutDelay = 15f;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private GameObject localUI;
 
@@ -47,9 +48,11 @@ public class PlayerHealth : NetworkBehaviour
     private void OnKnockoutChanged(bool prev, bool next, bool asServer)
     {
         if (!IsOwner) return;
-        
+
         if (next)
+        {
             PlayerEvents.RaiseKnockoutEvent(true);
+        }
         else 
             PlayerEvents.RaiseKnockoutEvent(false);
     }
@@ -72,29 +75,34 @@ public class PlayerHealth : NetworkBehaviour
         _health.Value -= amount;
 
         if (_health.Value <= 0)
-            _isKnockout.Value = true;
+            Knockout();
     }
 
     [Server]
-    private void Die()
+    private void Knockout()
     {
         _health.Value = 0;
-        _isDead.Value = true;
-
-        RpcOnDied();
-
-        StartCoroutine(RespawnCoroutine());
+        _isKnockout.Value = true;
+        
+        StartCoroutine(KnockoutCoroutine());
     }
-
-    [ObserversRpc]
-    private void RpcOnDied()
+    
+    [Server]
+    private IEnumerator KnockoutCoroutine()
     {
-        // Визуальная реакция на смерть — отключение модели, эффект и т.д.
-        Debug.Log($"{gameObject.name} died");
+        yield return new WaitForSeconds(knockoutDelay);
+        Death();
     }
 
     [Server]
-    private IEnumerator RespawnCoroutine()
+    private void Death()
+    {
+        _isDead.Value = true;
+        _health.Value = 0;
+    }
+    
+    [Server]
+    private IEnumerator DeadCoroutine()
     {
         yield return new WaitForSeconds(respawnDelay);
         Respawn();
@@ -107,7 +115,7 @@ public class PlayerHealth : NetworkBehaviour
         transform.position = spawnPos;
 
         _health.Value = maxHealth;
-        _isDead.Value = false;
+        _isKnockout.Value = false;
 
         RpcOnRespawned(spawnPos);
     }
