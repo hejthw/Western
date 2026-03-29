@@ -9,11 +9,17 @@ public static  class PlayerEvents
     public static event Action<bool> OnDeadEvent;
     
     public static event Action<bool> OnKnockoutEvent;
-    public static event Action TestEvent;
+    public static event Action NextTargetEvent;
+    public static event Action PrevTargetEvent;
 
-    public static void RaiseTestEvent()
+    public static void RaiseNextTargetEvent()
     {
-        TestEvent?.Invoke();
+        NextTargetEvent?.Invoke();
+    }
+
+    public static void RaisePrevTargetEvent()
+    {
+        PrevTargetEvent?.Invoke();
     }
     
     public static void RaiseHealthChange(int amount)
