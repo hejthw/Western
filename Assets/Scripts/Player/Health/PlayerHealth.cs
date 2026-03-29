@@ -4,13 +4,14 @@ using UnityEngine;
 using FishNet.Object.Synchronizing;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 
 public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private int maxHealth = 100;
-    [SerializeField] private float respawnDelay = 50f;
-    [SerializeField] private float  knockoutDelay = 15f;
+    [SerializeField] private float respawnDelay = 40f;
+    [SerializeField] private float  knockoutDelay = 5f;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private GameObject localUI;
 
@@ -100,6 +101,8 @@ public class PlayerHealth : NetworkBehaviour
     {
         _isDead.Value = true;
         _health.Value = -1;
+        
+        StartCoroutine(DeadCoroutine());
     }
     
     [Server]
