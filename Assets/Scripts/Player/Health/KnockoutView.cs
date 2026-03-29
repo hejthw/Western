@@ -36,12 +36,14 @@ public class KnockoutView : MonoBehaviour
     
     private void OnEnable()
     {
+        PlayerEvents.OnKnockoutEvent +=  OnKnockout;
         PlayerEvents.NextTargetEvent += OnNextTarget;
         PlayerEvents.PrevTargetEvent += OnPrevTarget;
     }
 
     private void OnDisable()
     {
+        PlayerEvents.OnKnockoutEvent -=  OnKnockout;
         PlayerEvents.NextTargetEvent -= OnNextTarget;
         PlayerEvents.PrevTargetEvent -= OnPrevTarget;
     }
