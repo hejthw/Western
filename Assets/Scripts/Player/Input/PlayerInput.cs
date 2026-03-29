@@ -71,7 +71,7 @@ public class PlayerInput : MonoBehaviour
     {
         if (value.Get<float>() > 0.5f)
         {
-            PlayerEvents.RaiseNextTargetEvent();
+            if (isDead) PlayerEvents.RaiseNextTargetEvent();
         }
     }
 
