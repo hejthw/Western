@@ -109,8 +109,6 @@ public class PickupController : NetworkBehaviour
         heldObject = null;
         lightObjectScript = null;
     }
-
-    // Метод для автоматического взятия предмета (используется инвентарём)
     public void PickupItem(GameObject item)
     {
         if (heldObject != null) return;
@@ -125,26 +123,24 @@ public class PickupController : NetworkBehaviour
         }
     }
 
-    // Сохранить предмет в инвентарь
     private void StoreCurrentObjectToSlot(int slot)
     {
         if (heldObject == null) return;
         LightObject lightObj = heldObject.GetComponent<LightObject>();
         if (lightObj == null) return;
-
         NetworkObject netObj = heldObject.GetComponent<NetworkObject>();
         if (netObj == null) return;
-
-        int prefabId = netObj.PrefabId;
-        inventory.ServerStoreItem(slot, prefabId);
-
-        // Деспавним объект
+        int prefabId = netObj.PrefabId; 
+        byte[] state = null;
+        if (heldObject.TryGetComponent(out ISavableItem savable))
+            state = savable.SaveState();
+        inventory.ServerStoreItem(slot, prefabId, state);
         NetworkObject.Despawn(netObj);
         heldObject = null;
         lightObjectScript = null;
     }
 
-    // Достать предмет из инвентаря
+    
     private void EquipFromSlot(int slot)
     {
         if (inventory.IsSlotEmpty(slot)) return;

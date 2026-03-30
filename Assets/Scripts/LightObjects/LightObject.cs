@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using FishNet.Object;
 
-public class LightObject : NetworkBehaviour
+public class LightObject : NetworkBehaviour, ISavableItem
 {
     public bool fragile = false;
 

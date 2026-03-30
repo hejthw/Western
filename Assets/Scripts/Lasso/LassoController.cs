@@ -13,6 +13,11 @@ public class LassoController : MonoBehaviour
 
     private GameObject lasso;
     private Lasso lassoScript;
+    private Rigidbody playerRigidbody;
+    private PlayerController playerController;
+
+    private bool isPullingToUnMovable = false;
+    private bool isHanging = false;
 
     void Start()
     {
@@ -22,31 +27,102 @@ public class LassoController : MonoBehaviour
         lasso = transform.Find("Lasso")?.gameObject;
         if (lasso != null)
             lassoScript = lasso.GetComponent<Lasso>() ?? lasso.AddComponent<Lasso>();
+
+        playerRigidbody = GetComponent<Rigidbody>();
+        playerController = GetComponent<PlayerController>();
     }
 
     void Update()
     {
         if (lassoScript == null) return;
 
+        // Бросок / отцепление по F
         if (Keyboard.current[throwKey].wasPressedThisFrame)
         {
             if (!lassoScript.isAttached)
                 ThrowLasso();
             else
+            {
+                if (isPullingToUnMovable || isHanging)
+                {
+                    isPullingToUnMovable = false;
+                    isHanging = false;
+                    DisablePlayerMovement(false);
+                }
                 lassoScript.DetachAndReturn();
+            }
         }
 
-        // Hold G — притягивание (только для обычных объектов)
-        if (Keyboard.current[pullKey].isPressed && lassoScript.isAttached && !lassoScript.isLightObjectAttached)
+        bool gPressed = Keyboard.current[pullKey].isPressed;
+        bool gJustPressed = Keyboard.current[pullKey].wasPressedThisFrame;
+
+        if (gPressed && lassoScript.isAttached)
         {
-            lassoScript.PullTowardsPlayer();
+            if (lassoScript.isLightObjectAttached)
+            {
+                if (gJustPressed)
+                    lassoScript.YankAndDetach();
+            }
+            else if (lassoScript.isUnMovable)
+            {
+                if (isHanging)
+                {
+                    isHanging = false;
+                    isPullingToUnMovable = true;
+                    DisablePlayerMovement(true);
+                }
+                else if (!isPullingToUnMovable)
+                {
+                    isPullingToUnMovable = true;
+                    DisablePlayerMovement(true);
+                }
+                PullPlayerToTarget(lassoScript.attachedTarget);
+            }
+            else if (lassoScript.isHeavyMovable)
+            {
+                HeavyMovable heavy = lassoScript.attachedTarget.GetComponent<HeavyMovable>();
+                if (heavy != null && lassoScript.isFrontHit)
+                {
+                    Vector3 globalDir = heavy.transform.TransformDirection(heavy.moveDirection);
+                    heavy.ServerMove(globalDir, heavy.moveSpeed);
+                }
+            }
+            else
+            {
+                lassoScript.PullTowardsPlayer();
+            }
+        }
+        else if (!gPressed && (isPullingToUnMovable || isHanging))
+        {
+            if (isPullingToUnMovable)
+            {
+                isPullingToUnMovable = false;
+                isHanging = true;
+                if (playerRigidbody != null)
+                    playerRigidbody.linearVelocity = Vector3.zero;
+            }
+        }
+      
+    }
+
+    private void PullPlayerToTarget(GameObject target)
+    {
+        if (target == null || playerRigidbody == null) return;
+
+        Vector3 direction = target.transform.position - transform.position;
+        float distance = direction.magnitude;
+
+        if (distance < 0.5f)
+        {
+            lassoScript.DetachAndReturn();
+            isPullingToUnMovable = false;
+            isHanging = false;
+            DisablePlayerMovement(false);
+            return;
         }
 
-        // Одиночное нажатие G — дёрг для LightObject
-        if (Keyboard.current[pullKey].wasPressedThisFrame && lassoScript.isAttached && lassoScript.isLightObjectAttached)
-        {
-            lassoScript.YankAndDetach();
-        }
+        Vector3 targetVelocity = direction.normalized * lassoScript.pullSpeed;
+        playerRigidbody.linearVelocity = targetVelocity;
     }
 
     private void ThrowLasso()
@@ -62,7 +138,26 @@ public class LassoController : MonoBehaviour
         lassoScript.Throw(direction);
     }
 
+    private void DisablePlayerMovement(bool disable)
+    {
+        if (playerController != null)
+        {
+            if (disable)
+                playerController.DisableMovement();
+            else
+                playerController.EnableMovement();
+        }
+    }
+
     public void OnLassoAttached(GameObject target) { }
     public void OnLassoMiss() { }
-    public void OnLassoReturned() { }
+    public void OnLassoReturned()
+    {
+        if (isPullingToUnMovable || isHanging)
+        {
+            isPullingToUnMovable = false;
+            isHanging = false;
+            DisablePlayerMovement(false);
+        }
+    }
 }

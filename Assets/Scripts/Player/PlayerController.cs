@@ -14,7 +14,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] public Transform weaponHoldPoint;
 
     private bool _isDied;
-
+    private bool movementDisabled = false;
     private Revolver _currentWeapon;
     
     public void EquipWeapon(Revolver weapon)
@@ -69,6 +69,17 @@ public class PlayerController : NetworkBehaviour
     {
         if (!IsOwner) return;
         TakeDamageTest(10);
+    }
+    public void DisableMovement()
+    {
+        if (physics != null)
+            physics.enabled = false;
+    }
+
+    public void EnableMovement()
+    {
+        if (physics != null)
+            physics.enabled = true;
     }
 
     [ServerRpc]
