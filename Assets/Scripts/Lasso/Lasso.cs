@@ -14,12 +14,13 @@ public class Lasso : MonoBehaviour
 
     private bool isFlying;
     private bool isReturning;
-    private GameObject attachedTarget;
-
-    // ← Эти два поля теперь public
+    public GameObject attachedTarget;
+    public bool isUnMovable;
     public bool isAttached;
     public bool isLightObjectAttached;
-
+    public bool isHeavyMovable;
+    private HeavyMovable heavyMovable;
+    public bool isFrontHit;
     private FixedJoint currentJoint;
     private float throwTime;
 
@@ -40,10 +41,14 @@ public class Lasso : MonoBehaviour
 
         isFlying = true;
         throwTime = Time.time;
+        isUnMovable = false;
         isAttached = false;
         isReturning = false;
         attachedTarget = null;
         isLightObjectAttached = false;
+        isHeavyMovable = false;
+        heavyMovable = null;
+        isFrontHit = false;
 
         if (currentJoint != null) Destroy(currentJoint);
     }
@@ -64,9 +69,16 @@ public class Lasso : MonoBehaviour
             isAttached = true;
             isLightObjectAttached = attachedTarget.GetComponent<LightObject>() != null;
 
+            heavyMovable = attachedTarget.GetComponent<HeavyMovable>();
+            if (heavyMovable != null)
+            {
+                isHeavyMovable = true;
+                isFrontHit = heavyMovable.IsFrontHit(transform.position);
+            }
+
             rb.isKinematic = true;
             transform.position = collision.contacts[0].point;
-
+            isUnMovable = attachedTarget.GetComponent<UnMovable>() != null;
             currentJoint = gameObject.AddComponent<FixedJoint>();
             currentJoint.connectedBody = targetRb;
             currentJoint.breakForce = Mathf.Infinity;
@@ -93,7 +105,7 @@ public class Lasso : MonoBehaviour
             }
             rb.linearVelocity = dirToPlayer.normalized * returnSpeed;
         }
-        else if (isAttached && !isLightObjectAttached && Keyboard.current[Key.G].isPressed)
+        else if (isAttached && !isLightObjectAttached && !isUnMovable && Keyboard.current[Key.G].isPressed)
         {
             PullTowardsPlayer();
         }

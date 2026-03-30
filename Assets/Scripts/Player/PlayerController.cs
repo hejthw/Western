@@ -21,6 +21,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private float kinematicDelay = 4f;
     
     private bool _isDied;
+    private bool movementDisabled = false;
     
     private Revolver _currentWeapon;
     private RevolverProjectile _currentGun;
@@ -111,6 +112,17 @@ public class PlayerController : NetworkBehaviour
     {
         if (!IsOwner) return;
         TakeDamageTest(10);
+    }
+    public void DisableMovement()
+    {
+        if (physics != null)
+            physics.enabled = false;
+    }
+
+    public void EnableMovement()
+    {
+        if (physics != null)
+            physics.enabled = true;
     }
 
     [ServerRpc]

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using FishNet.Object;
 
-public class LightObject : NetworkBehaviour
+public class LightObject : NetworkBehaviour, ISavableItem
 {
     public bool fragile = false;
 
@@ -38,6 +38,19 @@ public class LightObject : NetworkBehaviour
             GetComponent<NetworkObject>().Despawn();
         else
             DespawnServerRpc();
+    }
+
+    public byte[] SaveState()
+    {
+        return new byte[] { (byte)(fragile ? 1 : 0) };
+    }
+
+    public void LoadState(byte[] state)
+    {
+        if (state != null && state.Length > 0)
+            fragile = state[0] == 1;
+        else
+            fragile = false;
     }
 
     [ServerRpc]
