@@ -9,11 +9,11 @@ public class RevolverData : ScriptableObject
     public float timeBeforeDespawn = 30f;
     
     [Header("Recoil")]
-    public float recoilUp = 4f;           // базовый подъём (градусы) за выстрел
-    public float recoilSideMax = 1.5f;    // макс. боковая отдача первого выстрела
-    public float sprayMultiplier = 2.8f;  // множитель при быстрой стрельбе (Deagle-feel)
-    public float sprayRandomness = 3.5f;  // разброс при накоплении
-    public float resetDelay = 0.55f;      // секунд без выстрела → сброс паттерна
-    public float recoverySpeed = 6f;      // скорость возврата камеры (Lerp)
-    public float recoilApplySpeed = 18f; 
+    public float recoilUp = 4f;
+    public float recoilSideMax = 1.5f;
+    public float sprayMultiplier = 2.8f;
+    public float sprayRandomness = 3.5f;
+    public float resetDelay = 0.55f;
+    public float recoverySpeed = 6f;
+    public float recoilApplySpeed = 18f;
 }

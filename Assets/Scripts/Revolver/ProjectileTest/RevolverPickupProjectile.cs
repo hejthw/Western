@@ -8,7 +8,7 @@ using System.Collections;
 /// Пикак револьвера на сцене. Является LightObject
 /// </summary>
 [RequireComponent(typeof(LightObject))]
-public class RevolverPickup : NetworkBehaviour, IPickupable
+public class RevolverPickupProj : NetworkBehaviour, IPickupable
 {
     [SerializeField] private NetworkObject revolverWeaponPrefab;
     [SerializeField] public RevolverData revolverData;
@@ -60,10 +60,10 @@ public class RevolverPickup : NetworkBehaviour, IPickupable
         // Передача IsOwner клиенту, который подобрал оружие
         NetworkManager.ServerManager.Spawn(weaponInstance, playerNetObj.Owner);
 
-        Revolver revolver = weaponInstance.GetComponent<Revolver>();
+        RevolverProjectile revolver = weaponInstance.GetComponent<RevolverProjectile>();
         revolver.SetBullets(_bullets.Value);
         revolver.AttachToPlayer(playerController);
-        playerController.EquipWeapon(revolver);
+        playerController.EquipGun(revolver);
         
         NetworkObject.Despawn();
     }

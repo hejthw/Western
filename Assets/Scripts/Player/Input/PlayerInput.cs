@@ -13,6 +13,23 @@ public class PlayerInput : MonoBehaviour
     public bool SprintHeld { get; private set; }
     public bool CrouchHeld { get ; private set;}
     
+    public bool isDead { get ; private set ; }
+
+    private void OnEnable()
+    {
+        PlayerEvents.OnDeadEvent += bred;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.OnDeadEvent -= bred;
+    }
+
+    private void bred(bool a)
+    {
+        isDead = a;
+    }
+    
     public event Action JumpPressedEvent;
     public event Action OnSprintEvent;
     public event Action OnTestEvent;
@@ -45,8 +62,17 @@ public class PlayerInput : MonoBehaviour
     {
         if (value.Get<float>() > 0.5f)
         {
-            Debug.Log("[Input] OnAttack сработал");
-            OnAttackEvent?.Invoke();
+            if (isDead)
+                PlayerEvents.RaisePrevTargetEvent();
+            else OnAttackEvent?.Invoke();
+        }
+    }
+    
+    public void OnAim(InputValue value)
+    {
+        if (value.Get<float>() > 0.5f)
+        {
+            if (isDead) PlayerEvents.RaiseNextTargetEvent();
         }
     }
 
@@ -56,6 +82,7 @@ public class PlayerInput : MonoBehaviour
     {
         OnTestEvent?.Invoke();
     }
+    
     public void OnPickup(InputValue value)
     {
         if (value.Get<float>() > 0.5f)

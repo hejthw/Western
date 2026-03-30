@@ -17,7 +17,7 @@ MonoBehaviour:
   fovLerpDuration: 0.3
   walkBobFrequency: 4
   sprintBobFrequency: 6
-  walkBobAmplitude: 0.3
+  walkBobAmplitude: 0.5
   sprintBobAmplitude: 0.55
   bobTransitionSpeed: 8
   settleSpeed: 6
