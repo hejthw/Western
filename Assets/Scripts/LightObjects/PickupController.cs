@@ -18,6 +18,7 @@ public class PickupController : NetworkBehaviour
 
     private PlayerInput playerInput;
     private Transform cameraTransform;
+    
 
     private void Awake()
     {
@@ -48,6 +49,7 @@ public class PickupController : NetworkBehaviour
         {
             playerInput.OnPickupEvent -= OnPickupInput;
             playerInput.OnSlotKeyPressed -= OnSlotKeyPressed;
+            playerInput.OnAttackEvent += OnAttack;
         }
     }
 
@@ -145,5 +147,13 @@ public class PickupController : NetworkBehaviour
     {
         if (inventory.IsSlotEmpty(slot)) return;
         inventory.ServerRemoveItem(slot);
+    }
+    private void OnAttack()
+    {
+        if (!IsOwner) return;
+        if (heldObject != null && heldObject.TryGetComponent<Dynamite>(out Dynamite dynamite))
+        {
+            dynamite.Ignite();
+        }
     }
 }

@@ -1,175 +1,212 @@
+using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class Lasso : MonoBehaviour
+public class Lasso : NetworkBehaviour
 {
-    [Header("Настройки")]
+    [Header("Settings")]
     public float throwSpeed = 35f;
     public float returnSpeed = 18f;
     public float pullSpeed = 12f;
     public float yankImpulseForce = 25f;
+    public float maxDistance = 50f;
 
     private Rigidbody rb;
     private LassoController controller;
 
-    private bool isFlying;
-    private bool isReturning;
-    public GameObject attachedTarget;
-    public bool isUnMovable;
-    public bool isAttached;
-    public bool isLightObjectAttached;
-    public bool isHeavyMovable;
-    private HeavyMovable heavyMovable;
-    public bool isFrontHit;
+    public readonly SyncVar<NetworkObject> attachedNetObj = new SyncVar<NetworkObject>();
+    public readonly SyncVar<bool> isFlying = new SyncVar<bool>();
+    public readonly SyncVar<bool> isReturning = new SyncVar<bool>();
+    public readonly SyncVar<bool> isLightObjectAttached = new SyncVar<bool>();
+    public readonly SyncVar<bool> isHeavyMovable = new SyncVar<bool>();
+    public readonly SyncVar<bool> isUnMovable = new SyncVar<bool>();
+    public readonly SyncVar<bool> isFrontHit = new SyncVar<bool>();
+
     private FixedJoint currentJoint;
     private float throwTime;
 
-    void Awake()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         controller = GetComponentInParent<LassoController>();
+        attachedNetObj.OnChange += OnAttachedChanged;
     }
 
-    public void Throw(Vector3 direction)
+    private void OnAttachedChanged(NetworkObject oldValue, NetworkObject newValue, bool asServer)
     {
-        transform.SetParent(null);
-        gameObject.SetActive(true);
-
-        rb.isKinematic = false;
-        rb.linearVelocity = direction.normalized * throwSpeed;
-        rb.angularVelocity = Vector3.zero;
-
-        isFlying = true;
-        throwTime = Time.time;
-        isUnMovable = false;
-        isAttached = false;
-        isReturning = false;
-        attachedTarget = null;
-        isLightObjectAttached = false;
-        isHeavyMovable = false;
-        heavyMovable = null;
-        isFrontHit = false;
-
-        if (currentJoint != null) Destroy(currentJoint);
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (!isFlying) return;
-        if (Time.time - throwTime < 0.25f) return;
-
-        isFlying = false;
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-
-        if (collision.gameObject.CompareTag("Grabbable") &&
-            collision.gameObject.TryGetComponent<Rigidbody>(out Rigidbody targetRb))
+        if (currentJoint) Destroy(currentJoint);
+        if (newValue != null && newValue.TryGetComponent<Rigidbody>(out Rigidbody targetRb))
         {
-            attachedTarget = collision.gameObject;
-            isAttached = true;
-            isLightObjectAttached = attachedTarget.GetComponent<LightObject>() != null;
-
-            heavyMovable = attachedTarget.GetComponent<HeavyMovable>();
-            if (heavyMovable != null)
-            {
-                isHeavyMovable = true;
-                isFrontHit = heavyMovable.IsFrontHit(transform.position);
-            }
-
-            rb.isKinematic = true;
-            transform.position = collision.contacts[0].point;
-            isUnMovable = attachedTarget.GetComponent<UnMovable>() != null;
             currentJoint = gameObject.AddComponent<FixedJoint>();
             currentJoint.connectedBody = targetRb;
             currentJoint.breakForce = Mathf.Infinity;
             currentJoint.enableCollision = false;
+        }
+    }
 
-            controller.OnLassoAttached(attachedTarget);
+    [ServerRpc(RequireOwnership = false)]
+    public void ServerThrow(Vector3 direction)
+    {
+        if (attachedNetObj.Value != null) return;
+        transform.SetParent(null);
+        gameObject.SetActive(true);
+        rb.isKinematic = false;
+        rb.linearVelocity = direction.normalized * throwSpeed;
+        rb.angularVelocity = Vector3.zero;
+
+        isFlying.Value = true;
+        isReturning.Value = false;
+        throwTime = (float)Time.time;
+        attachedNetObj.Value = null;
+        isLightObjectAttached.Value = false;
+        isHeavyMovable.Value = false;
+        isUnMovable.Value = false;
+        isFrontHit.Value = false;
+    }
+
+    [ServerRpc]
+    public void ServerStartReturn()
+    {
+        if (attachedNetObj.Value != null)
+        {
+            ServerDetachAndReturn();
+            return;
+        }
+        if (isReturning.Value) return;
+        isFlying.Value = false;
+        isReturning.Value = true;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!IsServer) return;
+        if (!isFlying.Value) return;
+        if ((float)Time.time - throwTime < 0.25f) return;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        if (collision.gameObject.CompareTag("Grabbable") &&
+            collision.gameObject.TryGetComponent<Rigidbody>(out Rigidbody targetRb) &&
+            collision.gameObject.TryGetComponent<NetworkObject>(out NetworkObject netObj))
+        {
+            attachedNetObj.Value = netObj;
+            isFlying.Value = false;
+
+            isLightObjectAttached.Value = netObj.GetComponent<LightObject>() != null;
+            isUnMovable.Value = netObj.GetComponent<UnMovable>() != null;
+            var heavy = netObj.GetComponent<HeavyMovable>();
+            isHeavyMovable.Value = heavy != null;
+            if (heavy != null)
+                isFrontHit.Value = heavy.IsFrontHit(transform.position);
+
+            rb.isKinematic = true;
+            transform.position = collision.contacts[0].point;
+
+            controller.OnLassoAttachedServer(netObj.gameObject);
         }
         else
         {
-            isReturning = true;
+            isReturning.Value = true;
             controller.OnLassoMiss();
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (isReturning)
+        if (!IsServer) return;
+
+        if (isFlying.Value && Vector3.Distance(transform.position, controller.transform.position) > maxDistance)
         {
-            Vector3 dirToPlayer = controller.transform.position - transform.position;
-            if (dirToPlayer.sqrMagnitude < 2.25f)
+            ServerStartReturn();
+        }
+
+        if (isReturning.Value)
+        {
+            Vector3 dir = controller.transform.position - transform.position;
+            if (dir.sqrMagnitude < 2.25f)
             {
-                ReturnToPlayer();
+                ServerReturnToPlayer();
                 return;
             }
-            rb.linearVelocity = dirToPlayer.normalized * returnSpeed;
-        }
-        else if (isAttached && !isLightObjectAttached && !isUnMovable && Keyboard.current[Key.G].isPressed)
-        {
-            PullTowardsPlayer();
+            rb.linearVelocity = dir.normalized * returnSpeed;
         }
     }
 
-    public void PullTowardsPlayer()
+    [ServerRpc]
+    public void ServerPullTowardsPlayer()
     {
-        if (!isAttached || attachedTarget == null || !rb.isKinematic) return;
-
+        if (attachedNetObj.Value == null) return;
         Vector3 dirToPlayer = controller.transform.position - transform.position;
         rb.MovePosition(transform.position + dirToPlayer.normalized * pullSpeed * Time.fixedDeltaTime);
     }
 
-    public void YankAndDetach()
+    [ServerRpc]
+    public void ServerYankAndDetach()
     {
-        if (!isAttached || attachedTarget == null) return;
-
-        isAttached = false;
-
-        if (currentJoint != null)
+        if (attachedNetObj.Value == null) return;
+        if (isLightObjectAttached.Value && attachedNetObj.Value.TryGetComponent<Rigidbody>(out Rigidbody targetRb))
         {
-            Destroy(currentJoint);
-            currentJoint = null;
-        }
-
-        if (isLightObjectAttached && attachedTarget.TryGetComponent<Rigidbody>(out Rigidbody targetRb))
-        {
-            Vector3 yankDir = (controller.transform.position - attachedTarget.transform.position).normalized;
+            Vector3 yankDir = (controller.transform.position - attachedNetObj.Value.transform.position).normalized;
             targetRb.AddForce(yankDir * yankImpulseForce, ForceMode.Impulse);
         }
-
-        ReturnToPlayer();
+        attachedNetObj.Value = null;
+        ServerReturnToPlayer();
     }
 
-    private void ReturnToPlayer()
+    [ServerRpc]
+    public void ServerMoveHeavy(HeavyMovable heavy, Vector3 globalDir, float speed)
     {
-        isReturning = false;
-        isAttached = false;
-        isLightObjectAttached = false;
+        if (attachedNetObj.Value == null) return;
+        if (heavy == null || heavy != attachedNetObj.Value.GetComponent<HeavyMovable>()) return;
+        if (!isFrontHit.Value) return;
+        heavy.ServerMove(globalDir, speed);
+    }
 
-        if (currentJoint != null)
+    [ServerRpc]
+    public void ServerPullPlayerToTarget(NetworkObject target)
+    {
+        if (target == null || target != attachedNetObj.Value) return;
+        if (!isUnMovable.Value) return;
+
+        Vector3 dir = target.transform.position - controller.transform.position;
+        float dist = dir.magnitude;
+        if (dist < 0.5f)
         {
-            Destroy(currentJoint);
-            currentJoint = null;
+            ServerYankAndDetach();
+            return;
         }
+        controller.GetComponent<Rigidbody>().linearVelocity = dir.normalized * pullSpeed;
+    }
 
+    private void ServerReturnToPlayer()
+    {
+        attachedNetObj.Value = null;
+        isFlying.Value = false;
+        isReturning.Value = false;
         rb.isKinematic = true;
         rb.linearVelocity = Vector3.zero;
-
+        rb.angularVelocity = Vector3.zero;
         transform.SetParent(controller.transform);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-
         gameObject.SetActive(false);
-        controller.OnLassoReturned();
+        controller.OnLassoReturnedServer();
     }
 
-    public void DetachAndReturn()
+    [ServerRpc]
+    public void ServerDetachAndReturn()
     {
-        if (!isAttached) return;
-
-        if (isLightObjectAttached)
-            YankAndDetach();
+        if (attachedNetObj.Value == null)
+        {
+            ServerStartReturn();
+            return;
+        }
+        if (isLightObjectAttached.Value)
+            ServerYankAndDetach();
         else
-            ReturnToPlayer();
+            ServerReturnToPlayer();
     }
 }

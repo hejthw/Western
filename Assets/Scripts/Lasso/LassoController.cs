@@ -1,163 +1,163 @@
-﻿using UnityEngine;
+﻿using FishNet.Object;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class LassoController : MonoBehaviour
+public class LassoController : NetworkBehaviour
 {
-    [Header("Клавиши")]
+    [Header("Keys")]
     public Key throwKey = Key.F;
     public Key pullKey = Key.G;
 
-    [Header("Настройки")]
+    [Header("References")]
     public Transform launchPoint;
     public Transform cameraTransform;
 
-    private GameObject lasso;
-    private Lasso lassoScript;
-    private Rigidbody playerRigidbody;
+    private Lasso lasso;
+    private Rigidbody playerRb;
     private PlayerController playerController;
+    private PlayerInput playerInput;
 
-    private bool isPullingToUnMovable = false;
-    private bool isHanging = false;
+    private bool pullingToUnMovable;
+    private bool hanging;
 
-    void Start()
+    private void Start()
     {
         if (cameraTransform == null)
             cameraTransform = transform.Find("Joint/PlayerCamera")?.transform;
 
-        lasso = transform.Find("Lasso")?.gameObject;
-        if (lasso != null)
-            lassoScript = lasso.GetComponent<Lasso>() ?? lasso.AddComponent<Lasso>();
+        var lassoObj = transform.Find("Lasso")?.gameObject;
+        if (lassoObj != null)
+            lasso = lassoObj.GetComponent<Lasso>();
 
-        playerRigidbody = GetComponent<Rigidbody>();
+        playerRb = GetComponent<Rigidbody>();
         playerController = GetComponent<PlayerController>();
+        playerInput = GetComponent<PlayerInput>();
+        if (playerInput != null)
+            playerInput.JumpPressedEvent += OnJumpPressed;
     }
 
-    void Update()
+    private void Update()
     {
-        if (lassoScript == null) return;
+        if (!IsOwner) return;
+        if (lasso == null) return;
 
-        // Бросок / отцепление по F
         if (Keyboard.current[throwKey].wasPressedThisFrame)
         {
-            if (!lassoScript.isAttached)
-                ThrowLasso();
+            if (lasso.isFlying.Value || lasso.attachedNetObj.Value != null)
+            {
+                lasso.ServerDetachAndReturn();
+            }
             else
             {
-                if (isPullingToUnMovable || isHanging)
-                {
-                    isPullingToUnMovable = false;
-                    isHanging = false;
-                    DisablePlayerMovement(false);
-                }
-                lassoScript.DetachAndReturn();
+                ThrowLasso();
             }
         }
 
         bool gPressed = Keyboard.current[pullKey].isPressed;
         bool gJustPressed = Keyboard.current[pullKey].wasPressedThisFrame;
 
-        if (gPressed && lassoScript.isAttached)
+        if (gPressed && lasso.attachedNetObj.Value != null)
         {
-            if (lassoScript.isLightObjectAttached)
+            if (lasso.isLightObjectAttached.Value)
             {
                 if (gJustPressed)
-                    lassoScript.YankAndDetach();
+                    lasso.ServerYankAndDetach();
             }
-            else if (lassoScript.isUnMovable)
+            else if (lasso.isUnMovable.Value)
             {
-                if (isHanging)
+            
+                if (hanging)
                 {
-                    isHanging = false;
-                    isPullingToUnMovable = true;
-                    DisablePlayerMovement(true);
+                    hanging = false;
+                    pullingToUnMovable = true;
+                    DisableMovement();
                 }
-                else if (!isPullingToUnMovable)
+                else if (!pullingToUnMovable && !hanging)
                 {
-                    isPullingToUnMovable = true;
-                    DisablePlayerMovement(true);
+                    pullingToUnMovable = true;
+                    DisableMovement();
                 }
-                PullPlayerToTarget(lassoScript.attachedTarget);
+                lasso.ServerPullPlayerToTarget(lasso.attachedNetObj.Value);
             }
-            else if (lassoScript.isHeavyMovable)
+            else if (lasso.isHeavyMovable.Value)
             {
-                HeavyMovable heavy = lassoScript.attachedTarget.GetComponent<HeavyMovable>();
-                if (heavy != null && lassoScript.isFrontHit)
+                var heavy = lasso.attachedNetObj.Value.GetComponent<HeavyMovable>();
+                if (heavy != null && lasso.isFrontHit.Value)
                 {
                     Vector3 globalDir = heavy.transform.TransformDirection(heavy.moveDirection);
-                    heavy.ServerMove(globalDir, heavy.moveSpeed);
+                    lasso.ServerMoveHeavy(heavy, globalDir, heavy.moveSpeed);
                 }
             }
             else
             {
-                lassoScript.PullTowardsPlayer();
+                lasso.ServerPullTowardsPlayer();
             }
         }
-        else if (!gPressed && (isPullingToUnMovable || isHanging))
+        else if (!gPressed && (pullingToUnMovable || hanging))
         {
-            if (isPullingToUnMovable)
+            if (pullingToUnMovable)
             {
-                isPullingToUnMovable = false;
-                isHanging = true;
-                if (playerRigidbody != null)
-                    playerRigidbody.linearVelocity = Vector3.zero;
+                pullingToUnMovable = false;
+                hanging = true;
+                playerRb.linearVelocity = Vector3.zero;
             }
         }
-      
     }
 
-    private void PullPlayerToTarget(GameObject target)
+    private void FixedUpdate()
     {
-        if (target == null || playerRigidbody == null) return;
-
-        Vector3 direction = target.transform.position - transform.position;
-        float distance = direction.magnitude;
-
-        if (distance < 0.5f)
+        if (hanging && !pullingToUnMovable)
         {
-            lassoScript.DetachAndReturn();
-            isPullingToUnMovable = false;
-            isHanging = false;
-            DisablePlayerMovement(false);
-            return;
+            Vector3 vel = playerRb.linearVelocity;
+            vel.x = 0f;
+            vel.z = 0f;
+            playerRb.linearVelocity = vel;
         }
-
-        Vector3 targetVelocity = direction.normalized * lassoScript.pullSpeed;
-        playerRigidbody.linearVelocity = targetVelocity;
     }
 
     private void ThrowLasso()
     {
-        if (cameraTransform == null || lasso == null) return;
-
-        Vector3 startPosition = launchPoint ? launchPoint.position : cameraTransform.position + cameraTransform.forward * 0.5f;
+        if (cameraTransform == null) return;
+        Vector3 startPos = launchPoint != null ? launchPoint.position : cameraTransform.position + cameraTransform.forward * 0.5f;
         Vector3 direction = cameraTransform.forward;
-
-        lasso.transform.position = startPosition;
+        lasso.transform.position = startPos;
         lasso.transform.rotation = Quaternion.LookRotation(direction);
-
-        lassoScript.Throw(direction);
+        lasso.ServerThrow(direction);
     }
 
-    private void DisablePlayerMovement(bool disable)
-    {
-        if (playerController != null)
-        {
-            if (disable)
-                playerController.DisableMovement();
-            else
-                playerController.EnableMovement();
-        }
-    }
+    private void DisableMovement() => playerController?.DisableMovement();
+    private void EnableMovement() => playerController?.EnableMovement();
 
-    public void OnLassoAttached(GameObject target) { }
+    public void OnLassoAttachedServer(GameObject target) { }
     public void OnLassoMiss() { }
-    public void OnLassoReturned()
+    public void OnLassoReturnedServer()
     {
-        if (isPullingToUnMovable || isHanging)
+        pullingToUnMovable = false;
+        hanging = false;
+        EnableMovement();
+    }
+
+    private void OnDestroy()
+    {
+        if (playerInput != null)
+            playerInput.JumpPressedEvent -= OnJumpPressed;
+    }
+
+    private void OnJumpPressed()
+    {
+        if (!IsOwner) return;
+        if (pullingToUnMovable || hanging)
         {
-            isPullingToUnMovable = false;
-            isHanging = false;
-            DisablePlayerMovement(false);
+            lasso.ServerDetachAndReturn();
+            if (lasso.attachedNetObj.Value != null)
+            {
+                Vector3 awayDir = (transform.position - lasso.attachedNetObj.Value.transform.position).normalized;
+                awayDir.y = 0.5f;
+                playerRb.linearVelocity = awayDir * 5f;
+            }
+            pullingToUnMovable = false;
+            hanging = false;
+            EnableMovement();
         }
     }
 }

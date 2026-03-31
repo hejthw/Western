@@ -2415,6 +2415,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3998414238054622849}
     m_Modifications:
+    - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
+      propertyPath: WasActiveDuringEdit
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3614300672675387674, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2455,22 +2459,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6133476306332018826, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
-      propertyPath: pullSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6133476306332018826, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
-      propertyPath: throwSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 6133476306332018826, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
-      propertyPath: returnSpeed
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 7696105253319526697, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: m_Name
       value: Lasso
       objectReference: {fileID: 0}
+    - target: {fileID: 8567151649600317548, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
+      propertyPath: _addedNetworkObject
+      value: 
+      objectReference: {fileID: 4737990210302664583}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
