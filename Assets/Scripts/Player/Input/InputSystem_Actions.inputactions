@@ -115,31 +115,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Slot1",
-                    "type": "Button",
-                    "id": "0c4c0638-de37-4380-beb9-233ed438c996",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Slot2",
-                    "type": "Button",
-                    "id": "75949569-3a8e-4e4e-a7bf-224c7345b25f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Slot3",
-                    "type": "Button",
-                    "id": "f7121eb4-c8c6-4c5c-b850-b365373bf4e0",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                     "name": "Aim",
                     "type": "Value",
                     "id": "f17a8c09-9f69-40a8-b57e-7f3cad2ab09e",
@@ -570,34 +545,6 @@
                 },
                 {
                     "name": "",
-                    "id": "46aa3846-851f-4d4b-a611-6f79e643fd97",
-                    "path": "<Keyboard>/1",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Slot1",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "825dca44-cdc0-4fa1-a844-673a60d0e922",
-                    "path": "<Keyboard>/2",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Slot2",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f89a7d1d-bab5-4518-bc67-d9cbd6fd1d07",
-                    "path": "<Keyboard>/3",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Slot3",
                     "id": "523757a9-e542-4897-a998-2cd1c1531051",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",

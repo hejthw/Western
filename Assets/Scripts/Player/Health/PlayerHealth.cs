@@ -15,9 +15,9 @@ public class PlayerHealth : NetworkBehaviour
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private GameObject localUI;
 
-    private readonly SyncVar<int> _health = new SyncVar<int>();
-    private readonly SyncVar<bool> _isKnockout = new SyncVar<bool>();
-    private readonly SyncVar<bool> _isDead = new SyncVar<bool>();
+    public readonly SyncVar<int> _health = new SyncVar<int>();
+    public readonly SyncVar<bool> _isKnockout = new SyncVar<bool>();
+    public readonly SyncVar<bool> _isDead = new SyncVar<bool>();
     
     public override void OnStartNetwork()
     {
@@ -120,6 +120,7 @@ public class PlayerHealth : NetworkBehaviour
 
         _health.Value = maxHealth;
         _isKnockout.Value = false;
+        _isDead.Value = false;
 
         RpcOnRespawned(spawnPos);
     }
