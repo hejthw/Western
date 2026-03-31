@@ -86,8 +86,9 @@ public class PlayerHealth : NetworkBehaviour
     private IEnumerator DeadCoroutine()
     {
         yield return new WaitForSeconds(data.respawnDelay);
-        _state.Value = PlayerHealthState.Alive;
         
+        _state.Value = PlayerHealthState.Alive;
+        _health.Value = data.maxHealth;
         PlayerHealthEvents.RaiseRespawnEvent();
     }
 }
