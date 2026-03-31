@@ -47,8 +47,20 @@ public class SpectatorView : MonoBehaviour
         PlayerEvents.PrevTargetEvent -= OnPrevTarget;
     }
 
-    private void OnNextTarget() => CycleTarget(1);
-    private void OnPrevTarget() => CycleTarget(-1);
+    // private void OnNextTarget() => CycleTarget(1);
+    // private void OnPrevTarget() => CycleTarget(-1);
+
+    private void OnNextTarget()
+    {
+        Debug.Log("Cycle next");
+        CycleTarget(1);
+    }
+
+    private void OnPrevTarget()
+    {
+        Debug.Log("Cycle prev");
+        CycleTarget(-1);
+    }
 
     private void LateUpdate()
     {
@@ -72,7 +84,7 @@ public class SpectatorView : MonoBehaviour
         firstPersonCamera.Priority = isKnockout ? 0 : 10;
         knockoutCamera.Priority    = isKnockout ? 10 : 0;
 
-        fpInputController.enabled       = !isKnockout;
+        fpInputController.enabled = !isKnockout;
         knockoutInputController.enabled = isKnockout;
 
         if (isKnockout && knockoutPivot != null)

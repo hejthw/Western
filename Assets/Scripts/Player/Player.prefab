@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7635756975032730099}
+  - component: {fileID: 6546633076592774692}
   m_Layer: 6
   m_Name: Hitbox
   m_TagString: Untagged
@@ -37,6 +38,22 @@ Transform:
   - {fileID: 89345230495589935}
   m_Father: {fileID: 3998414238054622849}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6546633076592774692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538829022233379768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91f8f3780d7e4dd6a9ef31ac6c25de94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawner
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
+  spawnPoints: []
 --- !u!1 &1056871110255555570
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 0
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 0}
 --- !u!1 &2036903984489868689
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 3
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 0}
 --- !u!1 &2802459893473935432
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,8 +251,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.07078605, y: -0.837727, z: -0.52978706, w: 0.111930594}
-  m_LocalPosition: {x: 0.8208165, y: -0.67364097, z: 1.9291363}
+  m_LocalRotation: {x: -0.107720286, y: 0.8899032, z: 0.27707383, w: 0.34597504}
+  m_LocalPosition: {x: -1.1371816, y: 0.5968486, z: 1.7218657}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -318,7 +335,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: -156.4487
+    Value: 145.8406
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -328,7 +345,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: -4.6193643
+    Value: 25.411772
     Center: 17.5
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -362,7 +379,7 @@ MonoBehaviour:
   ReferenceFrame: 2
   RecenterTarget: 2
   PanAxis:
-    Value: -164.77931
+    Value: 137.51
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -372,7 +389,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -64.619354
+    Value: -34.58824
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -722,7 +739,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.28546524, y: -0.7143436, z: -0.44190586, w: 0.46145636}
+  m_LocalRotation: {x: -0.11753772, y: -0.85314137, z: -0.4588956, w: 0.21851657}
   m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -800,7 +817,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: -114.27617
+    Value: -151.26717
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -810,7 +827,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -63.483364
+    Value: -56.550663
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1040,7 +1057,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 2
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 0}
 --- !u!1 &5327568027396607055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1108,7 +1125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 1
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 0}
 --- !u!1 &5375274108382611991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1702,7 +1719,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 3
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 0}
 --- !u!1 &6858675002057946490
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,12 +1821,12 @@ GameObject:
   - component: {fileID: 3801565093934317144}
   - component: {fileID: 2479261188838793012}
   - component: {fileID: 3873198404099586706}
-  - component: {fileID: 6462810797751770924}
   - component: {fileID: 657205347255209784}
   - component: {fileID: 2344148755127962324}
   - component: {fileID: 6215445965447647855}
   - component: {fileID: 8370486624532304144}
   - component: {fileID: 191303042818185563}
+  - component: {fileID: 9106320914675195185}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2044,7 +2061,7 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: 6589580627724631239}
   - {fileID: 3801565093934317144}
-  - {fileID: 6462810797751770924}
+  - {fileID: 0}
   - {fileID: 6215445965447647855}
   - {fileID: 8370486624532304144}
   InitializedParentNetworkBehaviour: {fileID: 0}
@@ -2122,7 +2139,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4737990210302664583}
   cinemachineCamera: {fileID: 4685515460504658230}
   physics: {fileID: 3873198404099586706}
-  health: {fileID: 6462810797751770924}
+  health: {fileID: 0}
   input: {fileID: 2479261188838793012}
   weaponHoldPoint: {fileID: 6787961388630782479}
   localUI: {fileID: 5375274108382611991}
@@ -2158,23 +2175,6 @@ MonoBehaviour:
   rb: {fileID: 3110369444958837593}
   input: {fileID: 2479261188838793012}
   col: {fileID: 2364090612570148680}
---- !u!114 &6462810797751770924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7179411760756142996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7698e84e5344e629e71ccf093c8636f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  _componentIndexCache: 2
-  _addedNetworkObject: {fileID: 4737990210302664583}
-  _networkObjectCache: {fileID: 4737990210302664583}
-  data: {fileID: 11400000, guid: 917b28ece089295e2a6a124bd5ae2a9d, type: 2}
-  spawnPoints: []
 --- !u!114 &657205347255209784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2260,6 +2260,22 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 0}
   slotsCount: 3
+--- !u!114 &9106320914675195185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7179411760756142996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7698e84e5344e629e71ccf093c8636f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
+  data: {fileID: 11400000, guid: 917b28ece089295e2a6a124bd5ae2a9d, type: 2}
 --- !u!1 &7449048867237766776
 GameObject:
   m_ObjectHideFlags: 0
@@ -2404,7 +2420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 2
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 0}
 --- !u!1001 &421283244982108841
 PrefabInstance:
   m_ObjectHideFlags: 0

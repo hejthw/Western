@@ -1,16 +1,11 @@
-using System;
 using FishNet.Object;
 using UnityEngine;
 using FishNet.Object.Synchronizing;
 using System.Collections;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
-using Random = UnityEngine.Random;
 
 public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private PlayerHealthData data;
-    [SerializeField] private Transform[] spawnPoints;
     
     private readonly SyncVar<int> _health = new SyncVar<int>();
     private readonly SyncVar<PlayerHealthState> _state = new SyncVar<PlayerHealthState>();
@@ -49,30 +44,7 @@ public class PlayerHealth : NetworkBehaviour
             PlayerHealthEvents.RaiseDeadEvent(false);
             PlayerHealthEvents.RaiseKnockoutEvent(false);
         }
-        
     }
-
-    // private void OnKnockoutChanged(bool prev, bool next, bool asServer)
-    // {
-    //     if (!IsOwner) return;
-    //
-    //     if (next)
-    //     {
-    //         
-    //     }
-    //     else 
-    //         PlayerEvents.RaiseKnockoutEvent(false);
-    // }
-    //
-    // private void OnDeadChanged(bool prev, bool next, bool asServer)
-    // {
-    //     if (!IsOwner) return;
-    //     
-    //     if (next)
-    //         PlayerEvents.RaiseDeadEvent(true);
-    //     else
-    //         PlayerEvents.RaiseDeadEvent(false);
-    // }
 
     [Server]
     public void TakeDamage(int amount)
@@ -114,34 +86,8 @@ public class PlayerHealth : NetworkBehaviour
     private IEnumerator DeadCoroutine()
     {
         yield return new WaitForSeconds(data.respawnDelay);
-        Respawn();
-    }
-
-    [Server]
-    private void Respawn()
-    {
-        Vector3 spawnPos = GetSpawnPosition();
-        transform.position = spawnPos;
-
-        _health.Value = data.maxHealth;
         _state.Value = PlayerHealthState.Alive;
-
-        RpcOnRespawned(spawnPos);
-    }
-
-    [ObserversRpc]
-    private void RpcOnRespawned(Vector3 position)
-    {
-        transform.position = position;
-        Debug.Log($"{gameObject.name} respawned at {position}");
-    }
-    
-
-    private Vector3 GetSpawnPosition()
-    {
-        if (spawnPoints != null && spawnPoints.Length > 0)
-            return spawnPoints[Random.Range(0, spawnPoints.Length)].position;
-
-        return Vector3.zero;
+        
+        PlayerHealthEvents.RaiseRespawnEvent();
     }
 }
