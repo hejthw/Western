@@ -1,0 +1,42 @@
+using System;
+using Unity.Behavior;
+using UnityEngine;
+using Action = Unity.Behavior.Action;
+using Unity.Properties;
+using UnityEngine.AI;
+
+[Serializable, GeneratePropertyBag]
+[NodeDescription(name: "CitizenDetect", story: "[Self] detects [Player]", category: "Action", id: "10d87f97e3c47b105ce04a786719395f")]
+public partial class CitizenDetectAction : Action
+{
+    [SerializeReference] public BlackboardVariable<GameObject> Self;
+    [SerializeReference] public BlackboardVariable<GameObject> Player;
+
+    private NavMeshAgent _navAgent;
+    private Sensor _sensor;
+    
+    
+    protected override Status OnStart()
+    {
+        _navAgent = Self.Value.GetComponent<NavMeshAgent>();
+        _sensor = Self.Value.GetComponent<Sensor>();
+        Debug.Log(_sensor.name);
+        return Status.Running;
+    }
+
+    protected override Status OnUpdate()
+    {
+        var target = _sensor.GetClosestTarget("Player");
+        if (target == null) return Status.Running;
+        
+        Debug.Log($"Citizen detect: {target.name}");
+        Player.Value = target.gameObject;
+        return Status.Success;
+    }
+
+    protected override void OnEnd()
+    {
+        Debug.Log("end");
+    }
+}
+

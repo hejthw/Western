@@ -114,18 +114,10 @@ namespace Unity.Behavior.Example
 
         private Quaternion GetTextLookRotation()
         {
-            if (Camera.main != null)
-            {
-                Vector3 cameraForward = Camera.main.transform.forward;
-                cameraForward.y = 0.0f;
-                cameraForward.Normalize();
-                return Quaternion.LookRotation(cameraForward);
-            }
-            else
-            {
-                return Quaternion.identity;
-            }
-                
+            Vector3 cameraForward = Camera.main.transform.forward;
+            cameraForward.y = 0.0f;
+            cameraForward.Normalize();
+            return Quaternion.LookRotation(cameraForward);
             
         }
     }
