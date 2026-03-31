@@ -9,70 +9,75 @@ using Random = UnityEngine.Random;
 
 public class PlayerHealth : NetworkBehaviour
 {
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private float respawnDelay = 40f;
-    [SerializeField] private float  knockoutDelay = 5f;
+    [SerializeField] private PlayerHealthData data;
     [SerializeField] private Transform[] spawnPoints;
-    [SerializeField] private GameObject localUI;
-
-    public readonly SyncVar<int> _health = new SyncVar<int>();
-    public readonly SyncVar<bool> _isKnockout = new SyncVar<bool>();
-    public readonly SyncVar<bool> _isDead = new SyncVar<bool>();
+    
+    private readonly SyncVar<int> _health = new SyncVar<int>();
+    private readonly SyncVar<PlayerHealthState> _state = new SyncVar<PlayerHealthState>();
     
     public override void OnStartNetwork()
     {
         base.OnStartNetwork();
 
         _health.OnChange += OnHealthChanged;
-        _isDead.OnChange += OnDeadChanged;
-        _isKnockout.OnChange += OnKnockoutChanged;
+        _state.OnChange += OnStateChanged;
 
         if (IsServerInitialized)
         {
-            _health.Value = maxHealth;
-            _isDead.Value = false;
+            _health.Value = data.maxHealth;
+            _state.Value = PlayerHealthState.Alive;
         }
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        localUI.SetActive(IsOwner);
     }
 
     private void OnHealthChanged(int prev, int next, bool asServer)
     {
         if (asServer) return;
         if (!IsOwner) return;
-        PlayerEvents.RaiseHealthChange(next);
+        PlayerHealthEvents.RaiseHealthChange(next);
     }
 
-    private void OnKnockoutChanged(bool prev, bool next, bool asServer)
+    private void OnStateChanged(PlayerHealthState prev, PlayerHealthState next, bool asServer)
     {
         if (!IsOwner) return;
 
-        if (next)
-        {
-            PlayerEvents.RaiseKnockoutEvent(true);
-        }
-        else 
-            PlayerEvents.RaiseKnockoutEvent(false);
-    }
-
-    private void OnDeadChanged(bool prev, bool next, bool asServer)
-    {
-        if (!IsOwner) return;
-        
-        if (next)
-            PlayerEvents.RaiseDeadEvent(true);
+        if (next == PlayerHealthState.Knockout)
+            PlayerHealthEvents.RaiseKnockoutEvent(true);
+        else if (next == PlayerHealthState.Dead)
+            PlayerHealthEvents.RaiseDeadEvent(true);
         else
-            PlayerEvents.RaiseDeadEvent(false);
+        {
+            PlayerHealthEvents.RaiseDeadEvent(false);
+            PlayerHealthEvents.RaiseKnockoutEvent(false);
+        }
+        
     }
+
+    // private void OnKnockoutChanged(bool prev, bool next, bool asServer)
+    // {
+    //     if (!IsOwner) return;
+    //
+    //     if (next)
+    //     {
+    //         
+    //     }
+    //     else 
+    //         PlayerEvents.RaiseKnockoutEvent(false);
+    // }
+    //
+    // private void OnDeadChanged(bool prev, bool next, bool asServer)
+    // {
+    //     if (!IsOwner) return;
+    //     
+    //     if (next)
+    //         PlayerEvents.RaiseDeadEvent(true);
+    //     else
+    //         PlayerEvents.RaiseDeadEvent(false);
+    // }
 
     [Server]
     public void TakeDamage(int amount)
     {
-        if (_isDead.Value) return;
+        if (_state.Value == PlayerHealthState.Dead) return;
 
         _health.Value -= amount;
 
@@ -84,7 +89,7 @@ public class PlayerHealth : NetworkBehaviour
     private void Knockout()
     {
         _health.Value = 0;
-        _isKnockout.Value = true;
+        _state.Value = PlayerHealthState.Knockout;
         
         StartCoroutine(KnockoutCoroutine());
     }
@@ -92,14 +97,14 @@ public class PlayerHealth : NetworkBehaviour
     [Server]
     private IEnumerator KnockoutCoroutine()
     {
-        yield return new WaitForSeconds(knockoutDelay);
+        yield return new WaitForSeconds(data.knockoutDelay);
         Death();
     }
 
     [Server]
     private void Death()
     {
-        _isDead.Value = true;
+        _state.Value = PlayerHealthState.Dead;
         _health.Value = -1;
         
         StartCoroutine(DeadCoroutine());
@@ -108,7 +113,7 @@ public class PlayerHealth : NetworkBehaviour
     [Server]
     private IEnumerator DeadCoroutine()
     {
-        yield return new WaitForSeconds(respawnDelay);
+        yield return new WaitForSeconds(data.respawnDelay);
         Respawn();
     }
 
@@ -118,9 +123,8 @@ public class PlayerHealth : NetworkBehaviour
         Vector3 spawnPos = GetSpawnPosition();
         transform.position = spawnPos;
 
-        _health.Value = maxHealth;
-        _isKnockout.Value = false;
-        _isDead.Value = false;
+        _health.Value = data.maxHealth;
+        _state.Value = PlayerHealthState.Alive;
 
         RpcOnRespawned(spawnPos);
     }

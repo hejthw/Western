@@ -1,7 +1,7 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
-public class PlayerHealthView : MonoBehaviour
+public class PlayerRespawn : MonoBehaviour
 {
     [SerializeField] private TMP_Text HealthText;
     

@@ -13,7 +13,7 @@ public class SpectatorView : MonoBehaviour
     [SerializeField] private float orbitRadius = 2.5f;
     [SerializeField] private float orbitHeight = 1.2f;
     
-    [SerializeField] private Transform _knockoutPivot;
+    [SerializeField] private Transform knockoutPivot;
     
     [SerializeField] private string playerTag = "Player";
     
@@ -35,14 +35,14 @@ public class SpectatorView : MonoBehaviour
     
     private void OnEnable()
     {
-        PlayerEvents.OnKnockoutEvent +=  OnKnockout;
+        PlayerHealthEvents.OnKnockoutEvent += OnKnockout;
         PlayerEvents.NextTargetEvent += OnNextTarget;
         PlayerEvents.PrevTargetEvent += OnPrevTarget;
     }
 
     private void OnDisable()
     {
-        PlayerEvents.OnKnockoutEvent -=  OnKnockout;
+        PlayerHealthEvents.OnKnockoutEvent -= OnKnockout;
         PlayerEvents.NextTargetEvent -= OnNextTarget;
         PlayerEvents.PrevTargetEvent -= OnPrevTarget;
     }
@@ -56,10 +56,10 @@ public class SpectatorView : MonoBehaviour
             ? _currentSpectatorTarget
             : _knockoutJoint;
 
-        if (_knockoutPivot != null && pivot != null)
+        if (knockoutPivot != null && pivot != null)
         {
-            _knockoutPivot.position = pivot.position + Vector3.up * orbitHeight;
-            _knockoutPivot.rotation = Quaternion.identity;
+            knockoutPivot.position = pivot.position + Vector3.up * orbitHeight;
+            knockoutPivot.rotation = Quaternion.identity;
         }
     }
     
@@ -75,7 +75,7 @@ public class SpectatorView : MonoBehaviour
         fpInputController.enabled       = !isKnockout;
         knockoutInputController.enabled = isKnockout;
 
-        if (isKnockout && _knockoutPivot != null)
+        if (isKnockout && knockoutPivot != null)
         {
             RefreshSpectatorTargets();
             
@@ -83,8 +83,8 @@ public class SpectatorView : MonoBehaviour
                 ? _spectatorTargets[0]
                 : null;
 
-            knockoutCamera.Follow = _knockoutPivot;
-            knockoutCamera.LookAt = _knockoutPivot;
+            knockoutCamera.Follow = knockoutPivot;
+            knockoutCamera.LookAt = knockoutPivot;
 
             if (_orbitalFollow != null)
                 _orbitalFollow.Radius = orbitRadius;

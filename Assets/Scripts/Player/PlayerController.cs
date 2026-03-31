@@ -10,10 +10,10 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] private PlayerPhysics physics;
     [SerializeField] private PlayerHealth health;
-
     [SerializeField] private PlayerInput input;
 
     [SerializeField] public Transform weaponHoldPoint;
+    [SerializeField] private GameObject localUI;
     
     // вынести отсюда
     private Rigidbody rb;
@@ -65,13 +65,13 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable()
     {
         input.OnTestEvent += Test;
-        PlayerEvents.OnKnockoutEvent += DisableMovement;
+        PlayerHealthEvents.OnKnockoutEvent += DisableMovement;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
-        PlayerEvents.OnKnockoutEvent -= DisableMovement;
+        PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
     }
 
     // вынести отсюда
@@ -98,6 +98,7 @@ public class PlayerController : NetworkBehaviour
     {
         base.OnStartClient();
         cinemachineCamera.gameObject.SetActive(IsOwner);
+        localUI.SetActive(IsOwner);
         if (!IsOwner) DisableLocalComponents();
     }
 
