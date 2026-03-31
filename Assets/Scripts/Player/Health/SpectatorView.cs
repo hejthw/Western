@@ -25,6 +25,7 @@ public class SpectatorView : MonoBehaviour
     private int _currentTargetIndex = 0;
     private Transform _currentSpectatorTarget;
     private bool _isInKnockout = false;
+    private bool _isInDead = false;
 
     private void Awake()
     {
@@ -36,6 +37,7 @@ public class SpectatorView : MonoBehaviour
     private void OnEnable()
     {
         PlayerHealthEvents.OnKnockoutEvent += OnKnockout;
+        PlayerHealthEvents.OnDeadEvent += OnDead;
         PlayerEvents.NextTargetEvent += OnNextTarget;
         PlayerEvents.PrevTargetEvent += OnPrevTarget;
     }
@@ -43,24 +45,13 @@ public class SpectatorView : MonoBehaviour
     private void OnDisable()
     {
         PlayerHealthEvents.OnKnockoutEvent -= OnKnockout;
+        PlayerHealthEvents.OnDeadEvent -= OnDead;
         PlayerEvents.NextTargetEvent -= OnNextTarget;
         PlayerEvents.PrevTargetEvent -= OnPrevTarget;
     }
 
-    // private void OnNextTarget() => CycleTarget(1);
-    // private void OnPrevTarget() => CycleTarget(-1);
-
-    private void OnNextTarget()
-    {
-        Debug.Log("Cycle next");
-        CycleTarget(1);
-    }
-
-    private void OnPrevTarget()
-    {
-        Debug.Log("Cycle prev");
-        CycleTarget(-1);
-    }
+    private void OnNextTarget() => CycleTarget(1);
+    private void OnPrevTarget() => CycleTarget(-1);
 
     private void LateUpdate()
     {
@@ -76,6 +67,7 @@ public class SpectatorView : MonoBehaviour
     }
     
     private void OnKnockout(bool isKnockout) => ApplyState(isKnockout);
+    private void OnDead(bool isDead) => _isInDead = isDead;
 
     private void ApplyState(bool isKnockout)
     {
@@ -118,6 +110,8 @@ public class SpectatorView : MonoBehaviour
 
     private void CycleTarget(int direction)
     {
+        if (!_isInDead) return;
+        Debug.Log("CycleTarget");
         RefreshSpectatorTargets();
 
         if (_spectatorTargets.Count == 0)
