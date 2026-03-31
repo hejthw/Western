@@ -81,11 +81,18 @@ public class LassoController : NetworkBehaviour
             }
             else if (lasso.isHeavyMovable.Value)
             {
-                var heavy = lasso.attachedNetObj.Value.GetComponent<HeavyMovable>();
-                if (heavy != null && lasso.isFrontHit.Value)
+                HeavyMovable heavy = lasso.attachedNetObj.Value.GetComponent<HeavyMovable>();
+                if (heavy != null && heavy.IsActiveZone(lasso.transform.position))
                 {
-                    Vector3 globalDir = heavy.transform.TransformDirection(heavy.moveDirection);
-                    lasso.ServerMoveHeavy(heavy, globalDir, heavy.moveSpeed);
+                    if (gJustPressed)
+                    {
+                        heavy.RegisterPull();
+                        
+                    }
+                }
+                else
+                {
+                    
                 }
             }
             else
