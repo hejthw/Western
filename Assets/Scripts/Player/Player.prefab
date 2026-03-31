@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 0
-  ownerHealth: {fileID: 0}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &2036903984489868689
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 3
-  ownerHealth: {fileID: 0}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &2802459893473935432
 GameObject:
   m_ObjectHideFlags: 0
@@ -1057,7 +1057,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 2
-  ownerHealth: {fileID: 0}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &5327568027396607055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1125,7 +1125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 1
-  ownerHealth: {fileID: 0}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &5375274108382611991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1719,7 +1719,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 3
-  ownerHealth: {fileID: 0}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &6858675002057946490
 GameObject:
   m_ObjectHideFlags: 0
@@ -1899,7 +1899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_Actions: {fileID: 0}
   m_NotificationBehavior: 0
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -2420,7 +2420,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 2
-  ownerHealth: {fileID: 0}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1001 &421283244982108841
 PrefabInstance:
   m_ObjectHideFlags: 0
