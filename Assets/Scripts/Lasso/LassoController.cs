@@ -38,18 +38,24 @@ public class LassoController : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner) return;
-        if (lasso == null) return;
+        if (!IsOwner || lasso == null) return;
 
         if (Keyboard.current[throwKey].wasPressedThisFrame)
         {
-            if (lasso.isFlying.Value || lasso.attachedNetObj.Value != null)
+            if (lasso.CanThrow)
             {
-                lasso.ServerDetachAndReturn();
+                // Направление, куда смотрит игрок
+                Vector3 direction = cameraTransform.forward;
+                // Серверу передаём только направление
+                lasso.ServerThrow(direction);
+                // Клиентское предсказание: используем локальную позицию старта
+                Vector3 startPos = launchPoint != null ? launchPoint.position :
+                                   cameraTransform.position + cameraTransform.forward * 0.5f;
+                lasso.ClientThrowPrediction(startPos, direction);
             }
             else
             {
-                ThrowLasso();
+                lasso.ServerDetachAndReturn();
             }
         }
 
@@ -60,19 +66,11 @@ public class LassoController : NetworkBehaviour
         {
             if (lasso.isLightObjectAttached.Value)
             {
-                if (gJustPressed)
-                    lasso.ServerYankAndDetach();
+                if (gJustPressed) lasso.ServerYankAndDetach();
             }
             else if (lasso.isUnMovable.Value)
             {
-            
-                if (hanging)
-                {
-                    hanging = false;
-                    pullingToUnMovable = true;
-                    DisableMovement();
-                }
-                else if (!pullingToUnMovable && !hanging)
+                if (!pullingToUnMovable && !hanging)
                 {
                     pullingToUnMovable = true;
                     DisableMovement();
@@ -84,15 +82,7 @@ public class LassoController : NetworkBehaviour
                 HeavyMovable heavy = lasso.attachedNetObj.Value.GetComponent<HeavyMovable>();
                 if (heavy != null && heavy.IsActiveZone(lasso.transform.position))
                 {
-                    if (gJustPressed)
-                    {
-                        heavy.RegisterPull();
-                        
-                    }
-                }
-                else
-                {
-                    
+                    if (gJustPressed) heavy.RegisterPull();
                 }
             }
             else
@@ -122,15 +112,7 @@ public class LassoController : NetworkBehaviour
         }
     }
 
-    private void ThrowLasso()
-    {
-        if (cameraTransform == null) return;
-        Vector3 startPos = launchPoint != null ? launchPoint.position : cameraTransform.position + cameraTransform.forward * 0.5f;
-        Vector3 direction = cameraTransform.forward;
-        lasso.transform.position = startPos;
-        lasso.transform.rotation = Quaternion.LookRotation(direction);
-        lasso.ServerThrow(direction);
-    }
+ 
 
     private void DisableMovement() => playerController?.DisableMovement();
     private void EnableMovement() => playerController?.EnableMovement();
