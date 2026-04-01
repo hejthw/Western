@@ -25,6 +25,8 @@ public class Lasso : NetworkBehaviour
     private FixedJoint currentJoint;
     private float throwTime;
 
+    public bool CanThrow => !isFlying.Value && !isReturning.Value && attachedNetObj.Value == null;
+    private bool hasHit;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -47,8 +49,14 @@ public class Lasso : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void ServerThrow(Vector3 direction)
     {
-        if (attachedNetObj.Value != null) return;
+        if (!CanThrow) return;
 
+        hasHit = false;
+        Vector3 startPos = controller.launchPoint != null ? controller.launchPoint.position :
+                           controller.cameraTransform.position + controller.cameraTransform.forward * 0.5f;
+
+        transform.position = startPos;
+        transform.rotation = Quaternion.LookRotation(direction);
         transform.SetParent(null);
         gameObject.SetActive(true);
 
@@ -65,26 +73,27 @@ public class Lasso : NetworkBehaviour
         isUnMovable.Value = false;
     }
 
-    [ServerRpc]
-    public void ServerStartReturn()
+    // Клиентское предсказание — мгновенный бросок
+    public void ClientThrowPrediction(Vector3 startPosition, Vector3 direction)
     {
-        if (attachedNetObj.Value != null)
-        {
-            ServerDetachAndReturn();
-            return;
-        }
-        if (isReturning.Value) return;
-        isFlying.Value = false;
-        isReturning.Value = true;
-        rb.linearVelocity = Vector3.zero;
+        if (!IsOwner) return;
+
+        transform.position = startPosition;
+        transform.rotation = Quaternion.LookRotation(direction);
+        transform.SetParent(null);
+        gameObject.SetActive(true);
+
+        rb.isKinematic = false;
+        rb.linearVelocity = direction.normalized * throwSpeed;
         rb.angularVelocity = Vector3.zero;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!IsServer) return;
-        if (!isFlying.Value) return;
+        if (!IsServer || !isFlying.Value || hasHit) return;
         if (Time.time - throwTime < 0.25f) return;
+
+        hasHit = true; // сразу блокируем повторные вызовы
 
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -98,11 +107,10 @@ public class Lasso : NetworkBehaviour
 
             isLightObjectAttached.Value = netObj.GetComponent<LightObject>() != null;
             isUnMovable.Value = netObj.GetComponent<UnMovable>() != null;
-
-            var heavy = netObj.GetComponent<HeavyMovable>();
-            isHeavyMovable.Value = heavy != null;
+            isHeavyMovable.Value = netObj.GetComponent<HeavyMovable>() != null;
 
             rb.isKinematic = true;
+            // Устанавливаем позицию в точку контакта для точного соединения
             transform.position = collision.contacts[0].point;
 
             controller.OnLassoAttachedServer(netObj.gameObject);
@@ -139,19 +147,17 @@ public class Lasso : NetworkBehaviour
     public void ServerPullTowardsPlayer()
     {
         if (attachedNetObj.Value == null) return;
-        Vector3 dirToPlayer = controller.transform.position - transform.position;
-        rb.MovePosition(transform.position + dirToPlayer.normalized * pullSpeed * Time.fixedDeltaTime);
+        Vector3 dir = controller.transform.position - transform.position;
+        rb.MovePosition(transform.position + dir.normalized * pullSpeed * Time.fixedDeltaTime);
     }
 
     [ServerRpc]
-    public void ServerPullPlayerToTarget(NetworkObject target)   
+    public void ServerPullPlayerToTarget(NetworkObject target)
     {
-        if (target == null || target != attachedNetObj.Value) return;
-        if (!isUnMovable.Value) return;
+        if (target == null || target != attachedNetObj.Value || !isUnMovable.Value) return;
 
         Vector3 dir = target.transform.position - controller.transform.position;
-        float dist = dir.magnitude;
-        if (dist < 0.5f)
+        if (dir.magnitude < 0.5f)
         {
             ServerYankAndDetach();
             return;
@@ -166,8 +172,8 @@ public class Lasso : NetworkBehaviour
 
         if (isLightObjectAttached.Value && attachedNetObj.Value.TryGetComponent<Rigidbody>(out Rigidbody targetRb))
         {
-            Vector3 yankDir = (controller.transform.position - attachedNetObj.Value.transform.position).normalized;
-            targetRb.AddForce(yankDir * yankImpulseForce, ForceMode.Impulse);
+            Vector3 dir = (controller.transform.position - attachedNetObj.Value.transform.position).normalized;
+            targetRb.AddForce(dir * yankImpulseForce, ForceMode.Impulse);
         }
 
         attachedNetObj.Value = null;
@@ -177,18 +183,17 @@ public class Lasso : NetworkBehaviour
     [ServerRpc]
     public void ServerDetachAndReturn()
     {
-        if (attachedNetObj.Value == null)
-        {
-            ServerStartReturn();
-            return;
-        }
-
-        if (isLightObjectAttached.Value)
-            ServerYankAndDetach();
-        else if (attachedNetObj.Value.TryGetComponent<HeavyMovable>(out HeavyMovable heavy))
-            heavy.ResetPullCount();
-
         ServerReturnToPlayer();
+    }
+
+
+    [ServerRpc]
+    public void ServerStartReturn()
+    {
+        isFlying.Value = false;
+        isReturning.Value = true;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
     private void ServerReturnToPlayer()
@@ -196,6 +201,10 @@ public class Lasso : NetworkBehaviour
         attachedNetObj.Value = null;
         isFlying.Value = false;
         isReturning.Value = false;
+        isLightObjectAttached.Value = false;
+        isHeavyMovable.Value = false;
+        isUnMovable.Value = false;
+
         rb.isKinematic = true;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -205,6 +214,31 @@ public class Lasso : NetworkBehaviour
         transform.localRotation = Quaternion.identity;
         gameObject.SetActive(false);
 
+        ObserversReturnToPlayer(); // <- синхронизируем на клиентах
+
         controller.OnLassoReturnedServer();
     }
+
+    [ObserversRpc]
+    private void ObserversReturnToPlayer()
+    {
+        if (IsServer) return; // сервер уже обновился
+
+        attachedNetObj.Value = null;
+        isFlying.Value = false;
+        isReturning.Value = false;
+        isLightObjectAttached.Value = false;
+        isHeavyMovable.Value = false;
+        isUnMovable.Value = false;
+
+        rb.isKinematic = true;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        transform.SetParent(controller.transform);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+        gameObject.SetActive(false);
+    }
+
 }

@@ -2189,6 +2189,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de58b775f217c3344a12acc92e83889e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LassoController
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
   throwKey: 20
   pullKey: 21
   launchPoint: {fileID: 7610812819007157487}
@@ -2239,6 +2242,7 @@ MonoBehaviour:
   _componentIndexCache: 4
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
+  revolverWeaponPrefab: {fileID: 7630292203656044341, guid: 8e71e9f88a4be6fea8f26343c04417e3, type: 3}
   holdPoint: {fileID: 6083787823477241146}
   throwForce: 12
   pickupDistance: 2
@@ -2464,9 +2468,9 @@ PrefabInstance:
       value: Lasso
       objectReference: {fileID: 0}
     - target: {fileID: 8567151649600317548, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
-      propertyPath: _addedNetworkObject
-      value: 
-      objectReference: {fileID: 4737990210302664583}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

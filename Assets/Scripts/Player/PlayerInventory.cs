@@ -35,7 +35,7 @@ public class PlayerInventory : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ServerRemoveItem(int slot)
+    public void ServerRemoveItem(int slot, bool spawnItem = true)
     {
         if (slot < 0 || slot >= slotsCount) return;
         if (itemPrefabIds[slot] == -1) return;
@@ -45,17 +45,14 @@ public class PlayerInventory : NetworkBehaviour
         itemPrefabIds[slot] = -1;
         itemStates[slot] = null;
 
+        if (!spawnItem) return;
+
         NetworkObject prefab = NetworkManager.GetPrefab(prefabId, true);
         if (prefab == null) return;
 
         Vector3 spawnPos = transform.position + transform.forward * 1.5f;
         NetworkObject spawned = Instantiate(prefab, spawnPos, Quaternion.identity);
         NetworkManager.ServerManager.Spawn(spawned, Owner);
-
-   
-        if (spawned.TryGetComponent(out ISavableItem savable))
-            savable.LoadState(state);
-
         TargetEquipItem(Owner, spawned);
     }
 

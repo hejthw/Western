@@ -17,11 +17,10 @@ public class HeavyMovable : NetworkBehaviour
 
     private Rigidbody rb;
     private bool isAtStart = true;
-
     private readonly SyncVar<int> currentPullCount = new SyncVar<int>();
-    private readonly SyncVar<Vector3> targetPosition = new SyncVar<Vector3>();
 
     private bool isMoving;
+    private Vector3 targetPosition;
 
     private void Awake()
     {
@@ -34,15 +33,10 @@ public class HeavyMovable : NetworkBehaviour
         base.OnStartNetwork();
 
         if (IsServer && startPosition != null)
+        {
             transform.position = startPosition.position;
-
-        targetPosition.OnChange += OnTargetChanged;
-    }
-
-    private void OnTargetChanged(Vector3 oldValue, Vector3 newValue, bool asServer)
-    {
-        if (newValue != Vector3.zero)
-            isMoving = true;
+            targetPosition = startPosition.position;
+        }
     }
 
     private void FixedUpdate()
@@ -51,23 +45,21 @@ public class HeavyMovable : NetworkBehaviour
 
         transform.position = Vector3.MoveTowards(
             transform.position,
-            targetPosition.Value,
+            targetPosition,
             moveSpeed * Time.fixedDeltaTime
         );
 
-        if (Vector3.Distance(transform.position, targetPosition.Value) < 0.01f)
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
         {
             isMoving = false;
             isAtStart = !isAtStart;
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
     public void RegisterPull()
     {
-        if (!IsServer) return;
-
         currentPullCount.Value++;
-
         if (currentPullCount.Value >= requiredPulls)
         {
             currentPullCount.Value = 0;
@@ -76,22 +68,20 @@ public class HeavyMovable : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ServerStartMove()
+    private void ServerStartMove()
     {
         if (startPosition == null || endPosition == null) return;
 
-        Vector3 newTarget = isAtStart ? endPosition.position : startPosition.position;
-        targetPosition.Value = newTarget;
+        targetPosition = isAtStart ? endPosition.position : startPosition.position;
         isMoving = true;
     }
 
+    [ServerRpc(RequireOwnership = false)]
     public void ResetPullCount()
     {
-        if (!IsServer) return;
         currentPullCount.Value = 0;
     }
 
-    
     public bool IsActiveZone(Vector3 hitPoint)
     {
         if (frontTrigger == null || backTrigger == null) return true;

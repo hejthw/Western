@@ -41,33 +41,27 @@ public class RevolverPickup : NetworkBehaviour, IPickupable
         if (!IsServer) return;
 
         var playerController = player.GetComponent<PlayerController>();
-        if (playerController == null) 
-        {
-            return; 
-        }
-
-        if (playerController.IsArmed) return;
+        if (playerController == null || playerController.IsArmed) return;
 
         var playerNetObj = player.GetComponent<NetworkObject>();
 
-        // Спавн префаб оружия у игрока
         NetworkObject weaponInstance = Instantiate(
             revolverWeaponPrefab,
             playerController.weaponHoldPoint.position,
             playerController.weaponHoldPoint.rotation
         );
 
-        // Передача IsOwner клиенту, который подобрал оружие
         NetworkManager.ServerManager.Spawn(weaponInstance, playerNetObj.Owner);
 
         Revolver revolver = weaponInstance.GetComponent<Revolver>();
         revolver.SetBullets(_bullets.Value);
-        revolver.AttachToPlayer(playerController);
+        revolver.AttachToPlayer(playerController, _bullets.Value);
+
         playerController.EquipWeapon(revolver);
-        
+
         NetworkObject.Despawn();
     }
-    
+
     private IEnumerator DespawnAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
