@@ -26,7 +26,7 @@ public partial class CitizenDetectAction : Action
 
     protected override Status OnUpdate()
     {
-        var target = _sensor.GetClosestTarget("Player");
+        var target = _sensor.GetClosestTarget("Suspicion");
         if (target == null) return Status.Running;
         
         Debug.Log($"Citizen detect: {target.name}");

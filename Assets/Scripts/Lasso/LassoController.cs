@@ -136,6 +136,7 @@ public class LassoController : MonoBehaviour
         lasso.transform.rotation = Quaternion.LookRotation(direction);
 
         lassoScript.Throw(direction);
+        PlayerEvents.RaiseSuspicion();
     }
 
     private void DisablePlayerMovement(bool disable)
