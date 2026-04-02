@@ -3,5 +3,6 @@ public enum HitboxType
     Head,
     Torso,
     Arms,
-    Legs
+    Legs,
+    FullBody
 }

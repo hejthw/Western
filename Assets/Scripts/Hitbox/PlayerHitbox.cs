@@ -1,8 +1,6 @@
-using System;
 using UnityEngine;
-using TMPro;
 
-public class Hitbox : MonoBehaviour
+public class PlayerHitbox : MonoBehaviour
 {
     [SerializeField] private HitboxType hitboxType;
     [SerializeField] private PlayerHealth ownerHealth;

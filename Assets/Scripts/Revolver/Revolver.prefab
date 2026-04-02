@@ -98,7 +98,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 6e3bc0974ff8b5e47b712f6d31ad0e6e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -152,9 +152,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3854793694373561982}
-  - component: {fileID: 1493751386926634616}
   - component: {fileID: 7630292203656044341}
   - component: {fileID: 537094630950130939}
+  - component: {fileID: 1167066389783215168}
   m_Layer: 0
   m_Name: Revolver
   m_TagString: Untagged
@@ -182,26 +182,6 @@ Transform:
   - {fileID: 2159295183715185914}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
---- !u!114 &1493751386926634616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4853093127990864730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a988383671e14f58be77a7551c4fb7fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Revolver
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 7630292203656044341}
-  _networkObjectCache: {fileID: 7630292203656044341}
-  revolverData: {fileID: 11400000, guid: e2d994d400840eb18a2f9b484a48b590, type: 2}
-  muzzle: {fileID: 2159295183715185914}
-  revolverPickupPrefab: {fileID: 8413722035173566249, guid: 14b3e53dfc050b086bc824112e177970, type: 3}
-  bulletTrailPrefab: {fileID: 6154115337682793468, guid: 50d69fbdfa76860698fd698f7a44944a, type: 3}
-  trailMaxDistance: 100
 --- !u!114 &7630292203656044341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,7 +209,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 1
+  <PrefabId>k__BackingField: 15
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 3109322826814174217
   SceneId: 0
@@ -245,7 +225,7 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 1493751386926634616}
+  - {fileID: 1167066389783215168}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -256,7 +236,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584274956472992608
+  _initializedTimestamp: -8584264618475654948
 --- !u!114 &537094630950130939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,6 +249,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97a34cfdb49d4cebab0a2274cf40e25a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RevolverRecoil
+--- !u!114 &1167066389783215168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4853093127990864730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f1c5a4d4cf23ce1ad84335908ad3f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Revolver
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 7630292203656044341}
+  _networkObjectCache: {fileID: 7630292203656044341}
+  revolverData: {fileID: 11400000, guid: e2d994d400840eb18a2f9b484a48b590, type: 2}
+  muzzle: {fileID: 2159295183715185914}
+  revolverPickupPrefab: {fileID: 8413722035173566249, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
+  bulletPrefab: {fileID: 277968445057594497, guid: b8ce27727a7d0bc009a4cac49f7d10ce, type: 3}
 --- !u!1 &5567564159767479882
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,7 +335,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 6e3bc0974ff8b5e47b712f6d31ad0e6e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -448,7 +447,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 6e3bc0974ff8b5e47b712f6d31ad0e6e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

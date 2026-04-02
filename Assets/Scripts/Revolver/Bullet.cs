@@ -81,13 +81,23 @@ public class Bullet : NetworkBehaviour
     {
         _hit = true;
 
-        var hitbox = hit.collider.GetComponentInParent<Hitbox>();
-        if (hitbox != null)
+        var playerHitbox = hit.collider.GetComponentInParent<PlayerHitbox>();
+        if (playerHitbox != null)
         {
-            int finalDamage = Mathf.RoundToInt(_damage * hitbox.GetMultiplier());
-            hitbox.OwnerHealth.TakeDamage(finalDamage);
+            int finalDamage = Mathf.RoundToInt(_damage * playerHitbox.GetMultiplier());
+            playerHitbox.OwnerHealth.TakeDamage(finalDamage);
+            
+            NetworkObject.Despawn();
+            return;
         }
-
+        
+        var npcHitbox = hit.collider.GetComponentInParent<NPCHitbox>();
+        if (npcHitbox != null)
+        {
+            int finalDamage = Mathf.RoundToInt(_damage * npcHitbox.GetMultiplier());
+            npcHitbox.OwnerHealth.TakeDamage(finalDamage);
+        }
+        
         NetworkObject.Despawn();
     }
 }

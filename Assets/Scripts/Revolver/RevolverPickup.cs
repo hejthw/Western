@@ -8,7 +8,7 @@ using System.Collections;
 /// Пикак револьвера на сцене. Является LightObject
 /// </summary>
 [RequireComponent(typeof(LightObject))]
-public class RevolverPickup : NetworkBehaviour, IPickupable
+public class RevolverPickup: NetworkBehaviour, IPickupable
 {
     [SerializeField] private NetworkObject revolverWeaponPrefab;
     [SerializeField] public RevolverData revolverData;

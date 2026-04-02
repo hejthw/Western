@@ -24,21 +24,7 @@ public class PlayerController : NetworkBehaviour
     private bool movementDisabled = false;
     
     private Revolver _currentWeapon;
-    private RevolverProjectile _currentGun;
-    
     public bool IsArmed {get ; private set;}
-    
-    public void EquipGun(RevolverProjectile weapon)
-    {
-        _currentGun = weapon;
-        IsArmed = true;
-    }
-
-    public void UnequipGun()
-    {
-        _currentGun = null;
-        IsArmed = false;
-    }
     
     public void EquipWeapon(Revolver weapon)
     {
