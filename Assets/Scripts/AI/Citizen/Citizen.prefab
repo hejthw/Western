@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 755282058825207668}
   - component: {fileID: 4580484843998954322}
   - component: {fileID: 795490380925558475}
-  - component: {fileID: 2976050034706794737}
+  - component: {fileID: 4822277112505486637}
   m_Layer: 0
   m_Name: Citizen
   m_TagString: Untagged
@@ -319,7 +319,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   _behaviorAgent: {fileID: 5687827164112810396}
   _navMeshAgent: {fileID: 6090642510061842057}
---- !u!114 &2976050034706794737
+--- !u!114 &4822277112505486637
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

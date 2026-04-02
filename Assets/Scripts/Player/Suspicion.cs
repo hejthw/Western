@@ -17,7 +17,16 @@ public class Suspicion : NetworkBehaviour
     void OnEnable() => PlayerEvents.OnSuspicion += RaiseSuspicion;
     void OnDisable() => PlayerEvents.OnSuspicion -= RaiseSuspicion;
 
-    void RaiseSuspicion() => StartCoroutine(Coroutine());
+    void RaiseSuspicion()
+    {
+        if (IsOwner) SetSuspicionServerRpc();
+    }
+    
+    [ServerRpc]
+    private void SetSuspicionServerRpc()
+    {
+        StartCoroutine(Coroutine());
+    }
     
     private IEnumerator Coroutine()
     {
