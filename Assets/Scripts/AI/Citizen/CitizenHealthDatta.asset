@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7463fcaa622f4bf1b760bf7af0701f98, type: 3}
   m_Name: CitizenHealthDatta
   m_EditorClassIdentifier: Assembly-CSharp::NPCHealthData
-  maxHealth: 100
+  maxHealth: 200
