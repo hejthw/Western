@@ -18,7 +18,8 @@ GameObject:
   - component: {fileID: 3722831563050448617}
   - component: {fileID: 755282058825207668}
   - component: {fileID: 4580484843998954322}
-  - component: {fileID: 4069156145014477272}
+  - component: {fileID: 795490380925558475}
+  - component: {fileID: 2976050034706794737}
   m_Layer: 0
   m_Name: Citizen
   m_TagString: Untagged
@@ -137,6 +138,8 @@ MonoBehaviour:
   m_Graph: {fileID: -582874144839336215, guid: 2b5f83352794b1af8815177385b5c433, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 3130484035978264892
+  - rid: 3130484047327264849
+  - rid: 3130484047327265159
   m_OriginalGraph: {fileID: 0}
   m_IsInitialised: 0
   m_IsStarted: 0
@@ -151,6 +154,25 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 6851723002121039906}
+    - rid: 3130484047327264849
+      type: {class: 'BlackboardVariable`1[[System.Collections.Generic.List`1[[UnityEngine.GameObject, UnityEngine.CoreModule]], mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 7198759219510745752
+          m_Value1: 11790045264342380370
+        Name: Waypoints
+        m_Value:
+        - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+    - rid: 3130484047327265159
+      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 15837767042969501384
+          m_Value1: 3776357426991406204
+        Name: Safe
+        m_Value: {fileID: 0}
 --- !u!195 &6090642510061842057
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -280,7 +302,24 @@ MonoBehaviour:
   targetTags:
   - Suspicion
   updateInterval: 0.5
---- !u!114 &4069156145014477272
+--- !u!114 &795490380925558475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6851723002121039906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63743f1624aa4ad9b9a2d0ef0adff7e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkNPC
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 300745829150570369}
+  _networkObjectCache: {fileID: 0}
+  _behaviorAgent: {fileID: 5687827164112810396}
+  _navMeshAgent: {fileID: 6090642510061842057}
+--- !u!114 &2976050034706794737
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -295,7 +334,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 300745829150570369}
   _networkObjectCache: {fileID: 0}
-  _componentConfiguration: 0
+  _componentConfiguration: 2
   _synchronizeParent: 0
   _packing:
     Position: 1
@@ -306,7 +345,7 @@ MonoBehaviour:
   _extrapolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  _clientAuthoritative: 0
+  _clientAuthoritative: 1
   _sendToOwner: 1
   _interval: 1
   _synchronizePosition: 1

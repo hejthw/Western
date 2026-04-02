@@ -1,4 +1,5 @@
 using System;
+using FishNet.Object;
 using Unity.Behavior;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
@@ -14,18 +15,21 @@ public partial class CitizenDetectAction : Action
 
     private NavMeshAgent _navAgent;
     private Sensor _sensor;
-    
+    private NetworkObject _networkObject;
     
     protected override Status OnStart()
     {
         _navAgent = Self.Value.GetComponent<NavMeshAgent>();
         _sensor = Self.Value.GetComponent<Sensor>();
-        Debug.Log(_sensor.name);
+        _networkObject = Self.Value.GetComponent<NetworkObject>();
+        
         return Status.Running;
     }
 
     protected override Status OnUpdate()
     {
+        if (!_networkObject.IsServerInitialized) return Status.Running;
+        
         var target = _sensor.GetClosestTarget("Suspicion");
         if (target == null) return Status.Running;
         
@@ -36,7 +40,6 @@ public partial class CitizenDetectAction : Action
 
     protected override void OnEnd()
     {
-        Debug.Log("end");
     }
 }
 
