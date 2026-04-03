@@ -12,7 +12,7 @@ public class LassoController : NetworkBehaviour
     public Transform launchPoint;
     public Transform cameraTransform;
 
-    private Lasso lasso;
+    private LassoNetwork lasso;          
     private Rigidbody playerRb;
     private PlayerController playerController;
     private PlayerInput playerInput;
@@ -27,7 +27,7 @@ public class LassoController : NetworkBehaviour
 
         var lassoObj = transform.Find("Lasso")?.gameObject;
         if (lassoObj != null)
-            lasso = lassoObj.GetComponent<Lasso>();
+            lasso = lassoObj.GetComponent<LassoNetwork>();   
 
         playerRb = GetComponent<Rigidbody>();
         playerController = GetComponent<PlayerController>();
@@ -44,18 +44,18 @@ public class LassoController : NetworkBehaviour
         {
             if (lasso.CanThrow)
             {
-                // Направление, куда смотрит игрок
                 Vector3 direction = cameraTransform.forward;
-                // Серверу передаём только направление
-                lasso.ServerThrow(direction);
-                // Клиентское предсказание: используем локальную позицию старта
-                Vector3 startPos = launchPoint != null ? launchPoint.position :
-                                   cameraTransform.position + cameraTransform.forward * 0.5f;
+                Vector3 startPos = launchPoint != null
+                    ? launchPoint.position
+                    : cameraTransform.position + cameraTransform.forward * 0.5f;
+
+                lasso.ServerThrow(startPos, direction);
                 lasso.ClientThrowPrediction(startPos, direction);
             }
             else
             {
                 lasso.ServerDetachAndReturn();
+                Invoke(nameof(ThrowAfterReturn), 0.05f);
             }
         }
 
@@ -100,7 +100,6 @@ public class LassoController : NetworkBehaviour
             }
         }
     }
-
     private void FixedUpdate()
     {
         if (hanging && !pullingToUnMovable)
@@ -111,8 +110,6 @@ public class LassoController : NetworkBehaviour
             playerRb.linearVelocity = vel;
         }
     }
-
- 
 
     private void DisableMovement() => playerController?.DisableMovement();
     private void EnableMovement() => playerController?.EnableMovement();
@@ -142,11 +139,23 @@ public class LassoController : NetworkBehaviour
             {
                 Vector3 awayDir = (transform.position - lasso.attachedNetObj.Value.transform.position).normalized;
                 awayDir.y = 0.5f;
-                playerRb.linearVelocity = awayDir * 5f;
+                playerRb.linearVelocity = awayDir * 7f;
             }
             pullingToUnMovable = false;
             hanging = false;
             EnableMovement();
         }
+    }
+    private void ThrowAfterReturn()
+    {
+        if (lasso == null || !IsOwner) return;
+
+        Vector3 direction = cameraTransform.forward;
+        Vector3 startPos = launchPoint != null
+            ? launchPoint.position
+            : cameraTransform.position + cameraTransform.forward * 0.5f;
+
+        lasso.ServerThrow(startPos, direction);
+        lasso.ClientThrowPrediction(startPos, direction);
     }
 }

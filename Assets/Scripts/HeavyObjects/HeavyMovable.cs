@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class HeavyMovable : NetworkBehaviour
 {
-    [Header("Позиции")]
     public Transform startPosition;
     public Transform endPosition;
 
-    [Header("Настройки")]
+   
     public int requiredPulls = 3;
     public float moveSpeed = 5f;
 

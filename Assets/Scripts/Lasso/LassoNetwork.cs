@@ -1,9 +1,8 @@
 ﻿using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class Lasso : NetworkBehaviour
+public class LassoNetwork : NetworkBehaviour
 {
     [Header("Settings")]
     public float throwSpeed = 35f;
@@ -11,6 +10,9 @@ public class Lasso : NetworkBehaviour
     public float pullSpeed = 12f;
     public float yankImpulseForce = 25f;
     public float maxDistance = 50f;
+
+    [Header("Collision Settings")]
+    public float minAttachTimeAfterThrow = 0.25f;   // Защита от дрожания
 
     private Rigidbody rb;
     private LassoController controller;
@@ -24,9 +26,10 @@ public class Lasso : NetworkBehaviour
 
     private FixedJoint currentJoint;
     private float throwTime;
-    private bool hasHit;
+    private float canAttachTime;   // Время, после которого можно прицепляться
 
     public bool CanThrow => !isFlying.Value && !isReturning.Value && attachedNetObj.Value == null;
+    public NetworkObject AttachedObject => attachedNetObj.Value;
 
     private void Awake()
     {
@@ -48,17 +51,11 @@ public class Lasso : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ServerThrow(Vector3 direction)
+    public void ServerThrow(Vector3 startPosition, Vector3 direction)
     {
         if (!CanThrow) return;
 
-        hasHit = false;
-
-        Vector3 startPos = controller.launchPoint != null
-            ? controller.launchPoint.position
-            : controller.cameraTransform.position + controller.cameraTransform.forward * 0.5f;
-
-        transform.position = startPos;
+        transform.position = startPosition;
         transform.rotation = Quaternion.LookRotation(direction);
         transform.SetParent(null);
         gameObject.SetActive(true);
@@ -70,6 +67,8 @@ public class Lasso : NetworkBehaviour
         isFlying.Value = true;
         isReturning.Value = false;
         throwTime = Time.time;
+        canAttachTime = Time.time + minAttachTimeAfterThrow;   // ← Защита от дрожания
+
         attachedNetObj.Value = null;
         isLightObjectAttached.Value = false;
         isHeavyMovable.Value = false;
@@ -90,25 +89,17 @@ public class Lasso : NetworkBehaviour
         rb.angularVelocity = Vector3.zero;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!IsServer || !isFlying.Value || hasHit) return;
-        TryAttach(collision);
-    }
-
-    private void OnCollisionStay(Collision collision)
-    {
-        if (!IsServer || !isFlying.Value || hasHit) return;
-        TryAttach(collision);
-    }
+    private void OnCollisionEnter(Collision collision) => TryAttach(collision);
+    private void OnCollisionStay(Collision collision) => TryAttach(collision);
 
     private void TryAttach(Collision collision)
     {
+        if (!IsServer || !isFlying.Value || Time.time < canAttachTime) return;
+
         if (collision.gameObject.CompareTag("Grabbable") &&
             collision.gameObject.TryGetComponent<Rigidbody>(out Rigidbody targetRb) &&
             collision.gameObject.TryGetComponent<NetworkObject>(out NetworkObject netObj))
         {
-            hasHit = true;
             attachedNetObj.Value = netObj;
             isFlying.Value = false;
 
@@ -121,9 +112,8 @@ public class Lasso : NetworkBehaviour
 
             controller.OnLassoAttachedServer(netObj.gameObject);
         }
-        else if (!hasHit)
+        else
         {
-            hasHit = true;
             isReturning.Value = true;
             controller.OnLassoMiss();
         }
@@ -150,57 +140,11 @@ public class Lasso : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    public void ServerPullTowardsPlayer()
-    {
-        if (attachedNetObj.Value == null) return;
-        Vector3 dir = controller.transform.position - transform.position;
-        rb.MovePosition(transform.position + dir.normalized * pullSpeed * Time.fixedDeltaTime);
-    }
-
-    [ServerRpc]
-    public void ServerPullPlayerToTarget(NetworkObject target)
-    {
-        if (target == null || target != attachedNetObj.Value || !isUnMovable.Value) return;
-
-        Vector3 dir = target.transform.position - controller.transform.position;
-        if (dir.magnitude < 0.5f)
-        {
-            ServerYankAndDetach();
-            return;
-        }
-        controller.GetComponent<Rigidbody>().linearVelocity = dir.normalized * pullSpeed;
-    }
-
-    [ServerRpc]
-    public void ServerYankAndDetach()
-    {
-        if (attachedNetObj.Value == null) return;
-
-        if (isLightObjectAttached.Value && attachedNetObj.Value.TryGetComponent<Rigidbody>(out Rigidbody targetRb))
-        {
-            Vector3 dir = (controller.transform.position - attachedNetObj.Value.transform.position).normalized;
-            targetRb.AddForce(dir * yankImpulseForce, ForceMode.Impulse);
-        }
-
-        attachedNetObj.Value = null;
-        ServerReturnToPlayer();
-    }
-
-    [ServerRpc]
-    public void ServerDetachAndReturn()
-    {
-        ServerReturnToPlayer();
-    }
-
-    [ServerRpc]
-    public void ServerStartReturn()
-    {
-        isFlying.Value = false;
-        isReturning.Value = true;
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-    }
+    [ServerRpc] public void ServerPullTowardsPlayer() { if (attachedNetObj.Value == null) return; Vector3 dir = controller.transform.position - transform.position; rb.MovePosition(transform.position + dir.normalized * pullSpeed * Time.fixedDeltaTime); }
+    [ServerRpc] public void ServerPullPlayerToTarget(NetworkObject target) { if (target == null || target != attachedNetObj.Value || !isUnMovable.Value) return; Vector3 dir = target.transform.position - controller.transform.position; if (dir.magnitude < 0.5f) { ServerYankAndDetach(); return; } controller.GetComponent<Rigidbody>().linearVelocity = dir.normalized * pullSpeed; }
+    [ServerRpc] public void ServerYankAndDetach() { if (attachedNetObj.Value == null) return; if (isLightObjectAttached.Value && attachedNetObj.Value.TryGetComponent<Rigidbody>(out Rigidbody targetRb)) { Vector3 dir = (controller.transform.position - attachedNetObj.Value.transform.position).normalized; targetRb.AddForce(dir * yankImpulseForce, ForceMode.Impulse); } attachedNetObj.Value = null; ServerReturnToPlayer(); }
+    [ServerRpc] public void ServerDetachAndReturn() => ServerReturnToPlayer();
+    [ServerRpc] public void ServerStartReturn() { isFlying.Value = false; isReturning.Value = true; rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
 
     private void ServerReturnToPlayer()
     {
@@ -210,7 +154,6 @@ public class Lasso : NetworkBehaviour
         isLightObjectAttached.Value = false;
         isHeavyMovable.Value = false;
         isUnMovable.Value = false;
-        hasHit = false;
 
         rb.isKinematic = true;
         rb.linearVelocity = Vector3.zero;

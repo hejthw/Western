@@ -1,217 +1,138 @@
 ﻿using UnityEngine;
 using FishNet.Object;
-using FishNet.Connection;
 
 public class PickupController : NetworkBehaviour
 {
-    [Header("Weapons")]
-    [SerializeField] private NetworkObject revolverWeaponPrefab;
+    [SerializeField] private Transform holdPoint;
 
-    [Header("Настройки")]
-    public Transform holdPoint;
     public float throwForce = 12f;
     public float pickupDistance = 5f;
     public LayerMask pickupLayer;
 
-    [Header("Инвентарь")]
-    [SerializeField] private PlayerInventory inventory;
-
     private GameObject heldObject;
-    private LightObject lightObjectScript;
-    private PlayerInput playerInput;
-    private Transform cameraTransform;
+    private Rigidbody heldRb;
+    private Transform cam;
+    private PlayerInput input;
 
     private void Awake()
     {
-        if (inventory == null)
-            inventory = GetComponent<PlayerInventory>();
-        playerInput = GetComponent<PlayerInput>();
+        input = GetComponent<PlayerInput>();
     }
 
     private void Start()
     {
-        cameraTransform = transform.Find("CameraJoint/PlayerCamera")?.transform;
+        cam = transform.Find("CameraJoint/PlayerCamera");
+
+        if (cam == null)
+        {
+            Debug.LogError("Camera not found!");
+        }
+
+        if (holdPoint == null)
+        {
+            Debug.LogError("HoldPoint NOT SET!");
+        }
     }
 
     private void OnEnable()
     {
-        if (playerInput != null)
-        {
-            playerInput.OnPickupEvent += OnPickupInput;
-            playerInput.OnSlotKeyPressed += OnSlotKeyPressed;
-            playerInput.OnAttackEvent += OnAttack;
-        }
+        if (input != null)
+            input.OnPickupEvent += HandlePickup;
     }
 
     private void OnDisable()
     {
-        if (playerInput != null)
-        {
-            playerInput.OnPickupEvent -= OnPickupInput;
-            playerInput.OnSlotKeyPressed -= OnSlotKeyPressed;
-            playerInput.OnAttackEvent -= OnAttack;
-        }
+        if (input != null)
+            input.OnPickupEvent -= HandlePickup;
     }
 
-    private void OnPickupInput()
+    private void HandlePickup()
     {
         if (!IsOwner) return;
 
         if (heldObject == null)
             TryPickup();
         else
-            ThrowObject();
+            Throw();
     }
+
+    // =========================
+    // PICKUP
+    // =========================
 
     private void TryPickup()
     {
-        if (cameraTransform == null || holdPoint == null || heldObject != null) return;
+        Ray ray = new Ray(cam.position, cam.forward);
 
-        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
-        if (!Physics.Raycast(ray, out RaycastHit hit, pickupDistance, pickupLayer)) return;
+        if (!Physics.Raycast(ray, out var hit, pickupDistance, pickupLayer))
+            return;
 
-        if (hit.collider.TryGetComponent(out LightObject lightObj))
-        {
-            lightObj.ServerPickup(GetComponent<NetworkObject>());
-        }
-        else if (hit.collider.TryGetComponent(out IPickupable pickupable))
-        {
-            InteractServerRpc(hit.collider.GetComponent<NetworkObject>());
-        }
+        if (!hit.collider.TryGetComponent(out LightObject obj))
+            return;
+
+   obj.ServerPickup(GetComponent<NetworkObject>());
+
+        AttachLocal(obj.gameObject);
     }
 
-    [ServerRpc]
-    private void InteractServerRpc(NetworkObject target)
+    private void AttachLocal(GameObject obj)
     {
-        if (target != null && target.TryGetComponent(out IPickupable pickupable))
-            pickupable.Interact(gameObject);
+        heldObject = obj;
+        heldRb = obj.GetComponent<Rigidbody>();
+
+        // 🔥 СНАЧАЛА выключаем физику
+        heldRb.isKinematic = true;
+        heldRb.useGravity = false;
+        heldRb.linearVelocity = Vector3.zero;
+        heldRb.angularVelocity = Vector3.zero;
+
+        // 🔥 ПОТОМ делаем parent
+        obj.transform.SetParent(holdPoint, false);
+
+        // 🔥 ОБЯЗАТЕЛЬНО сбрасываем локальные координаты
+        obj.transform.localPosition = Vector3.zero;
+        obj.transform.localRotation = Quaternion.identity;
+        Debug.Log("Kinematic: " + heldRb.isKinematic);
     }
+  
 
-    private void ThrowObject()
-    {
-        if (heldObject == null || lightObjectScript == null) return;
+    // =========================
+    // THROW
+    // =========================
 
-        Vector3 position = heldObject.transform.position;
-        Quaternion rotation = heldObject.transform.rotation;
-        Vector3 force = cameraTransform.forward * throwForce;
-
-        heldObject.transform.SetParent(null);
-        lightObjectScript.ServerThrow(position, rotation, force);
-        lightObjectScript.OnThrow(force); // локальное предсказание
-
-        ClearHeldObject();
-    }
-
-    public void PickupItem(GameObject item)
-    {
-        if (heldObject != null) return;
-
-        heldObject = item;
-        lightObjectScript = item.GetComponent<LightObject>();
-
-        if (lightObjectScript != null)
-        {
-            heldObject.transform.SetParent(holdPoint);
-            heldObject.transform.localPosition = Vector3.zero;
-            heldObject.transform.localRotation = Quaternion.identity;
-            lightObjectScript.OnPickup();
-        }
-    }
-
-    public void ClearHeldObject()
-    {
-        heldObject = null;
-        lightObjectScript = null;
-    }
-
-    private void StoreCurrentObjectToSlot(int slot)
+    private void Throw()
     {
         if (heldObject == null) return;
 
-        // Если это револьвер (оружие)
-        if (heldObject.TryGetComponent<Revolver>(out Revolver revolver))
-        {
-            int bullets = revolver.GetBullets();
-            byte[] revolverState = System.BitConverter.GetBytes(bullets);
-            NetworkObject pickupPrefab = revolver.revolverPickupPrefab;
-            if (pickupPrefab != null)
-            {
-                inventory.ServerStoreItem(slot, pickupPrefab.PrefabId, revolverState);
-                NetworkObject.Despawn(heldObject.GetComponent<NetworkObject>());
-                ClearHeldObject();
-            }
-            return;
-        }
+        Vector3 pos = heldObject.transform.position;
+        Vector3 velocity = cam.forward * throwForce;
 
-        // Обычный LightObject
-        LightObject lightObj = heldObject.GetComponent<LightObject>();
-        if (lightObj == null) return;
+        heldObject.transform.SetParent(null);
 
-        NetworkObject netObj = heldObject.GetComponent<NetworkObject>();
-        if (netObj == null) return;
+        heldRb.isKinematic = false;
+        heldRb.useGravity = true;
+        heldRb.linearVelocity = velocity;
 
-        int prefabId = netObj.PrefabId;
-        byte[] itemState = null;
-        if (heldObject.TryGetComponent(out ISavableItem savable))
-            itemState = savable.SaveState();
+        heldObject.GetComponent<LightObject>()
+            .ServerThrow(pos, velocity);
 
-        inventory.ServerStoreItem(slot, prefabId, itemState);
-        NetworkObject.Despawn(netObj);
-        ClearHeldObject();
+        heldObject = null;
+        heldRb = null;
     }
     public void SetHeldWeapon(GameObject weapon)
     {
         if (heldObject != null) return;
-        heldObject = weapon;
-        lightObjectScript = null;
+
     }
-
-    private void EquipFromSlot(int slot)
-    {
-        if (inventory.IsSlotEmpty(slot)) return;
-        if (heldObject != null) return;
-
-        int prefabId = inventory.GetItemPrefabId(slot);
-        byte[] state = inventory.GetItemState(slot);
-
-        NetworkObject prefab = NetworkManager.GetPrefab(prefabId, true);
-        if (prefab != null && prefab.TryGetComponent<RevolverPickup>(out _))
-        {
-            Vector3 spawnPos = holdPoint.position;
-            Quaternion spawnRot = holdPoint.rotation;
-            NetworkObject weaponObj = Instantiate(revolverWeaponPrefab, spawnPos, spawnRot);
-            NetworkManager.ServerManager.Spawn(weaponObj, Owner);
-
-            Revolver revolver = weaponObj.GetComponent<Revolver>();
-            int bullets = (state != null && state.Length >= 4)
-                ? System.BitConverter.ToInt32(state, 0)
-                : revolver.revolverData.bullets;
-
-            revolver.SetBullets(bullets);
-            revolver.AttachToPlayer(GetComponent<PlayerController>(), bullets);
-
-            // Удаляем предмет из инвентаря без спавна на земле
-            inventory.ServerRemoveItem(slot, false);
-            return;
-        }
-
-        // Обычный LightObject – спавним на земле
-        inventory.ServerRemoveItem(slot, true);
-    }
-
-    private void OnAttack()
-    {
-        if (!IsOwner || heldObject == null) return;
-        if (heldObject.TryGetComponent<Dynamite>(out Dynamite dynamite))
-            dynamite.Ignite();
-    }
-
-    private void OnSlotKeyPressed(int slot)
+    private void LateUpdate()
     {
         if (!IsOwner) return;
+
         if (heldObject != null)
-            StoreCurrentObjectToSlot(slot);
-        else
-            EquipFromSlot(slot);
+        {
+            heldObject.transform.position = holdPoint.position;
+            heldObject.transform.rotation = holdPoint.rotation;
+        }
     }
+
 }

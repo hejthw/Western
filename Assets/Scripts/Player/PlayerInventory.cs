@@ -51,16 +51,14 @@ public class PlayerInventory : NetworkBehaviour
         if (prefab == null) return;
 
         Vector3 spawnPos = transform.position + transform.forward * 1.5f;
+  
         NetworkObject spawned = Instantiate(prefab, spawnPos, Quaternion.identity);
-        NetworkManager.ServerManager.Spawn(spawned, Owner);
-        TargetEquipItem(Owner, spawned);
-    }
 
-    [TargetRpc]
-    private void TargetEquipItem(NetworkConnection target, NetworkObject item)
-    {
-        var pickup = GetComponent<PickupController>();
-        if (pickup != null)
-            pickup.PickupItem(item.gameObject);
+        NetworkManager.ServerManager.Spawn(spawned, Owner);
+
+        if (spawned.TryGetComponent<LightObject>(out var lightObj))
+        {
+            lightObj.ServerPickup(GetComponent<NetworkObject>());
+        }
     }
 }

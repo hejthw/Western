@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 5912945583157731004}
   - component: {fileID: 5849718590788835571}
   - component: {fileID: 385048781580953851}
-  - component: {fileID: 6133476306332018826}
   - component: {fileID: 8567151649600317548}
   - component: {fileID: 608948622990259887}
+  - component: {fileID: -7196255493245536799}
   m_Layer: 0
   m_Name: Lasso
   m_TagString: Untagged
@@ -114,8 +114,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.3937626, y: 1.2736602, z: 1.1761818}
+  m_Center: {x: -0.07724857, y: 0.02332449, z: 0.018360138}
 --- !u!54 &385048781580953851
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -143,26 +143,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
---- !u!114 &6133476306332018826
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7696105253319526697}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35ff8940c2fb2384ca33c7c14b3f8e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Lasso
-  _componentIndexCache: 0
-  _addedNetworkObject: {fileID: 608948622990259887}
-  _networkObjectCache: {fileID: 608948622990259887}
-  throwSpeed: 20
-  returnSpeed: 10
-  pullSpeed: 5
-  yankImpulseForce: 15
-  maxDistance: 30
 --- !u!114 &8567151649600317548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,8 +208,9 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 6133476306332018826}
+  - {fileID: 0}
   - {fileID: 8567151649600317548}
+  - {fileID: -7196255493245536799}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -240,7 +221,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584266673127891948
+  _initializedTimestamp: -8584263729903535407
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 1
@@ -265,3 +246,23 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 0.5, y: 0.5, z: 0.5}
     IsValid: 1
+--- !u!114 &-7196255493245536799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7696105253319526697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd9951ea05ef67b4da35ee2927831b7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LassoNetwork
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 608948622990259887}
+  _networkObjectCache: {fileID: 608948622990259887}
+  throwSpeed: 20
+  returnSpeed: 10
+  pullSpeed: 5
+  yankImpulseForce: 15
+  maxDistance: 30

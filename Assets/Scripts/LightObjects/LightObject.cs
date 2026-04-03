@@ -3,118 +3,89 @@ using FishNet.Connection;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 
-public class LightObject : NetworkBehaviour, ISavableItem
+public class LightObject : NetworkBehaviour
 {
-    public bool fragile = false;
-
     private Rigidbody rb;
-    private bool wasThrown = false;
 
-    public readonly SyncVar<NetworkObject> heldBy = new SyncVar<NetworkObject>();
+    private readonly SyncVar<ItemState> state = new SyncVar<ItemState>();
+    private readonly SyncVar<NetworkObject> holder = new SyncVar<NetworkObject>();
+
+    [SerializeField] private bool fragile = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        heldBy.OnChange += OnHeldByChanged;
     }
 
-    private void OnHeldByChanged(NetworkObject oldValue, NetworkObject newValue, bool asServer)
-    {
-        if (newValue == null && IsOwner)
-            GetComponentInParent<PickupController>()?.ClearHeldObject();
-    }
+    // =========================
+    // SERVER LOGIC
+    // =========================
 
     [ServerRpc(RequireOwnership = false)]
     public void ServerPickup(NetworkObject player)
     {
-        if (heldBy.Value != null) return;
+        if (state.Value != ItemState.World) return;
 
-        heldBy.Value = player;
+        holder.Value = player;
+        state.Value = ItemState.Held;
+
         GiveOwnership(player.Owner);
-        rb.isKinematic = true;
-        rb.useGravity = false;
-
-        TargetOnPickup(player.Owner, player);
-    }
-
-    [TargetRpc]
-    private void TargetOnPickup(NetworkConnection target, NetworkObject player)
-    {
-        var pickup = player.GetComponent<PickupController>();
-        if (pickup != null)
-            pickup.PickupItem(gameObject);
-    }
-
-    public void OnPickup()
-    {
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-            rb.useGravity = false;
-        }
-        wasThrown = false;
-    }
-    public void OnThrow(Vector3 force)
-    {
-        if (rb != null)
-        {
-            rb.isKinematic = false;
-            rb.useGravity = true;
-            rb.AddForce(force, ForceMode.Impulse);
-        }
-        wasThrown = true;
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ServerThrow(Vector3 position, Quaternion rotation, Vector3 force)
+    public void ServerThrow(Vector3 pos, Vector3 velocity)
     {
-        if (heldBy.Value == null) return;
+        if (state.Value != ItemState.Held) return;
 
-        heldBy.Value = null;
-        GiveOwnership(null);
+        state.Value = ItemState.Thrown;
+        holder.Value = null;
 
-        transform.position = position;
-        transform.rotation = rotation;
+        RemoveOwnership();
+
+        transform.position = pos;
+
         rb.isKinematic = false;
         rb.useGravity = true;
-        rb.AddForce(force, ForceMode.Impulse);
+        rb.linearVelocity = velocity;
 
-        ObserversThrow(transform.position, transform.rotation, rb.linearVelocity, rb.angularVelocity);
+        ObserversApplyThrow(pos, velocity);
     }
 
     [ObserversRpc]
-    private void ObserversThrow(Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
+    private void ObserversApplyThrow(Vector3 pos, Vector3 velocity)
     {
         if (IsOwner) return;
+
         transform.position = pos;
-        transform.rotation = rot;
-        rb.linearVelocity = vel;
-        rb.angularVelocity = angVel;
+
         rb.isKinematic = false;
         rb.useGravity = true;
-        heldBy.Value = null;
+        rb.linearVelocity = velocity;
     }
+
+    // =========================
+    // COLLISION
+    // =========================
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!wasThrown || !fragile) return;
-        if (IsServer)
-            GetComponent<NetworkObject>().Despawn();
-        else
-            DespawnServerRpc();
+        if (!IsServer) return;
+
+        if (state.Value != ItemState.Thrown) return;
+
+        if (fragile)
+        {
+            Despawn();
+            return;
+        }
+
+        state.Value = ItemState.World;
     }
 
-    [ServerRpc]
-    private void DespawnServerRpc()
+    [Server]
+    public void ForceDrop()
     {
-        GetComponent<NetworkObject>().Despawn();
-    }
-
-    public byte[] SaveState() => new byte[] { (byte)(fragile ? 1 : 0) };
-
-    public void LoadState(byte[] state)
-    {
-        if (state != null && state.Length > 0)
-            fragile = state[0] == 1;
+        holder.Value = null;
+        state.Value = ItemState.World;
     }
 }
