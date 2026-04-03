@@ -51,20 +51,20 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable()
     {
         input.OnTestEvent += Test;
-        if (IsOwner) PlayerRegistry.Register(this);
+        PlayerRegistry.Register(this);
         PlayerHealthEvents.OnKnockoutEvent += DisableMovement;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
-        if (IsOwner) PlayerRegistry.Unregister(this);
+        PlayerRegistry.Unregister(this);
         PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
     }
 
     private void Update()
     {
-        Debug.Log(PlayerRegistry.All);
+        Debug.Log(PlayerRegistry.All.Count);
     }
 
     // вынести отсюда
