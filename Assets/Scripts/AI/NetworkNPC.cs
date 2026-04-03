@@ -7,7 +7,8 @@ public class NetworkNPC : NetworkBehaviour
 {
     [SerializeField] private BehaviorGraphAgent _behaviorAgent;
     [SerializeField] private NavMeshAgent _navMeshAgent;
-
+    
+    
     // server-authority
     public override void OnStartServer()
     {
@@ -34,14 +35,6 @@ public class NetworkNPC : NetworkBehaviour
         
         _behaviorAgent.enabled = false;
         _navMeshAgent.enabled = false;
-    }
-
-    private void OnEnable() => NPCEvents.OnDeadEvent += Destroy;
-    private void OnDisable() => NPCEvents.OnDeadEvent -= Destroy;
-
-    private void Destroy()
-    {
-        ServerManager.Despawn(this);
     }
     
     // private readonly SyncVar<CitizenStatus> _npcState = new SyncVar<CitizenStatus>();

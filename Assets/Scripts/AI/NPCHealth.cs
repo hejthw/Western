@@ -40,7 +40,9 @@ public class NPCHealth : NetworkBehaviour
     [Server]
     private void Death()
     {
+        if (_isDead.Value) return;
+        
         _isDead.Value = true;
-        NPCEvents.RaiseDeadEvent();
+        ServerManager.Despawn(this);
     }
 }

@@ -2,7 +2,6 @@ using System;
 
 public static  class PlayerEvents
 {
-    
     public static event Action<float> OnLocalStaminaChange;
     
     public static event Action NextTargetEvent;

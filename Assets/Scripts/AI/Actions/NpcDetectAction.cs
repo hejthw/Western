@@ -7,12 +7,11 @@ using Unity.Properties;
 using UnityEngine.AI;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "CitizenDetect", story: "[Self] detects [Player]", category: "Action", id: "10d87f97e3c47b105ce04a786719395f")]
+[NodeDescription(name: "NPCDetect", story: "[Self] detects [Player]", category: "Action", id: "10d87f97e3c47b105ce04a786719395f")]
 public partial class CitizenDetectAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Self;
     [SerializeReference] public BlackboardVariable<GameObject> Player;
-
     private NavMeshAgent _navAgent;
     private Sensor _sensor;
     private NetworkObject _networkObject;

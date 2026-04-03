@@ -10,6 +10,8 @@ public class PlayerHealth : NetworkBehaviour
     private readonly SyncVar<int> _health = new SyncVar<int>();
     private readonly SyncVar<PlayerHealthState> _state = new SyncVar<PlayerHealthState>();
     
+    public int GetHealth() => _health.Value;
+    
     public override void OnStartNetwork()
     {
         base.OnStartNetwork();
