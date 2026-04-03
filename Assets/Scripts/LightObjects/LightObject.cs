@@ -17,10 +17,6 @@ public class LightObject : NetworkBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    // =========================
-    // SERVER LOGIC
-    // =========================
-
     [ServerRpc(RequireOwnership = false)]
     public void ServerPickup(NetworkObject player)
     {
@@ -62,10 +58,6 @@ public class LightObject : NetworkBehaviour
         rb.useGravity = true;
         rb.linearVelocity = velocity;
     }
-
-    // =========================
-    // COLLISION
-    // =========================
 
     private void OnCollisionEnter(Collision collision)
     {
