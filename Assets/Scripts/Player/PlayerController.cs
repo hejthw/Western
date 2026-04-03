@@ -51,14 +51,13 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable()
     {
         input.OnTestEvent += Test;
-        PlayerRegistry.Register(this);
+
         PlayerHealthEvents.OnKnockoutEvent += DisableMovement;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
-        PlayerRegistry.Unregister(this);
         PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
     }
 
@@ -93,6 +92,7 @@ public class PlayerController : NetworkBehaviour
         cinemachineCamera.gameObject.SetActive(IsOwner);
         localUI.SetActive(IsOwner);
         if (!IsOwner) DisableLocalComponents();
+        PlayerRegistry.Register(this);
     }
 
     private void DisableLocalComponents()
@@ -123,5 +123,10 @@ public class PlayerController : NetworkBehaviour
     private void TakeDamageTest(int damage)
     {
         health.TakeDamage(damage);
+    }
+
+    public override void OnStopClient()
+    {
+        PlayerRegistry.Unregister(this);
     }
 }
