@@ -44,11 +44,9 @@ public class LassoController : NetworkBehaviour
         {
             if (lasso.CanThrow)
             {
-                // Направление, куда смотрит игрок
+               
                 Vector3 direction = cameraTransform.forward;
-                // Серверу передаём только направление
                 lasso.ServerThrow(direction);
-                // Клиентское предсказание: используем локальную позицию старта
                 Vector3 startPos = launchPoint != null ? launchPoint.position :
                                    cameraTransform.position + cameraTransform.forward * 0.5f;
                 lasso.ClientThrowPrediction(startPos, direction);
@@ -80,7 +78,7 @@ public class LassoController : NetworkBehaviour
             else if (lasso.isHeavyMovable.Value)
             {
                 HeavyMovable heavy = lasso.attachedNetObj.Value.GetComponent<HeavyMovable>();
-                if (heavy != null && heavy.IsActiveZone(lasso.transform.position))
+                if (heavy != null && heavy.IsActiveZone(lasso.HitPoint))
                 {
                     if (gJustPressed) heavy.RegisterPull();
                 }
