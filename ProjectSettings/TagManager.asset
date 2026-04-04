@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Grabbable
+  - Suspicion
   layers:
   - Default
   - TransparentFX

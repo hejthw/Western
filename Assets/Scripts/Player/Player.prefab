@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7635756975032730099}
+  - component: {fileID: 6546633076592774692}
   m_Layer: 6
   m_Name: Hitbox
   m_TagString: Untagged
@@ -37,6 +38,22 @@ Transform:
   - {fileID: 89345230495589935}
   m_Father: {fileID: 3998414238054622849}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6546633076592774692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538829022233379768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91f8f3780d7e4dd6a9ef31ac6c25de94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawner
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
+  spawnPoints: []
 --- !u!1 &1056871110255555570
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 0
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &2036903984489868689
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 3
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &2802459893473935432
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,8 +251,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.18308339, y: 0.54031414, z: 0.1217922, w: 0.812224}
-  m_LocalPosition: {x: -1.9729097, y: 0.6933191, z: -0.46068382}
+  m_LocalRotation: {x: -0.094259515, y: 0.9048808, z: 0.27205753, w: 0.3135132}
+  m_LocalPosition: {x: -0.9984008, y: 0.35747266, z: 1.7830696}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -318,7 +335,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 75.59656
+    Value: 150.11137
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -328,7 +345,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 27.669348
+    Value: 20.13234
     Center: 17.5
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -362,7 +379,7 @@ MonoBehaviour:
   ReferenceFrame: 2
   RecenterTarget: 2
   PanAxis:
-    Value: 67.26593
+    Value: 141.78076
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -372,7 +389,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -25.405478
+    Value: -33.467403
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -722,7 +739,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.061489914, y: 0.8846223, z: 0.12200524, w: 0.44584435}
+  m_LocalRotation: {x: -0.22703765, y: -0.7522475, z: -0.5267294, w: 0.32424337}
   m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -800,7 +817,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: 126.50433
+    Value: -133.36475
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -810,7 +827,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -15.70515
+    Value: -70
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1040,7 +1057,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 2
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &5327568027396607055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1108,7 +1125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 1
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &5375274108382611991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1379,6 +1396,77 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &5628976193001401049
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6657445138780899547}
+  - component: {fileID: 1835402252551627959}
+  - component: {fileID: 1772565907744420026}
+  m_Layer: 0
+  m_Name: Suspicion
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6657445138780899547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5628976193001401049}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3998414238054622849}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1835402252551627959
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5628976193001401049}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.97797227
+  m_Center: {x: 0, y: 0.47797227, z: 0}
+--- !u!114 &1772565907744420026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5628976193001401049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f061ff669c74df8a127f3dd6a7c4dfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Suspicion
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
+  suspicionObject: {fileID: 5628976193001401049}
+  suspicionTime: 3
 --- !u!1 &6143229965531775805
 GameObject:
   m_ObjectHideFlags: 0
@@ -1574,25 +1662,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
-  <IsNested>k__BackingField: 1
-  WasActiveDuringEdit: 1
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 1
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours:
-  - {fileID: 868698912939469854}
-  InitializedParentNetworkBehaviour: {fileID: 6589580627724631239}
-  InitializedNestedNetworkObjects: []
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
-  _initializedTimestamp: -8584274956472992608
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -1617,6 +1686,25 @@ MonoBehaviour:
     Rotation: {x: -0, y: -0, z: -0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
+  <IsNested>k__BackingField: 1
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 1
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours:
+  - {fileID: 868698912939469854}
+  InitializedParentNetworkBehaviour: {fileID: 6589580627724631239}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: -8584274956472992608
 --- !u!114 &868698912939469854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1702,7 +1790,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 3
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1 &6858675002057946490
 GameObject:
   m_ObjectHideFlags: 0
@@ -1754,7 +1842,7 @@ MonoBehaviour:
   knockoutInputController: {fileID: 7653360756303194320}
   orbitRadius: 2
   orbitHeight: 1
-  _knockoutPivot: {fileID: 434668095162423598}
+  knockoutPivot: {fileID: 434668095162423598}
   playerTag: Player
 --- !u!1 &7075362909638396278
 GameObject:
@@ -1804,12 +1892,12 @@ GameObject:
   - component: {fileID: 3801565093934317144}
   - component: {fileID: 2479261188838793012}
   - component: {fileID: 3873198404099586706}
-  - component: {fileID: 6462810797751770924}
   - component: {fileID: 657205347255209784}
   - component: {fileID: 2344148755127962324}
   - component: {fileID: 6215445965447647855}
   - component: {fileID: 8370486624532304144}
   - component: {fileID: 191303042818185563}
+  - component: {fileID: 9106320914675195185}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1841,6 +1929,7 @@ Transform:
   - {fileID: 6787961388630782479}
   - {fileID: 7635756975032730099}
   - {fileID: 1005701852619884833}
+  - {fileID: 6657445138780899547}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3110369444958837593
@@ -1973,7 +2062,7 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!136 &2364090612570148680
@@ -2011,30 +2100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
-  <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours:
-  - {fileID: 6589580627724631239}
-  - {fileID: 3801565093934317144}
-  - {fileID: 6462810797751770924}
-  - {fileID: 6215445965447647855}
-  - {fileID: 8370486624532304144}
-  InitializedParentNetworkBehaviour: {fileID: 0}
-  InitializedNestedNetworkObjects:
-  - {fileID: 4896003232713610340}
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
-  _initializedTimestamp: -8584274956472992608
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -2059,6 +2124,30 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 0
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours:
+  - {fileID: 6589580627724631239}
+  - {fileID: 3801565093934317144}
+  - {fileID: 0}
+  - {fileID: 6215445965447647855}
+  - {fileID: 8370486624532304144}
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects:
+  - {fileID: 4896003232713610340}
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: -8584274956472992608
 --- !u!114 &6589580627724631239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2122,9 +2211,10 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4737990210302664583}
   cinemachineCamera: {fileID: 4685515460504658230}
   physics: {fileID: 3873198404099586706}
-  health: {fileID: 6462810797751770924}
+  health: {fileID: 0}
   input: {fileID: 2479261188838793012}
   weaponHoldPoint: {fileID: 6787961388630782479}
+  localUI: {fileID: 5375274108382611991}
   kinematicDelay: 5
 --- !u!114 &2479261188838793012
 MonoBehaviour:
@@ -2157,26 +2247,6 @@ MonoBehaviour:
   rb: {fileID: 3110369444958837593}
   input: {fileID: 2479261188838793012}
   col: {fileID: 2364090612570148680}
---- !u!114 &6462810797751770924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7179411760756142996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7698e84e5344e629e71ccf093c8636f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  _componentIndexCache: 2
-  _addedNetworkObject: {fileID: 4737990210302664583}
-  _networkObjectCache: {fileID: 4737990210302664583}
-  maxHealth: 100
-  respawnDelay: 10
-  knockoutDelay: 15
-  spawnPoints: []
-  localUI: {fileID: 5375274108382611991}
 --- !u!114 &657205347255209784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2266,6 +2336,22 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 0}
   slotsCount: 3
+--- !u!114 &9106320914675195185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7179411760756142996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7698e84e5344e629e71ccf093c8636f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
+  data: {fileID: 11400000, guid: 917b28ece089295e2a6a124bd5ae2a9d, type: 2}
 --- !u!1 &7449048867237766776
 GameObject:
   m_ObjectHideFlags: 0
@@ -2410,7 +2496,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hitbox
   hitboxType: 2
-  ownerHealth: {fileID: 6462810797751770924}
+  ownerHealth: {fileID: 9106320914675195185}
 --- !u!1001 &421283244982108841
 PrefabInstance:
   m_ObjectHideFlags: 0

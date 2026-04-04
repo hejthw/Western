@@ -10,10 +10,10 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] private PlayerPhysics physics;
     [SerializeField] private PlayerHealth health;
-
     [SerializeField] private PlayerInput input;
 
     [SerializeField] public Transform weaponHoldPoint;
+    [SerializeField] private GameObject localUI;
     
     // вынести отсюда
     private Rigidbody rb;
@@ -24,21 +24,7 @@ public class PlayerController : NetworkBehaviour
     private bool movementDisabled = false;
     
     private Revolver _currentWeapon;
-    private RevolverProjectile _currentGun;
-    
     public bool IsArmed {get ; private set;}
-    
-    public void EquipGun(RevolverProjectile weapon)
-    {
-        _currentGun = weapon;
-        IsArmed = true;
-    }
-
-    public void UnequipGun()
-    {
-        _currentGun = null;
-        IsArmed = false;
-    }
     
     public void EquipWeapon(Revolver weapon)
     {
@@ -65,13 +51,19 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable()
     {
         input.OnTestEvent += Test;
-        PlayerEvents.OnKnockoutEvent += DisableMovement;
+
+        PlayerHealthEvents.OnKnockoutEvent += DisableMovement;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
-        PlayerEvents.OnKnockoutEvent -= DisableMovement;
+        PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
+    }
+
+    private void Update()
+    {
+        Debug.Log(PlayerRegistry.All.Count);
     }
 
     // вынести отсюда
@@ -98,7 +90,9 @@ public class PlayerController : NetworkBehaviour
     {
         base.OnStartClient();
         cinemachineCamera.gameObject.SetActive(IsOwner);
+        localUI.SetActive(IsOwner);
         if (!IsOwner) DisableLocalComponents();
+        PlayerRegistry.Register(this);
     }
 
     private void DisableLocalComponents()
@@ -129,5 +123,10 @@ public class PlayerController : NetworkBehaviour
     private void TakeDamageTest(int damage)
     {
         health.TakeDamage(damage);
+    }
+
+    public override void OnStopClient()
+    {
+        PlayerRegistry.Unregister(this);
     }
 }
