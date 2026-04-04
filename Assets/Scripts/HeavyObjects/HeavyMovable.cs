@@ -1,19 +1,26 @@
-using UnityEngine;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using UnityEngine;
 
 public class HeavyMovable : NetworkBehaviour
 {
-    [Header("Направление движения (в локальных координатах)")]
-    public Vector3 moveDirection = Vector3.forward;
+    [Header("Позиции")]
+    public Transform startPosition;
+    public Transform endPosition;
 
-    [Header("Коллайдеры-триггеры для определения стороны")]
+    [Header("Настройки")]
+    public int requiredPulls = 3;
+    public float moveSpeed = 5f;
+
     public Collider frontTrigger;
     public Collider backTrigger;
 
-    [Header("Скорость движения")]
-    public float moveSpeed = 5f;
-
     private Rigidbody rb;
+    private bool isAtStart = true;
+    private readonly SyncVar<int> currentPullCount = new SyncVar<int>();
+
+    private bool isMoving;
+    private Vector3 targetPosition;
 
     private void Awake()
     {
@@ -21,23 +28,67 @@ public class HeavyMovable : NetworkBehaviour
         if (rb != null) rb.isKinematic = true;
     }
 
-    // Определяем, с какой стороны захват (по точке)
-    public bool IsFrontHit(Vector3 hitPoint)
+    public override void OnStartNetwork()
     {
-        if (frontTrigger == null || backTrigger == null) return true;
-        float distToFront = Vector3.Distance(hitPoint, frontTrigger.ClosestPoint(hitPoint));
-        float distToBack = Vector3.Distance(hitPoint, backTrigger.ClosestPoint(hitPoint));
-        return distToFront < distToBack;
+        base.OnStartNetwork();
+
+        if (IsServer && startPosition != null)
+        {
+            transform.position = startPosition.position;
+            targetPosition = startPosition.position;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (!IsServer || !isMoving) return;
+
+        transform.position = Vector3.MoveTowards(
+            transform.position,
+            targetPosition,
+            moveSpeed * Time.fixedDeltaTime
+        );
+
+        if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
+        {
+            isMoving = false;
+            isAtStart = !isAtStart;
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ServerMove(Vector3 direction, float speed)
+    public void RegisterPull()
     {
-        if (!IsServer) return;
-        Vector3 newPos = transform.position + direction * speed * Time.fixedDeltaTime;
-        if (rb != null)
-            rb.MovePosition(newPos);
-        else
-            transform.position = newPos;
+        currentPullCount.Value++;
+        if (currentPullCount.Value >= requiredPulls)
+        {
+            currentPullCount.Value = 0;
+            ServerStartMove();
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void ServerStartMove()
+    {
+        if (startPosition == null || endPosition == null) return;
+
+        targetPosition = isAtStart ? endPosition.position : startPosition.position;
+        isMoving = true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ResetPullCount()
+    {
+        currentPullCount.Value = 0;
+    }
+
+    public bool IsActiveZone(Vector3 hitPoint)
+    {
+        if (frontTrigger == null || backTrigger == null) return true;
+
+        bool front = frontTrigger.bounds.Contains(hitPoint);
+        bool back = backTrigger.bounds.Contains(hitPoint);
+
+        return isAtStart ? front : back;
     }
 }
