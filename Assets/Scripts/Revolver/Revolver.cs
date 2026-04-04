@@ -6,7 +6,7 @@ public class Revolver: NetworkBehaviour
 {
     public RevolverData revolverData;
     [SerializeField] private Transform muzzle;
-    [SerializeField] private NetworkObject revolverPickupPrefab;
+    [SerializeField] public NetworkObject revolverPickupPrefab;
     
     [SerializeField] private NetworkObject bulletPrefab;
 
@@ -17,6 +17,8 @@ public class Revolver: NetworkBehaviour
     private LayerMask _hitboxMask;
 
     private readonly SyncVar<int> _bullets = new SyncVar<int>();
+    
+    public int GetBullets() => _bullets.Value;
 
     private void Awake()
     {
@@ -31,15 +33,15 @@ public class Revolver: NetworkBehaviour
 
     public void SetBullets(int count) => _bullets.Value = count;
 
-    public void AttachToPlayer(PlayerController playerController)
+    public void AttachToPlayer(PlayerController playerController, int bullets)
     {
         _playerController = playerController;
         int playerObjId = playerController.GetComponent<NetworkObject>().ObjectId;
-        AttachClientRpc(playerObjId);
+        AttachClientRpc(playerObjId, bullets);
     }
 
     [ObserversRpc(BufferLast = true)]
-    private void AttachClientRpc(int playerNetObjId)
+    private void AttachClientRpc(int playerNetObjId, int bullets)
     {
         if (!NetworkManager.ClientManager.Objects.Spawned.TryGetValue(
                 playerNetObjId, out NetworkObject playerNetObj))
@@ -53,7 +55,12 @@ public class Revolver: NetworkBehaviour
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
 
+        _bullets.Value = bullets; 
+
         if (!playerNetObj.IsOwner) return;
+
+        var pickup = playerNetObj.GetComponent<PickupController>();
+        if (pickup != null) pickup.SetHeldWeapon(gameObject);
 
         _recoil = GetComponent<RevolverRecoil>();
         _recoil?.Init(revolverData, controller);
@@ -65,6 +72,7 @@ public class Revolver: NetworkBehaviour
             _input.OnDropEvent += Drop;
         }
     }
+
 
     public override void OnStopClient()
     {

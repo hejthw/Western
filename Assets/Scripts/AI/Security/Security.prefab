@@ -569,6 +569,8 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   _behaviorAgent: {fileID: 6856290257989824021}
   _navMeshAgent: {fileID: 4497231934169299779}
+  _criticalRange: 3
+  damage: 100
 --- !u!1001 &5901501430087918975
 PrefabInstance:
   m_ObjectHideFlags: 0

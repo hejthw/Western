@@ -224,7 +224,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 19
+  <PrefabId>k__BackingField: 16
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 11012448834569971294
   SceneId: 0
@@ -241,6 +241,9 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 3722831563050448617}
+  - {fileID: 795490380925558475}
+  - {fileID: 4822277112505486637}
+  - {fileID: 4892289949281136317}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -251,7 +254,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584266562087419288
+  _initializedTimestamp: -8584262908988759398
 --- !u!114 &3722831563050448617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,9 +319,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63743f1624aa4ad9b9a2d0ef0adff7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkNPC
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 300745829150570369}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 300745829150570369}
   _behaviorAgent: {fileID: 5687827164112810396}
   _navMeshAgent: {fileID: 6090642510061842057}
 --- !u!114 &4822277112505486637
@@ -333,9 +336,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 300745829150570369}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 300745829150570369}
   _componentConfiguration: 2
   _synchronizeParent: 0
   _packing:
@@ -379,9 +382,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a836728d709a4bedbc50820ac1867df9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCHealth
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 300745829150570369}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 300745829150570369}
   data: {fileID: 11400000, guid: d255d54b6083aad78b2d69de0d872f73, type: 2}
 --- !u!1 &7070904914041509893
 GameObject:

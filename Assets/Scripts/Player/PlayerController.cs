@@ -60,12 +60,6 @@ public class PlayerController : NetworkBehaviour
         input.OnTestEvent -= Test;
         PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
     }
-
-    private void Update()
-    {
-        Debug.Log(PlayerRegistry.All.Count);
-    }
-
     // вынести отсюда
     private void DisableMovement(bool isDead)
     {
