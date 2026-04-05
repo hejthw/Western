@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 244412688785977491}
   - component: {fileID: 6509024294491109918}
   m_Layer: 0
-  m_Name: Security
+  m_Name: Enforcer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -320,11 +320,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
-  m_Graph: {fileID: -582874144839336215, guid: 2b5f83352794b1af8815177385b5c433, type: 2}
+  m_Graph: {fileID: -582874144839336215, guid: c5223085f4db611009b3f5a710ca3109, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 3130484035978264892
   - rid: 3130484047327264849
-  - rid: 3130484047327265159
   m_OriginalGraph: {fileID: 0}
   m_IsInitialised: 0
   m_IsStarted: 0
@@ -350,14 +349,6 @@ MonoBehaviour:
         - {fileID: 0}
         - {fileID: 0}
         - {fileID: 0}
-    - rid: 3130484047327265159
-      type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 15837767042969501384
-          m_Value1: 3776357426991406204
-        Name: Safe
-        m_Value: {fileID: 0}
 --- !u!195 &4497231934169299779
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -407,12 +398,12 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 13
+  <PrefabId>k__BackingField: 2
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 4526677451631115604
+  <AssetPathHash>k__BackingField: 2090765972082189796
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: -37.42832, y: 0.96, z: -3.61256}
+    Position: {x: -7.9687266, y: 0.99999994, z: 0.83100235}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
@@ -424,9 +415,9 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 460620546247179870}
-  - {fileID: 0}
   - {fileID: 9110340404155981805}
   - {fileID: 244412688785977491}
+  - {fileID: 6509024294491109918}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -437,7 +428,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584264513532111608
+  _initializedTimestamp: -8584262069938745198
 --- !u!114 &460620546247179870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -488,7 +479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Sensor
   detectionRadius: 10
   targetTags:
-  - Suspicion
+  - Player
   updateInterval: 0.5
 --- !u!114 &9110340404155981805
 MonoBehaviour:
@@ -502,7 +493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 2
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 577405625571252360}
   _networkObjectCache: {fileID: 577405625571252360}
   _componentConfiguration: 2
@@ -548,7 +539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a836728d709a4bedbc50820ac1867df9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCHealth
-  _componentIndexCache: 3
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 577405625571252360}
   _networkObjectCache: {fileID: 577405625571252360}
   data: {fileID: 11400000, guid: d255d54b6083aad78b2d69de0d872f73, type: 2}
@@ -564,9 +555,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b40a03e4c19c42dbb73b9b9c6b2d71c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enforcer
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 577405625571252360}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 577405625571252360}
   _behaviorAgent: {fileID: 6856290257989824021}
   _navMeshAgent: {fileID: 4497231934169299779}
   _criticalRange: 3
