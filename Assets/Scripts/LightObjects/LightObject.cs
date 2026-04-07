@@ -3,7 +3,7 @@ using FishNet.Connection;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 
-public class LightObject : NetworkBehaviour
+public class LightObject : NetworkBehaviour, ILassoInteractable
 {
     private Rigidbody rb;
 
@@ -11,11 +11,16 @@ public class LightObject : NetworkBehaviour
     private readonly SyncVar<NetworkObject> holder = new SyncVar<NetworkObject>();
 
     [SerializeField] private bool fragile = false;
-
+    [SerializeField] private float pullSpeed = 15f;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
+    public LassoInteractionType GetInteractionType()
+    {
+        return LassoInteractionType.PullObject;
+    }
+
 
     [ServerRpc(RequireOwnership = false)]
     public void ServerPickup(NetworkObject player)
@@ -59,6 +64,8 @@ public class LightObject : NetworkBehaviour
         rb.linearVelocity = velocity;
     }
 
+
+
     private void OnCollisionEnter(Collision collision)
     {
         if (!IsServer) return;
@@ -79,5 +86,50 @@ public class LightObject : NetworkBehaviour
     {
         holder.Value = null;
         state.Value = ItemState.World;
+    }
+    public void OnLassoAttach(LassoNetwork lasso)
+    {
+        if (!IsServer) return;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+    }
+
+
+
+
+    public void OnLassoPull(LassoNetwork lasso)
+    {
+        if (!IsServer) return;
+
+        if (rb == null) return;
+
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        Vector3 dir = (lasso.Owner.transform.position - transform.position).normalized;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.AddForce(dir * 20f, ForceMode.Impulse);
+    }
+
+    [ObserversRpc]
+    private void ObserversMove(Vector3 pos)
+    {
+        if (IsServer) return;
+        transform.position = pos;
+    }
+    public void OnLassoDetach(LassoNetwork lasso)
+    {
+        if (!IsServer) return;
+
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.useGravity = true;
+        }
     }
 }

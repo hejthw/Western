@@ -149,6 +149,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1575783462794506319}
+  - component: {fileID: 8505110637416980450}
   m_Layer: 0
   m_Name: UnMovable
   m_TagString: Untagged
@@ -173,6 +174,21 @@ Transform:
   - {fileID: 5640075457397643297}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8505110637416980450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5230420083902056987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
 --- !u!1 &8581208583537325061
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,3 +342,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8156d0a88c6af349ad26a7e5c2ece12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnMovable
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
