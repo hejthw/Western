@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3953410498395496811}
   - component: {fileID: 7791169221281951741}
   m_Layer: 5
-  m_Name: Name (1)
+  m_Name: HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -238,7 +238,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
@@ -429,7 +429,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -441,7 +441,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
@@ -566,7 +566,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -578,7 +578,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
@@ -811,7 +811,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -823,7 +823,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
@@ -1206,7 +1206,7 @@ GameObject:
   - component: {fileID: 6139058406003443125}
   - component: {fileID: 4452327539885419793}
   m_Layer: 5
-  m_Name: Name (1)
+  m_Name: HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1361,8 +1361,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.13495074, y: 0.79616916, z: 0.1927401, w: 0.5574534}
-  m_LocalPosition: {x: -1.7615414, y: 0.15837121, z: 0.9958229}
+  m_LocalRotation: {x: -0.066231325, y: 0.930477, z: 0.21099962, w: 0.29207033}
+  m_LocalPosition: {x: -0.89311075, y: 0.23806119, z: 1.8355179}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1445,7 +1445,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 118.333534
+    Value: 153.47719
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1455,7 +1455,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 15.9419565
+    Value: 17.60608
     Center: 17.5
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -1489,7 +1489,7 @@ MonoBehaviour:
   ReferenceFrame: 2
   RecenterTarget: 2
   PanAxis:
-    Value: 110.00292
+    Value: 145.14658
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1499,7 +1499,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -27.2172
+    Value: -25.553204
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1734,7 +1734,7 @@ GameObject:
   - component: {fileID: 7132094242125729817}
   - component: {fileID: 4252502440966506749}
   m_Layer: 5
-  m_Name: Name (1)
+  m_Name: HP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1928,7 +1928,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.3322006, y: 0.17430517, z: 0.062609635, w: 0.92484623}
+  m_LocalRotation: {x: -0.49870706, y: -0.03402371, z: -0.019596072, w: 0.86588085}
   m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2006,7 +2006,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: 21.3466
+    Value: -4.500417
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -2016,7 +2016,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -39.51612
+    Value: -59.87988
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -3048,7 +3048,6 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 0}
-  text: {fileID: 0}
   nameText: {fileID: 8990631498777757072}
   healthText: {fileID: 8961458103767659077}
   IsMain: 1

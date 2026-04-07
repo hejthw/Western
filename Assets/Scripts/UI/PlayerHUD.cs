@@ -3,32 +3,50 @@ using TMPro;
 using Steamworks;
 using UnityEngine;
 
-public class PlayerHUD : NetworkBehaviour
+public class PlayerHUD : MonoBehaviour
 {
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text healthText;
     public bool IsMain;
     
-    public override void OnStartClient()
+    public void Awake()
     {
-        base.OnStartClient();
-        
         string myName = SteamFriends.GetPersonaName();
         nameText.text = myName;
-        SetPlayerName(myName);
+        // SetPlayerName(myName);
         healthText.text = "100";
     }
     
-    [ServerRpc]
-    private void SetPlayerName(string playerName)
+    private void OnEnable()
     {
-        SetPlayerNameForObservers(playerName);
+        PlayerHealthEvents.OnLocalHealthChange += UpdateHealthText;
     }
 
-    [ObserversRpc(BufferLast = true)]
-    private void SetPlayerNameForObservers(string playerName)
+    private void OnDisable()
     {
-        nameText.text = playerName;
+        PlayerHealthEvents.OnLocalHealthChange -= UpdateHealthText;
     }
+
+    private void UpdateHealthText(int amount)
+    {
+        if (amount == -1)
+            healthText.text = "Dead";
+        else if (amount != 0)
+            healthText.text = amount.ToString();
+        else
+            healthText.text = "Knock";
+    }
+    
+    // [ServerRpc]
+    // private void SetPlayerName(string playerName)
+    // {
+    //     SetPlayerNameForObservers(playerName);
+    // }
+    //
+    // [ObserversRpc(BufferLast = true)]
+    // private void SetPlayerNameForObservers(string playerName)
+    // {
+    //     nameText.text = playerName;
+    // }
 
 }
