@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Grabbable
   - HoldPoint
+  - Suspicion
   layers:
   - Default
   - TransparentFX

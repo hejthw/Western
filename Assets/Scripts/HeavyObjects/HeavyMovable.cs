@@ -84,13 +84,17 @@ public class HeavyMovable : NetworkBehaviour, ILassoInteractable
     {
         currentPullCount.Value = 0;
     }
-
     public bool IsActiveZone(Vector3 hitPoint)
     {
         if (frontTrigger == null || backTrigger == null) return true;
 
-        bool front = frontTrigger.bounds.Contains(hitPoint);
-        bool back = backTrigger.bounds.Contains(hitPoint);
+        float frontDist = Vector3.Distance(frontTrigger.ClosestPoint(hitPoint), hitPoint);
+        float backDist = Vector3.Distance(backTrigger.ClosestPoint(hitPoint), hitPoint);
+
+        float threshold = 0.2f;
+
+        bool front = frontDist < threshold;
+        bool back = backDist < threshold;
 
         return isAtStart ? front : back;
     }
