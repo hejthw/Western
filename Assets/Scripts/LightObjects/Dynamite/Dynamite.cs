@@ -1,8 +1,9 @@
 ﻿using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 using System.Collections;
 
-public class Dynamite : LightObject
+public class Dynamite : LightObject, IUsable
 {
     [Header("Dynamite Settings")]
     public float explosionDelay = 3f;
@@ -10,44 +11,56 @@ public class Dynamite : LightObject
     public float explosionForce = 500f;
     public LayerMask wallLayer;
 
-    private bool isLit = false;
+    private readonly SyncVar<bool> _isLit = new SyncVar<bool>();
+    public bool IsLit => _isLit.Value;
 
-    // =========================
-    // IGNITE
-    // =========================
-
+    public void Use()
+    {
+        Debug.Log("[Dynamite] Use() called");
+        Ignite();
+    }
     public void Ignite()
     {
-        if (isLit) return;
+        Debug.Log($"[Dynamite] Ignite() called. isLit={IsLit}, parent={transform.parent?.name}");
+        if (IsLit) return;
+
+        // Проверка на клиенте: предмет в руках
+        bool isHeld = transform.parent != null && transform.parent.CompareTag("HoldPoint");
+        if (!isHeld)
+        {
+            Debug.Log("[Dynamite] Ignite aborted: not held");
+            return;
+        }
 
         if (IsServer)
-        {
             StartIgnite();
-        }
         else
-        {
             ServerIgnite();
-        }
     }
-
     [ServerRpc(RequireOwnership = false)]
     private void ServerIgnite()
     {
+        Debug.Log("[Dynamite] ServerIgnite RPC received on server");
         StartIgnite();
     }
 
     [Server]
     private void StartIgnite()
     {
-        if (isLit) return;
+        Debug.Log("[Dynamite] StartIgnite on server - igniting without state check");
+        if (IsLit) return;
 
-        isLit = true;
+        _isLit.Value = true;
+        Debug.Log("[Dynamite] _isLit set to true, starting coroutine");
+        ObserversIgniteEffect();
         StartCoroutine(ExplodeAfterDelay());
     }
 
-    // =========================
-    // EXPLOSION
-    // =========================
+    [ObserversRpc]
+    private void ObserversIgniteEffect()
+    {
+        Debug.Log("Dynamite lit!");
+    }
 
     private IEnumerator ExplodeAfterDelay()
     {
@@ -58,39 +71,53 @@ public class Dynamite : LightObject
     [Server]
     private void Explode()
     {
-        // 💥 Находим стены
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, explosionRadius);
-
-        foreach (Collider col in hitColliders)
+        if (holder.Value != null)
+            ForceDrop();
+        Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius);
+        foreach (Collider hit in hits)
         {
-            if (((1 << col.gameObject.layer) & wallLayer) == 0)
-                continue;
-
-            RDestructibleWall wall = col.GetComponent<RDestructibleWall>();
-            if (wall != null)
+            PlayerHealth health = hit.GetComponent<PlayerHealth>();
+            if (health != null)
             {
-                wall.DestroyWallServer(transform.position);
+                float distance = Vector3.Distance(transform.position, hit.transform.position);
+                int damage = Mathf.RoundToInt(100 * (1 - distance / explosionRadius));
+                health.TakeDamage(damage);
             }
 
-            // 💥 Добавим физику
-            Rigidbody rb = col.attachedRigidbody;
-            if (rb != null)
+            if (((1 << hit.gameObject.layer) & wallLayer) != 0)
             {
+                RDestructibleWall wall = hit.GetComponent<RDestructibleWall>();
+                if (wall != null)
+                    wall.DestroyWallServer(transform.position);
+            }
+
+            Rigidbody rb = hit.attachedRigidbody;
+            if (rb != null && rb.gameObject != gameObject)
                 rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-            }
         }
 
-        // 💥 Эффекты для всех
         ObserversExplode(transform.position);
-
-        // удаляем объект
         NetworkObject.Despawn();
     }
 
     [ObserversRpc]
     private void ObserversExplode(Vector3 pos)
     {
-        // сюда потом добавишь VFX / звук
         Debug.Log("BOOM at " + pos);
+    }
+
+    public override byte[] SerializeState()
+    {
+        byte[] data = new byte[1];
+        data[0] = (byte)(IsLit ? 1 : 0);
+        return data;
+    }
+
+    public override void DeserializeState(byte[] data)
+    {
+        if (data != null && data.Length > 0)
+        {
+            _isLit.Value = data[0] == 1;
+        }
     }
 }
