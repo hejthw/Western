@@ -1592,7 +1592,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584263592086369121
+  _initializedTimestamp: -8584262043606150414
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -2037,7 +2037,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584263592086369121
+  _initializedTimestamp: -8584262043606150414
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -2058,7 +2058,7 @@ MonoBehaviour:
   <AssetPathHash>k__BackingField: 13623089071726480599
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: -0.21768, y: 1.03, z: -10.62}
+    Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
@@ -2426,7 +2426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: _initializedTimestamp
-      value: -8584263592086369121
+      value: -8584262043606150414
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: <IsNested>k__BackingField
@@ -2436,6 +2436,10 @@ PrefabInstance:
       propertyPath: <ComponentIndex>k__BackingField
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[0]'
+      value: 
+      objectReference: {fileID: 5229653020010689605}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: 'NetworkBehaviours.Array.data[1]'
       value: 
@@ -2512,6 +2516,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5569764543513671404, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
+      propertyPath: _componentIndexCache
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7696105253319526697, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: m_Name
       value: Lasso
@@ -2541,6 +2549,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3614300672675387674, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
   m_PrefabInstance: {fileID: 421283244982108841}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5229653020010689605 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5569764543513671404, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
+  m_PrefabInstance: {fileID: 421283244982108841}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004792176764210048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
 --- !u!1 &8004792176764210048 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7696105253319526697, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
@@ -2563,10 +2582,8 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 985119996041999366}
   throwSpeed: 20
   returnSpeed: 10
-  pullSpeed: 6
-  yankImpulseForce: 15
   maxDistance: 30
-  minAttachTimeAfterThrow: 0.25
+  playerPullSpeed: 15
 --- !u!1001 &756114341620690634
 PrefabInstance:
   m_ObjectHideFlags: 0
