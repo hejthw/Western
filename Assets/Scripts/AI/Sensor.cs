@@ -9,7 +9,7 @@ public class Sensor : MonoBehaviour
     public List<string> targetTags = new();
     public float updateInterval = 0.5f;
         
-    public readonly List<Transform> detectedObjects = new(10);
+    public readonly List<Transform> detectedObjects = new(4);
     SphereCollider sphereCollider;
     float _timer;
 
