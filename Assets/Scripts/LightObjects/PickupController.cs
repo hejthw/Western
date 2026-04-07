@@ -56,9 +56,6 @@ public class PickupController : NetworkBehaviour
             Throw();
     }
 
-    // =========================
-    // PICKUP
-    // =========================
 
     private void TryPickup()
     {
@@ -79,27 +76,16 @@ public class PickupController : NetworkBehaviour
     {
         heldObject = obj;
         heldRb = obj.GetComponent<Rigidbody>();
-
-        // 🔥 СНАЧАЛА выключаем физику
         heldRb.isKinematic = true;
         heldRb.useGravity = false;
         heldRb.linearVelocity = Vector3.zero;
         heldRb.angularVelocity = Vector3.zero;
-
-        // 🔥 ПОТОМ делаем parent
         obj.transform.SetParent(holdPoint, false);
-
-        // 🔥 ОБЯЗАТЕЛЬНО сбрасываем локальные координаты
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
         Debug.Log("Kinematic: " + heldRb.isKinematic);
     }
   
-
-    // =========================
-    // THROW
-    // =========================
-
     private void Throw()
     {
         if (heldObject == null) return;
