@@ -3,118 +3,184 @@ using FishNet.Connection;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 
-public class LightObject : NetworkBehaviour, ISavableItem
+public class LightObject : NetworkBehaviour, ILassoInteractable
 {
-    public bool fragile = false;
-
     private Rigidbody rb;
-    private bool wasThrown = false;
 
-    public readonly SyncVar<NetworkObject> heldBy = new SyncVar<NetworkObject>();
+    protected readonly SyncVar<ItemState> state = new SyncVar<ItemState>();
+    protected readonly SyncVar<NetworkObject> holder = new SyncVar<NetworkObject>();
 
+    [SerializeField] private bool fragile = false;
+    [SerializeField] private float pullSpeed = 15f;
+    private bool _isLocallyHeld = false;
+    public bool IsLocallyHeld => _isLocallyHeld;
+
+    public void SetLocallyHeld(bool held)
+    {
+        _isLocallyHeld = held;
+        Debug.Log($"[LightObject] SetLocallyHeld({held}) on {name}");
+    }
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        heldBy.OnChange += OnHeldByChanged;
+    }
+    public LassoInteractionType GetInteractionType()
+    {
+        return LassoInteractionType.PullObject;
     }
 
-    private void OnHeldByChanged(NetworkObject oldValue, NetworkObject newValue, bool asServer)
-    {
-        if (newValue == null && IsOwner)
-            GetComponentInParent<PickupController>()?.ClearHeldObject();
-    }
 
     [ServerRpc(RequireOwnership = false)]
     public void ServerPickup(NetworkObject player)
     {
-        if (heldBy.Value != null) return;
+        Debug.Log($"[LightObject] ServerPickup called on {name}, state={state.Value}, player={player.name}, owner={player.Owner?.ClientId}");
+        if (state.Value != ItemState.World) return;
 
-        heldBy.Value = player;
+        holder.Value = player;
+        state.Value = ItemState.Held;
         GiveOwnership(player.Owner);
-        rb.isKinematic = true;
-        rb.useGravity = false;
 
-        TargetOnPickup(player.Owner, player);
+        Debug.Log($"[LightObject] About to call TargetConfirmPickup for connection {player.Owner?.ClientId}");
+        TargetConfirmPickup(player.Owner, player);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void ServerThrow(Vector3 pos, Vector3 velocity)
+    {
+        if (state.Value != ItemState.Held) return;
+
+        state.Value = ItemState.Thrown;
+        holder.Value = null;
+
+        RemoveOwnership();
+        transform.position = pos;
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        rb.linearVelocity = velocity;
+
+        // Сбросить локальный флаг у предыдущего владельца
+        TargetResetLocallyHeld(Owner);
+
+        ObserversApplyThrow(pos, velocity);
     }
 
     [TargetRpc]
-    private void TargetOnPickup(NetworkConnection target, NetworkObject player)
+    private void TargetResetLocallyHeld(NetworkConnection target)
     {
-        var pickup = player.GetComponent<PickupController>();
-        if (pickup != null)
-            pickup.PickupItem(gameObject);
+        SetLocallyHeld(false);
     }
 
-    public void OnPickup()
+
+    [ObserversRpc]
+    private void ObserversApplyThrow(Vector3 pos, Vector3 velocity)
     {
+        if (IsOwner) return;
+
+        transform.position = pos;
+
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        rb.linearVelocity = velocity;
+    }
+
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!IsServer) return;
+
+        if (state.Value != ItemState.Thrown) return;
+
+        if (fragile)
+        {
+            Despawn();
+            return;
+        }
+
+        state.Value = ItemState.World;
+    }
+
+    [Server]
+    public void ForceDrop()
+    {
+        holder.Value = null;
+        state.Value = ItemState.World;
+    }
+    public void OnLassoAttach(LassoNetwork lasso)
+    {
+        if (!IsServer) return;
+
         if (rb != null)
         {
-            rb.isKinematic = true;
-            rb.useGravity = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
-        wasThrown = false;
     }
-    public void OnThrow(Vector3 force)
+
+
+
+
+    public void OnLassoPull(LassoNetwork lasso)
     {
+        if (!IsServer) return;
+
+        if (rb == null) return;
+
+        rb.isKinematic = false;
+        rb.useGravity = true;
+
+        Vector3 dir = (lasso.Owner.transform.position - transform.position).normalized;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.AddForce(dir * 20f, ForceMode.Impulse);
+    }
+
+    [ObserversRpc]
+    private void ObserversMove(Vector3 pos)
+    {
+        if (IsServer) return;
+        transform.position = pos;
+    }
+    public void OnLassoDetach(LassoNetwork lasso)
+    {
+        if (!IsServer) return;
+
         if (rb != null)
         {
             rb.isKinematic = false;
             rb.useGravity = true;
-            rb.AddForce(force, ForceMode.Impulse);
         }
-        wasThrown = true;
+    }
+    [TargetRpc]
+    public void TargetConfirmPickup(NetworkConnection target, NetworkObject playerObject)
+    {
+        Debug.Log($"[LightObject] TargetConfirmPickup received on client. target={target?.ClientId}, LocalConnection={LocalConnection?.ClientId}, playerObject={playerObject?.name}");
+        if (playerObject == null)
+        {
+            Debug.Log("[LightObject] playerObject is null");
+            return;
+        }
+        if (playerObject.Owner != LocalConnection)
+        {
+            Debug.Log($"[LightObject] Owner mismatch: playerObject.Owner={playerObject.Owner?.ClientId}, LocalConnection={LocalConnection?.ClientId}");
+            return;
+        }
+
+        var pickup = playerObject.GetComponent<PickupController>();
+        Debug.Log($"[LightObject] pickup component = {(pickup != null ? "found" : "null")}");
+        if (pickup != null)
+        {
+            pickup.AttachLocal(gameObject);
+            SetLocallyHeld(true);
+        }
+    }
+    public virtual byte[] SerializeState()
+    {
+        return null;
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void ServerThrow(Vector3 position, Quaternion rotation, Vector3 force)
+    public virtual void DeserializeState(byte[] data)
     {
-        if (heldBy.Value == null) return;
-
-        heldBy.Value = null;
-        GiveOwnership(null);
-
-        transform.position = position;
-        transform.rotation = rotation;
-        rb.isKinematic = false;
-        rb.useGravity = true;
-        rb.AddForce(force, ForceMode.Impulse);
-
-        ObserversThrow(transform.position, transform.rotation, rb.linearVelocity, rb.angularVelocity);
-    }
-
-    [ObserversRpc]
-    private void ObserversThrow(Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
-    {
-        if (IsOwner) return;
-        transform.position = pos;
-        transform.rotation = rot;
-        rb.linearVelocity = vel;
-        rb.angularVelocity = angVel;
-        rb.isKinematic = false;
-        rb.useGravity = true;
-        heldBy.Value = null;
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!wasThrown || !fragile) return;
-        if (IsServer)
-            GetComponent<NetworkObject>().Despawn();
-        else
-            DespawnServerRpc();
-    }
-
-    [ServerRpc]
-    private void DespawnServerRpc()
-    {
-        GetComponent<NetworkObject>().Despawn();
-    }
-
-    public byte[] SaveState() => new byte[] { (byte)(fragile ? 1 : 0) };
-
-    public void LoadState(byte[] state)
-    {
-        if (state != null && state.Length > 0)
-            fragile = state[0] == 1;
+        
     }
 }

@@ -13,8 +13,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private PlayerInput input;
 
     [SerializeField] public Transform weaponHoldPoint;
-    [SerializeField] private GameObject localUI;
-    
+    public bool IsLassoPulling { get; set; }
     // вынести отсюда
     private Rigidbody rb;
     private PlayerRotate playerRotate;
@@ -93,7 +92,7 @@ public class PlayerController : NetworkBehaviour
     {
         GetComponent<PlayerInput>().enabled  = false;
         GetComponent<PlayerPhysics>().enabled = false;
-        enabled = false;
+      
     }
 
     private void Test()
@@ -118,9 +117,20 @@ public class PlayerController : NetworkBehaviour
     {
         health.TakeDamage(damage);
     }
-
-    public override void OnStopClient()
+    public void SetLassoState(bool state)
     {
-        PlayerRegistry.Unregister(this);
+        IsLassoPulling = state;
+
+   
+        if (physics != null)
+            physics.enabled = !state;
+
+        if (playerRotate != null)
+            playerRotate.enabled = !state;
+
+      
+
+        string who = IsServer ? "SERVER (host)" : "CLIENT";
+        Debug.Log($"[{who}] Lasso state: {state} | Physics enabled: {!state}");
     }
 }

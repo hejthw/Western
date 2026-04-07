@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Grabbable
+  - HoldPoint
   - Suspicion
   layers:
   - Default
@@ -15,8 +16,8 @@ TagManager:
   - UI
   - Hitbox
   - Wall
-  - 
-  - 
+  - Lasso
+  - IgnorePlayer
   - 
   - 
   - 

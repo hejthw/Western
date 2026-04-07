@@ -62,11 +62,14 @@ public class PlayerInput : MonoBehaviour
     {
         if (value.Get<float>() > 0.5f)
         {
-            OnAttackEvent?.Invoke();
-            PlayerEvents.RaisePrevTargetEvent();
+            Debug.Log("[PlayerInput] OnAttack triggered");
+            if (isDead)
+                PlayerEvents.RaisePrevTargetEvent();
+            else
+                OnAttackEvent?.Invoke();
         }
     }
-    
+
     public void OnAim(InputValue value)
     {
         if (value.Get<float>() > 0.5f)
