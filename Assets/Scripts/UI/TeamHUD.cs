@@ -13,6 +13,18 @@ public class TeamHUDEntry : MonoBehaviour
     public void Track(PlayerHealth player, string playerName)
     {
         _tracked = player;
+    
+        // Подписываемся на изменение имени
+        var nameView = player.GetComponent<PlayerNameView>();
+        if (nameView != null)
+        {
+            nameView.PlayerName.OnChange += OnNameChanged;
+            // Берём актуальное имя если уже пришло, иначе дождёмся колбэка
+            playerName = string.IsNullOrEmpty(nameView.PlayerName.Value) 
+                ? "..." 
+                : nameView.PlayerName.Value;
+        }
+
         nameText.text = playerName;
         Refresh(player.GetHealth());
 
@@ -22,9 +34,18 @@ public class TeamHUDEntry : MonoBehaviour
 
     public void Untrack()
     {
+        var nameView = _tracked?.GetComponent<PlayerNameView>();
+        if (nameView != null)
+            nameView.PlayerName.OnChange -= OnNameChanged;
+
         PlayerHealthEvents.OnTeammateHealthChange -= OnHealthChanged;
         PlayerHealthEvents.OnTeammateStateChange  -= OnStateChanged;
         _tracked = null;
+    }
+
+    private void OnNameChanged(string prev, string next, bool asServer)
+    {
+        nameText.text = next;
     }
 
     private void OnHealthChanged(PlayerHealth player, int health)

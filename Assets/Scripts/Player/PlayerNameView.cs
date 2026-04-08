@@ -1,4 +1,5 @@
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using TMPro;
 using Steamworks;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine;
 public class PlayerNameView : NetworkBehaviour
 {
     [SerializeField] private TMP_Text text;
+    
+    public readonly SyncVar<string> PlayerName = new SyncVar<string>("PlayerName"); 
     
     public override void OnStartClient()
     {
@@ -15,6 +18,7 @@ public class PlayerNameView : NetworkBehaviour
         {
             text.gameObject.SetActive(false);
             string myName = SteamFriends.GetPersonaName();
+            PlayerName.Value = myName;
             text.text = myName;
             SetPlayerName(myName);
         }

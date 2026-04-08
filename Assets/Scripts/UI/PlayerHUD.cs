@@ -31,10 +31,13 @@ public class PlayerHUD : MonoBehaviour
         PlayerHealthEvents.OnLocalHealthChange -= UpdateHealthText;
     }
 
-    private void OnTeammateJoined(PlayerHealth player, string nickname)
+    private void OnTeammateJoined(PlayerHealth player)
     {
+        var nameView = player.GetComponent<PlayerNameView>();
+        string playerName = nameView != null ? nameView.PlayerName.Value : "Unknown";
+
         var entry = Instantiate(teamEntryPrefab, teamHUDContainer);
-        entry.Track(player, nickname); 
+        entry.Track(player, playerName);
         _teamEntries[player] = entry;
     }
 

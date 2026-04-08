@@ -105,7 +105,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         base.OnStartClient();
         if (!IsOwner)
-            PlayerHealthEvents.RaiseTeammateRegistered(this, SteamFriends.GetPersonaName());
+            PlayerHealthEvents.RaiseTeammateRegistered(this);
     }
 
     public override void OnStopClient()
