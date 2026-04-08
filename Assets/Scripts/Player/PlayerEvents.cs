@@ -7,12 +7,7 @@ public static  class PlayerEvents
     public static event Action NextTargetEvent;
     public static event Action PrevTargetEvent;
     public static event Action OnSuspicion;
-    public static event Action<string> UpdateName;
 
-    public static void OnUpdateName(string nickname)
-    {
-        UpdateName?.Invoke(nickname);
-    }
     
     public static void RaiseSuspicion()
     {

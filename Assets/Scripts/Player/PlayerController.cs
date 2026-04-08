@@ -54,14 +54,12 @@ public class PlayerController : NetworkBehaviour
         input.OnTestEvent += Test;
 
         PlayerHealthEvents.OnKnockoutEvent += DisableMovement;
-        PlayerEvents.UpdateName += UpdateName;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
         PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
-        PlayerEvents.UpdateName -= UpdateName;
     }
     // вынести отсюда
     private void DisableMovement(bool isDead)
