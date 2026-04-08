@@ -8,7 +8,7 @@ public class PlayerNameView : NetworkBehaviour
 {
     [SerializeField] private TMP_Text text;
     
-    public readonly SyncVar<string> PlayerName = new SyncVar<string>("PlayerName"); 
+    public readonly SyncVar<string> PlayerName = new SyncVar<string>(SteamFriends.GetPersonaName()); 
     
     public override void OnStartClient()
     {
