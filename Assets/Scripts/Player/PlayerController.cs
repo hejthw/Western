@@ -61,6 +61,7 @@ public class PlayerController : NetworkBehaviour
         input.OnTestEvent -= Test;
         PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
     }
+    
     // вынести отсюда
     private void DisableMovement(bool isDead)
     {
@@ -88,6 +89,7 @@ public class PlayerController : NetworkBehaviour
         localUI.SetActive(IsOwner);
         if (!IsOwner) DisableLocalComponents();
         PlayerRegistry.Register(this);
+        StartCoroutine(UpdateNameWithDelay());
     }
 
     private void DisableLocalComponents()
@@ -125,9 +127,15 @@ public class PlayerController : NetworkBehaviour
         PlayerRegistry.Unregister(this);
     }
 
-    [ServerRpc]
-    private void UpdateName(string nickname)
+    private IEnumerator UpdateNameWithDelay()
     {
-        name = nickname;
+        yield return new WaitForSeconds(kinematicDelay);
+        UpdateName();
+    }
+    
+    [ServerRpc]
+    private void UpdateName()
+    {
+        name = playerNameView.PlayerName.Value;
     }
 }
