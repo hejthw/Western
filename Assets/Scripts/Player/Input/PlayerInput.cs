@@ -11,24 +11,6 @@ public class PlayerInput : MonoBehaviour
     public Vector2 MoveInput {get ; private set;}
     
     public bool SprintHeld { get; private set; }
-    public bool CrouchHeld { get ; private set;}
-    
-    // public bool isDead { get ; private set ; }
-    //
-    // private void OnEnable()
-    // {
-    //     PlayerEvents.OnDeadEvent += bred;
-    // }
-    //
-    // private void OnDisable()
-    // {
-    //     PlayerEvents.OnDeadEvent -= bred;
-    // }
-    //
-    // private void bred(bool a)
-    // {
-    //     isDead = a;
-    // }
     
     public event Action JumpPressedEvent;
     public event Action OnSprintEvent;
@@ -45,12 +27,6 @@ public class PlayerInput : MonoBehaviour
     {
         SprintHeld = value.Get<float>() > 0.5; 
         OnSprintEvent?.Invoke();
-    }
-    
-    public void OnCrouch(InputValue value)
-    {
-        CrouchHeld = value.Get<float>() > 0.5;
-        OnCrouchEvent?.Invoke();
     }
 
     public void OnJump(InputValue value)
@@ -107,5 +83,4 @@ public class PlayerInput : MonoBehaviour
     {
         if (value.Get<float>() > 0.5f) OnSlotKeyPressed?.Invoke(2);
     }
-
 }

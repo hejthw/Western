@@ -2,6 +2,7 @@ using FishNet.Object;
 using UnityEngine;
 using FishNet.Object.Synchronizing;
 using System.Collections;
+using Steamworks;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -29,23 +30,29 @@ public class PlayerHealth : NetworkBehaviour
     private void OnHealthChanged(int prev, int next, bool asServer)
     {
         if (asServer) return;
-        if (!IsOwner) return;
-        PlayerHealthEvents.RaiseHealthChange(next);
+        if (IsOwner) PlayerHealthEvents.RaiseHealthChange(next);
+        else PlayerHealthEvents.RaiseTeammateHealthChange(this, next);
     }
 
     private void OnStateChanged(PlayerHealthState prev, PlayerHealthState next, bool asServer)
     {
-        if (!IsOwner) return;
-
-        if (next == PlayerHealthState.Knockout)
-            PlayerHealthEvents.RaiseKnockoutEvent(true);
-        else if (next == PlayerHealthState.Dead)
-            PlayerHealthEvents.RaiseDeadEvent(true);
+        if (IsOwner)
+        {
+            if (next == PlayerHealthState.Knockout)
+                PlayerHealthEvents.RaiseKnockoutEvent(true);
+            else if (next == PlayerHealthState.Dead)
+                PlayerHealthEvents.RaiseDeadEvent(true);
+            else
+            {
+                PlayerHealthEvents.RaiseDeadEvent(false);
+                PlayerHealthEvents.RaiseKnockoutEvent(false);
+            }
+        }
         else
         {
-            PlayerHealthEvents.RaiseDeadEvent(false);
-            PlayerHealthEvents.RaiseKnockoutEvent(false);
+            PlayerHealthEvents.RaiseTeammateStateChange(this, next);
         }
+        
     }
 
     [Server]
@@ -92,5 +99,21 @@ public class PlayerHealth : NetworkBehaviour
         _state.Value = PlayerHealthState.Alive;
         _health.Value = data.maxHealth;
         PlayerHealthEvents.RaiseRespawnEvent();
+    }
+    
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (!IsOwner)
+        {
+            PlayerHealthEvents.RaiseTeammateRegistered(this, "nickname");
+        }
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        if (!IsOwner)
+            PlayerHealthEvents.RaiseTeammateUnregistered(this);
     }
 }
