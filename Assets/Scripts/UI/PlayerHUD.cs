@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FishNet.Object;
 using TMPro;
 using Steamworks;
@@ -9,22 +10,50 @@ public class PlayerHUD : MonoBehaviour
     [SerializeField] private TMP_Text healthText;
     public bool IsMain;
     
-    public void Awake()
-    {
-        string myName = SteamFriends.GetPersonaName();
-        nameText.text = myName;
-        // SetPlayerName(myName);
-        healthText.text = "100";
-    }
-    
+    [Header("Team HUD")]
+    [SerializeField] private Transform teamHUDContainer;
+    [SerializeField] private TeamHUDEntry teamEntryPrefab;
+
+    private readonly Dictionary<PlayerHealth, TeamHUDEntry> _teamEntries = new();
+
     private void OnEnable()
     {
+        PlayerHealthEvents.OnLocalHealthChange     += UpdateHealthText;
+        PlayerHealthEvents.OnTeammateRegistered    += OnTeammateJoined;
+        PlayerHealthEvents.OnTeammateUnregistered  += OnTeammateLeft;
         PlayerHealthEvents.OnLocalHealthChange += UpdateHealthText;
     }
 
     private void OnDisable()
     {
+        PlayerHealthEvents.OnLocalHealthChange     -= UpdateHealthText;
+        PlayerHealthEvents.OnTeammateRegistered    -= OnTeammateJoined;
+        PlayerHealthEvents.OnTeammateUnregistered  -= OnTeammateLeft;
         PlayerHealthEvents.OnLocalHealthChange -= UpdateHealthText;
+    }
+
+    private void OnTeammateJoined(PlayerHealth player)
+    {
+        var entry = Instantiate(teamEntryPrefab, teamHUDContainer);
+        entry.Track(player, "Teammate"); 
+        _teamEntries[player] = entry;
+    }
+
+    private void OnTeammateLeft(PlayerHealth player)
+    {
+        if (!_teamEntries.TryGetValue(player, out var entry)) return;
+    
+        entry.Untrack();
+        Destroy(entry.gameObject);
+        _teamEntries.Remove(player);
+    }
+    
+    
+    public void Awake()
+    {
+        string myName = SteamFriends.GetPersonaName();
+        nameText.text = myName;
+        healthText.text = "100";
     }
 
     private void UpdateHealthText(int amount)
