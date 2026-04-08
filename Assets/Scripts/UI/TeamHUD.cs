@@ -20,6 +20,14 @@ public class TeamHUDEntry : MonoBehaviour
         PlayerHealthEvents.OnTeammateStateChange  += OnStateChanged;
     }
 
+    private void OnEnable() => PlayerEvents.UpdateName += UpdateName;
+    private void OnDisable() => PlayerEvents.UpdateName -= UpdateName;
+
+    private void UpdateName(string newName)
+    {
+        nameText.text = newName;
+    }
+
     public void Untrack()
     {
         PlayerHealthEvents.OnTeammateHealthChange -= OnHealthChanged;

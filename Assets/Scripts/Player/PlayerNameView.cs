@@ -35,7 +35,7 @@ public class PlayerNameView : NetworkBehaviour
     {
         text.text = playerName;
         PlayerName.Value = playerName;
-        PlayerEvents.OnUpdateName();
+        PlayerEvents.OnUpdateName(playerName);
     }
 
 }
