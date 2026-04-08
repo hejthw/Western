@@ -127,6 +127,7 @@ public class PlayerController : NetworkBehaviour
         PlayerRegistry.Unregister(this);
     }
 
+    [ServerRpc]
     private void UpdateName()
     {
         name = playerNameView.PlayerName.Value;
