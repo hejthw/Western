@@ -742,8 +742,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.18842837, y: 0.8029813, z: -0.45983443, w: 0.32904118}
-  m_LocalPosition: {x: -1.2192193, y: 0.9581983, z: 1.7097559}
+  m_LocalRotation: {x: 0.10484081, y: 0.8066238, z: -0.5618847, w: 0.15050612}
+  m_LocalPosition: {x: -0.444297, y: 1.2280381, z: 2.000391}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -826,7 +826,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 143.76562
+    Value: 167.19247
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -836,7 +836,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 34.59602
+    Value: 44.72121
     Center: 17.5
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -870,7 +870,7 @@ MonoBehaviour:
   ReferenceFrame: 2
   RecenterTarget: 2
   PanAxis:
-    Value: 135.43488
+    Value: 158.8617
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -880,7 +880,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 59.59599
+    Value: 69.72124
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1078,7 +1078,6 @@ GameObject:
   - component: {fileID: 2649622787159371485}
   - component: {fileID: 2127731901823534451}
   - component: {fileID: 1729103182420112826}
-  - component: {fileID: 1483011979962732496}
   m_Layer: 0
   m_Name: PlayerCamera
   m_TagString: Untagged
@@ -1094,7 +1093,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.18646416, y: -0.22015992, z: -0.04291828, w: 0.9565139}
+  m_LocalRotation: {x: 0.5552416, y: 0.1218675, z: -0.08266574, w: 0.8185484}
   m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1172,7 +1171,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: -25.92393
+    Value: 16.936268
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1182,7 +1181,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -22.061947
+    Value: 68.300026
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1279,14 +1278,6 @@ MonoBehaviour:
   _input: {fileID: 2479261188838793012}
   cC: {fileID: 4685515460504658230}
   camData: {fileID: 11400000, guid: b8fddfa6fb70dcf10ae455c9db36d9a5, type: 2}
---- !u!81 &1483011979962732496
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4782091303354485408}
-  m_Enabled: 1
 --- !u!1 &4798807284231356474
 GameObject:
   m_ObjectHideFlags: 0
