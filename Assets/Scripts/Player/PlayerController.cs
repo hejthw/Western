@@ -15,7 +15,6 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] public Transform weaponHoldPoint;
     [SerializeField] private GameObject localUI;
-    [SerializeField] private PlayerNameView playerNameView;
     
     // вынести отсюда
     private Rigidbody rb;
@@ -89,7 +88,6 @@ public class PlayerController : NetworkBehaviour
         localUI.SetActive(IsOwner);
         if (!IsOwner) DisableLocalComponents();
         PlayerRegistry.Register(this);
-        StartCoroutine(UpdateNameWithDelay());
     }
 
     private void DisableLocalComponents()
@@ -125,17 +123,5 @@ public class PlayerController : NetworkBehaviour
     public override void OnStopClient()
     {
         PlayerRegistry.Unregister(this);
-    }
-
-    private IEnumerator UpdateNameWithDelay()
-    {
-        yield return new WaitForSeconds(kinematicDelay);
-        UpdateName();
-    }
-    
-    [ServerRpc]
-    private void UpdateName()
-    {
-        if (IsOwner) name = playerNameView.PlayerName.Value;
     }
 }

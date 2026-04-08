@@ -106,10 +106,9 @@ public class PlayerHealth : NetworkBehaviour
         base.OnStartClient();
         if (!IsOwner)
         {
-            string nickname = transform.name;
+            string nickname = GetComponent<PlayerNameView>().PlayerName.Value;
             PlayerHealthEvents.RaiseTeammateRegistered(this, nickname);
         }
-
     }
 
     public override void OnStopClient()
