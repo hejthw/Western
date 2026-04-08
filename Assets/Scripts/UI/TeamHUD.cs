@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -6,7 +8,13 @@ public class TeamHUDEntry : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text healthText;
 
+    private PlayerNameView _nameView;
     private PlayerHealth _tracked;
+
+    private void Awake()
+    {
+        _nameView = GetComponent<PlayerNameView>();
+    }
 
     public bool IsTracking(PlayerHealth player) => _tracked == player;
 
@@ -14,6 +22,7 @@ public class TeamHUDEntry : MonoBehaviour
     {
         _tracked = player;
         nameText.text = playerName;
+        StartCoroutine(WaitForName());
         Refresh(player.GetHealth());
 
         PlayerHealthEvents.OnTeammateHealthChange += OnHealthChanged;
@@ -25,6 +34,12 @@ public class TeamHUDEntry : MonoBehaviour
         PlayerHealthEvents.OnTeammateHealthChange -= OnHealthChanged;
         PlayerHealthEvents.OnTeammateStateChange  -= OnStateChanged;
         _tracked = null;
+    }
+
+    private IEnumerator WaitForName()
+    {
+        yield return new WaitForSeconds(2f);
+        nameText.text = _nameView.PlayerName.Value;
     }
 
     private void OnHealthChanged(PlayerHealth player, int health)
