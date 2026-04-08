@@ -13,7 +13,7 @@ public class TeamHUDEntry : MonoBehaviour
 
     private void Awake()
     {
-        _nameView = GetComponent<PlayerNameView>();
+        _nameView = FindFirstObjectByType<PlayerNameView>();
     }
 
     public bool IsTracking(PlayerHealth player) => _tracked == player;
@@ -38,7 +38,7 @@ public class TeamHUDEntry : MonoBehaviour
 
     private IEnumerator WaitForName()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         nameText.text = _nameView.PlayerName.Value;
     }
 
