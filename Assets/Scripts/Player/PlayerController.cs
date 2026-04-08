@@ -136,6 +136,6 @@ public class PlayerController : NetworkBehaviour
     [ServerRpc]
     private void UpdateName()
     {
-        name = playerNameView.PlayerName.Value;
+        if (IsOwner) name = playerNameView.PlayerName.Value;
     }
 }
