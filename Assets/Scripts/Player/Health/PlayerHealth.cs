@@ -2,6 +2,7 @@ using FishNet.Object;
 using UnityEngine;
 using FishNet.Object.Synchronizing;
 using System.Collections;
+using Steamworks;
 
 public class PlayerHealth : NetworkBehaviour
 {
@@ -104,7 +105,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         base.OnStartClient();
         if (!IsOwner)
-            PlayerHealthEvents.RaiseTeammateRegistered(this);
+            PlayerHealthEvents.RaiseTeammateRegistered(this, SteamFriends.GetPersonaName());
     }
 
     public override void OnStopClient()

@@ -8,7 +8,6 @@ public class PlayerHUD : MonoBehaviour
 {
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text healthText;
-    public bool IsMain;
     
     [Header("Team HUD")]
     [SerializeField] private Transform teamHUDContainer;
@@ -32,10 +31,10 @@ public class PlayerHUD : MonoBehaviour
         PlayerHealthEvents.OnLocalHealthChange -= UpdateHealthText;
     }
 
-    private void OnTeammateJoined(PlayerHealth player)
+    private void OnTeammateJoined(PlayerHealth player, string nickname)
     {
         var entry = Instantiate(teamEntryPrefab, teamHUDContainer);
-        entry.Track(player, "Teammate"); 
+        entry.Track(player, nickname); 
         _teamEntries[player] = entry;
     }
 
