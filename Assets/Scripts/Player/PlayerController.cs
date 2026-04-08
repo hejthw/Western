@@ -128,8 +128,8 @@ public class PlayerController : NetworkBehaviour
     }
 
     [ServerRpc]
-    private void UpdateName()
+    private void UpdateName(string nickname)
     {
-        name = playerNameView.PlayerName.Value;
+        name = nickname;
     }
 }
