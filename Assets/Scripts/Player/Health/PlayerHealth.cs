@@ -11,6 +11,8 @@ public class PlayerHealth : NetworkBehaviour
     private readonly SyncVar<int> _health = new SyncVar<int>();
     private readonly SyncVar<PlayerHealthState> _state = new SyncVar<PlayerHealthState>();
     
+    [SerializeField] private PlayerNameView nameView;
+    
     public int GetHealth() => _health.Value;
     
     public override void OnStartNetwork()
@@ -106,7 +108,7 @@ public class PlayerHealth : NetworkBehaviour
         base.OnStartClient();
         if (!IsOwner)
         {
-            string nickname = GetComponent<PlayerNameView>().PlayerName.Value;
+            string nickname = nameView.PlayerName.Value;
             PlayerHealthEvents.RaiseTeammateRegistered(this, nickname);
         }
     }
