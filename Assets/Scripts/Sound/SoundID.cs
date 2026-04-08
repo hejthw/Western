@@ -1,5 +1,5 @@
 public enum SoundID
 {
-    Shoot,
-    Jump
+    Shoot = 0,
+    Jump = 1
 }
