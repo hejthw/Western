@@ -15,6 +15,7 @@ public class PlayerController : NetworkBehaviour
 
     [SerializeField] public Transform weaponHoldPoint;
     [SerializeField] private GameObject localUI;
+    [SerializeField] private PlayerNameView playerNameView;
     
     // вынести отсюда
     private Rigidbody rb;
@@ -46,7 +47,6 @@ public class PlayerController : NetworkBehaviour
         input = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         playerRotate = GetComponent<PlayerRotate>();
-        name = SteamFriends.GetPersonaName();
     }
 
     private void OnEnable()
@@ -54,12 +54,14 @@ public class PlayerController : NetworkBehaviour
         input.OnTestEvent += Test;
 
         PlayerHealthEvents.OnKnockoutEvent += DisableMovement;
+        PlayerEvents.UpdateName += UpdateName;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
         PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
+        PlayerEvents.UpdateName -= UpdateName;
     }
     // вынести отсюда
     private void DisableMovement(bool isDead)
@@ -123,5 +125,10 @@ public class PlayerController : NetworkBehaviour
     public override void OnStopClient()
     {
         PlayerRegistry.Unregister(this);
+    }
+
+    private void UpdateName()
+    {
+        name = playerNameView.PlayerName.Value;
     }
 }

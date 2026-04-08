@@ -7,7 +7,13 @@ public static  class PlayerEvents
     public static event Action NextTargetEvent;
     public static event Action PrevTargetEvent;
     public static event Action OnSuspicion;
+    public static event Action UpdateName;
 
+    public static void OnUpdateName()
+    {
+        UpdateName?.Invoke();
+    }
+    
     public static void RaiseSuspicion()
     {
         OnSuspicion?.Invoke();

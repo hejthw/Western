@@ -2062,7 +2062,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHUD
   nameText: {fileID: 8990631498777757072}
   healthText: {fileID: 8961458103767659077}
-  IsMain: 1
   teamHUDContainer: {fileID: 907699394190580194}
   teamEntryPrefab: {fileID: 1844037279763963224, guid: ccd60425bfc788f788b54604a6912ead, type: 3}
 --- !u!1 &6741484574031347934
@@ -2530,7 +2529,7 @@ MonoBehaviour:
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
+  WasActiveDuringEdit: 1
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
@@ -2625,6 +2624,7 @@ MonoBehaviour:
   input: {fileID: 2479261188838793012}
   weaponHoldPoint: {fileID: 6787961388630782479}
   localUI: {fileID: 5375274108382611991}
+  playerNameView: {fileID: 868698912939469854}
   kinematicDelay: 5
 --- !u!114 &2479261188838793012
 MonoBehaviour:

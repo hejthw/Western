@@ -34,6 +34,8 @@ public class PlayerNameView : NetworkBehaviour
     private void SetPlayerNameForObservers(string playerName)
     {
         text.text = playerName;
+        PlayerName.Value = playerName;
+        PlayerEvents.OnUpdateName();
     }
 
 }
