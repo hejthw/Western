@@ -1,5 +1,6 @@
 using System.Collections;
 using FishNet.Object;
+using Steamworks;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -45,7 +46,7 @@ public class PlayerController : NetworkBehaviour
         input = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         playerRotate = GetComponent<PlayerRotate>();
-        
+        name = SteamFriends.GetPersonaName();
     }
 
     private void OnEnable()

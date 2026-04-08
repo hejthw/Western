@@ -31,10 +31,10 @@ public class PlayerHUD : MonoBehaviour
         PlayerHealthEvents.OnLocalHealthChange -= UpdateHealthText;
     }
 
-    private void OnTeammateJoined(PlayerHealth player)
+    private void OnTeammateJoined(PlayerHealth player, string nickname)
     {
         var entry = Instantiate(teamEntryPrefab, teamHUDContainer);
-        entry.Track(player, "Test"); 
+        entry.Track(player, nickname); 
         _teamEntries[player] = entry;
     }
 

@@ -9,7 +9,7 @@ public static class PlayerHealthEvents
     
     public static event Action<PlayerHealth, int> OnTeammateHealthChange;
     public static event Action<PlayerHealth, PlayerHealthState> OnTeammateStateChange;
-    public static event Action<PlayerHealth> OnTeammateRegistered;
+    public static event Action<PlayerHealth, string> OnTeammateRegistered;
     public static event Action<PlayerHealth> OnTeammateUnregistered;
 
     public static void RaiseTeammateHealthChange(PlayerHealth player, int health) 
@@ -18,7 +18,7 @@ public static class PlayerHealthEvents
     public static void RaiseTeammateStateChange(PlayerHealth player, PlayerHealthState state) 
         => OnTeammateStateChange?.Invoke(player, state);
     
-    public static void RaiseTeammateRegistered(PlayerHealth player) => OnTeammateRegistered?.Invoke(player);
+    public static void RaiseTeammateRegistered(PlayerHealth player, string name) => OnTeammateRegistered?.Invoke(player, name);
     public static void RaiseTeammateUnregistered(PlayerHealth player) => OnTeammateUnregistered?.Invoke(player);
     
     public static void RaiseRespawnEvent() => RespawnEvent?.Invoke();
