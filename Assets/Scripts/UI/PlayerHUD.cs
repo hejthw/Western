@@ -33,11 +33,8 @@ public class PlayerHUD : MonoBehaviour
 
     private void OnTeammateJoined(PlayerHealth player)
     {
-        var nameView = player.GetComponent<PlayerNameView>();
-        string playerName = nameView != null ? nameView.PlayerName.Value : "Unknown";
-
         var entry = Instantiate(teamEntryPrefab, teamHUDContainer);
-        entry.Track(player, playerName);
+        entry.Track(player, "Test"); 
         _teamEntries[player] = entry;
     }
 
