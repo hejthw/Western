@@ -42,6 +42,7 @@ public class LassoController : NetworkBehaviour
         if (lasso.CanThrow)
         {
             lasso.ServerThrow(startPos, dir, base.NetworkObject);
+            PlayerEvents.RaiseSuspicion();
         }
         else
         {
