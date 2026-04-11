@@ -8,13 +8,13 @@ public class PlayerHealthView : MonoBehaviour
     private void OnEnable()
     {
         PlayerHealthEvents.OnLocalHealthChange += HandleHealthChange;
-        PlayerHealthEvents.OnStunnedEvent += HandleStunned;
+        //PlayerHealthEvents.OnStunnedEvent += HandleStunned;
     }
 
     private void OnDisable()
     {
         PlayerHealthEvents.OnLocalHealthChange -= HandleHealthChange;
-        PlayerHealthEvents.OnStunnedEvent -= HandleStunned;
+       // PlayerHealthEvents.OnStunnedEvent -= HandleStunned;
     }
 
     private void HandleHealthChange(int health)
