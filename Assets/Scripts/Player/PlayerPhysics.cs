@@ -10,7 +10,6 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] private PlayerMovementData data;
     [SerializeField] private CinemachineCamera  cinemachineCamera;
     [SerializeField] private Transform groundCheck; // точка, где спавниться сфера для просчета IsGrounded
-    [SerializeField] private PlayerStamina stamina;
     
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerInput input;
@@ -28,13 +27,11 @@ public class PlayerPhysics : MonoBehaviour
     private void OnEnable()
     {
         input.JumpPressedEvent += Jump;
-        input.OnCrouchEvent += Crouch;
     }
 
     private void OnDisable()
     {
         input.JumpPressedEvent -= Jump;
-        input.OnCrouchEvent -= Crouch;
     }
 
     void Update()
@@ -44,7 +41,7 @@ public class PlayerPhysics : MonoBehaviour
             data.groundCheckDistance,
             data.whatIsGround);
 
-        bool canSprint = input.SprintHeld && !stamina.IsEmpty && !input.CrouchHeld;
+        bool canSprint = input.SprintHeld;
         _player.ChangeMaxSpeed(canSprint, Time.deltaTime);
 
         CurrentState = _player.ResolvePlayerState(
@@ -95,20 +92,6 @@ public class PlayerPhysics : MonoBehaviour
 
         return (forward.normalized * input.MoveInput.y
               + right.normalized   * input.MoveInput.x).normalized;
-    }
-
-    private void Crouch()
-    {
-        // if (input.CrouchHeld)
-        // {
-        //     col.height = 1f;
-        //     col.center = new Vector3(0f, 0.5f, 0f);
-        // }
-        // else
-        // {
-        //     col.height = 2f;
-        //     col.center = new Vector3(0f, 0f, 0f);
-        // }
     }
 
     // public void AddExternalForce(Vector3 force, ForceMode mode = ForceMode.Impulse)

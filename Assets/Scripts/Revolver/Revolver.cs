@@ -95,6 +95,7 @@ public class Revolver: NetworkBehaviour
         Vector3 direction = muzzle.forward;
 
         ShootServerRpc(origin, direction);
+        PlayerEvents.RaiseShoot(0);
         _fireTimer = revolverData.timeBeforeShot;
         
     }
@@ -128,6 +129,7 @@ public class Revolver: NetworkBehaviour
     {
         _playerController?.UnequipWeapon();
 
+        // GetPooledInstantiate
         NetworkObject pickup = Instantiate(revolverPickupPrefab, pos, rot);
         NetworkManager.ServerManager.Spawn(pickup);
         pickup.GetComponent<RevolverPickup>().SetBullets(_bullets.Value);

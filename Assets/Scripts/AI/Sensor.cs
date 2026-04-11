@@ -10,14 +10,15 @@ public class Sensor : MonoBehaviour
     public float updateInterval = 0.5f;
         
     public readonly List<Transform> detectedObjects = new(4);
-    SphereCollider sphereCollider;
+    [SerializeField] private SphereCollider detectionSphere;
+    [SerializeField] private SphereCollider lineOfSightSphere;
     float _timer;
 
     void Start() 
     {
-        sphereCollider = GetComponent<SphereCollider>();
-        sphereCollider.isTrigger = true;
-        sphereCollider.radius = detectionRadius;
+        detectionSphere = GetComponent<SphereCollider>();
+        detectionSphere.isTrigger = true;
+        detectionSphere.radius = detectionRadius;
         
         ScanOverlap();
     }

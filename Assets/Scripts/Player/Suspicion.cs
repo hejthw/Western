@@ -30,8 +30,14 @@ public class Suspicion : NetworkBehaviour
     
     private IEnumerator Coroutine()
     {
-        suspicionObject.tag = "Suspicion";
+        SetTagClientRpc("Suspicion");
         yield return new WaitForSeconds(suspicionTime);
-        suspicionObject.tag = "Untagged";
+        SetTagClientRpc("Untagged");
+    }
+
+    [ObserversRpc(BufferLast = true)]
+    private void SetTagClientRpc(string newTag)
+    {
+        suspicionObject.tag = newTag;
     }
 }

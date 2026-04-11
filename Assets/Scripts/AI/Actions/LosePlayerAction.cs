@@ -5,10 +5,11 @@ using Action = Unity.Behavior.Action;
 using Unity.Properties;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "ChoosePlayerToAttack", story: "[Self] choose Player", category: "Action", id: "4e6a1d62560785f8e63e7fd9afb77b42")]
-public partial class ChoosePlayerToAttackAction : Action
+[NodeDescription(name: "LosePlayer", story: "[Self] losing [Player]", category: "Action", id: "8ff720c31bf7b363a3bf0994c0aa3b0b")]
+public partial class LosePlayerAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Self;
+    [SerializeReference] public BlackboardVariable<GameObject> Player;
 
     protected override Status OnStart()
     {

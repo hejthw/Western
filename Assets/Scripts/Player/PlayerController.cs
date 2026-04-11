@@ -1,5 +1,6 @@
 using System.Collections;
 using FishNet.Object;
+using Steamworks;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -44,7 +45,6 @@ public class PlayerController : NetworkBehaviour
         input = GetComponent<PlayerInput>();
         rb = GetComponent<Rigidbody>();
         playerRotate = GetComponent<PlayerRotate>();
-        
     }
 
     private void OnEnable()
@@ -59,6 +59,7 @@ public class PlayerController : NetworkBehaviour
         input.OnTestEvent -= Test;
         PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
     }
+    
     // вынести отсюда
     private void DisableMovement(bool isDead)
     {

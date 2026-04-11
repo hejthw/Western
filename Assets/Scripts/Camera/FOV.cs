@@ -6,7 +6,6 @@ public class FOV : MonoBehaviour
 {
     [SerializeField] private PlayerInput _input;
     [SerializeField] private CinemachineCamera cC;
-    [SerializeField] private PlayerStamina _stamina;
     
     private Coroutine _fovCoroutine;
     
@@ -21,26 +20,16 @@ public class FOV : MonoBehaviour
     void OnEnable()
     {
         _input.OnSprintEvent += FovChange;
-        _stamina.OnStaminaEmpty += OnStaminaRanOut;
     }
 
     void OnDisable()
     {
         _input.OnSprintEvent -= FovChange;
-        _stamina.OnStaminaEmpty -= OnStaminaRanOut;
-    }
-    
-    private void OnStaminaRanOut()
-    {
-        if (_fovCoroutine != null)
-            StopCoroutine(_fovCoroutine);
-    
-        _fovCoroutine = StartCoroutine(FovLerp(cC.Lens.FieldOfView, camData.normalFov, camData.fovLerpDuration));
     }
 
     private void FovChange()
     {
-        bool sprintFovActive = _input.SprintHeld && !_stamina.IsEmpty && _input.IsMoving();
+        bool sprintFovActive = _input.SprintHeld && _input.IsMoving();
 
         if (_fovCoroutine != null)
             StopCoroutine(_fovCoroutine);
