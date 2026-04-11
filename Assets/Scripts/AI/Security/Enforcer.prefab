@@ -350,6 +350,8 @@ MonoBehaviour:
         - {fileID: 0}
         - {fileID: 0}
         - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
     - rid: 8488898533181621222
       type: {class: 'BlackboardVariable`1[[System.Int32, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -412,8 +414,8 @@ MonoBehaviour:
   _isGlobal: 0
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
-  _initializedTimestamp: -8584256833433909012
+  _defaultDespawnType: 1
+  _initializedTimestamp: -8584256807948771766
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -571,8 +573,8 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 577405625571252360}
   _behaviorAgent: {fileID: 6856290257989824021}
   _navMeshAgent: {fileID: 4497231934169299779}
-  _criticalRange: 3
-  damage: 100
+  AttackData: {fileID: 11400000, guid: 974017e5273cb4a4087a6d53e0f8f6fd, type: 2}
+  RevolverMuzzle: {fileID: 907529417449354944}
 --- !u!1001 &5901501430087918975
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -583,7 +585,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.536
+      value: 0.33
       objectReference: {fileID: 0}
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalPosition.y
@@ -591,7 +593,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.542
+      value: 0.722
       objectReference: {fileID: 0}
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalRotation.w
@@ -647,6 +649,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
+--- !u!4 &907529417449354944 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6736938065762227135, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
+  m_PrefabInstance: {fileID: 5901501430087918975}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5396281404760279485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}

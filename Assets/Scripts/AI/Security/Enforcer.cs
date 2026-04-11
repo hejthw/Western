@@ -9,4 +9,5 @@ using Random = UnityEngine.Random;
 public class Enforcer: NetworkNPC
 {
     public NPCAttackData AttackData;
+    public Transform RevolverMuzzle;
 }

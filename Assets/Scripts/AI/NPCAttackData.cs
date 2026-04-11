@@ -3,8 +3,6 @@
 [CreateAssetMenu(fileName = "NPCAttackData", menuName = "ScriptableObjects/NPCAttackData")]
 public class NPCAttackData : ScriptableObject
 {
-    public int maxHealth = 100;
-    public bool HasLineOfSight; 
     public float FireRate;        // выстрелов в секунду, например 1.5
     public float MaxSpread;       // макс разброс в градусах, например 10
     public float SpreadDistance;  // дистанция при которой разброс максимален, например 20
