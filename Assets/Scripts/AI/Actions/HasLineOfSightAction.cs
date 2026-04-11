@@ -18,11 +18,40 @@ public partial class HasLineOfSightAction : Action
 
     protected override Status OnUpdate()
     {
-        return Status.Success;
+        if (Self?.Value == null || Player?.Value == null)
+            return Status.Failure;
+
+        Vector3 origin = Self.Value.transform.position;
+        Vector3 target = Player.Value.transform.position;
+        Vector3 direction = target - origin;
+        float distance = direction.magnitude;
+
+        if (Physics.Raycast(origin, direction.normalized, out RaycastHit hit, distance, Physics.AllLayers,QueryTriggerInteraction.Ignore))
+        {
+            if (hit.collider.gameObject == Player.Value)
+            {
+                Debug.DrawLine(origin, target, Color.green);
+                RotateSelf();
+                return Status.Success;
+            }
+        }
+        else
+        {
+            Debug.DrawLine(origin, target, Color.red);
+        }
+
+        return Status.Failure;
     }
 
     protected override void OnEnd()
     {
+    }
+
+
+    private void RotateSelf()
+    {
+        var target = Player.Value.transform;
+        Self.Value.transform.LookAt(target);
     }
 }
 

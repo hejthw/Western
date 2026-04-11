@@ -34,7 +34,7 @@ public partial class CitizenDetectAction : Action
         if (target == null) return Status.Running;
         
         Debug.Log($"Citizen detect: {target.name}");
-        Player.Value = target.gameObject;
+        Player.Value = target.parent.gameObject;
         return Status.Success;
     }
 
