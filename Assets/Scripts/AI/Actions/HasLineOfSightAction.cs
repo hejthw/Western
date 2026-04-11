@@ -35,11 +35,8 @@ public partial class HasLineOfSightAction : Action
                 return Status.Success;
             }
         }
-        else
-        {
-            Debug.DrawLine(origin, target, Color.red);
-        }
-
+        
+        Debug.DrawLine(origin, target, Color.red);
         return Status.Failure;
     }
 
