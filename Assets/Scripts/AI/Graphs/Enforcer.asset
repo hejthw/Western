@@ -45,8 +45,8 @@ MonoBehaviour:
           rid: 3130484035978264840
         BlackboardGroupReferences: []
         Root:
-          rid: 8488898533375607315
-        m_VersionTimestamp: 639115373912630721
+          rid: 8488898533375607510
+        m_VersionTimestamp: 639115400322850016
     - rid: 3130484035978264840
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -141,7 +141,7 @@ MonoBehaviour:
           m_Value1: 7117817550553913064
         Name: LosingTime
         m_Value: 0
-    - rid: 8488898533375607204
+    - rid: 8488898533375607468
       type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -149,7 +149,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: PlayerDetected
-    - rid: 8488898533375607205
+    - rid: 8488898533375607469
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -157,7 +157,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 0.5
-    - rid: 8488898533375607208
+    - rid: 8488898533375607472
       type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -165,7 +165,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: CitizenStartPatrol
-    - rid: 8488898533375607209
+    - rid: 8488898533375607473
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -173,7 +173,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 0.5
-    - rid: 8488898533375607210
+    - rid: 8488898533375607474
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -181,7 +181,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 3
-    - rid: 8488898533375607211
+    - rid: 8488898533375607475
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -189,7 +189,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 1
-    - rid: 8488898533375607212
+    - rid: 8488898533375607476
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -197,7 +197,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 0.2
-    - rid: 8488898533375607213
+    - rid: 8488898533375607477
       type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -205,7 +205,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: SpeedMagnitude
-    - rid: 8488898533375607214
+    - rid: 8488898533375607478
       type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -213,7 +213,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 0
-    - rid: 8488898533375607226
+    - rid: 8488898533375607491
       type: {class: 'BlackboardVariable`1[[Unity.Behavior.ConditionOperator, Unity.Behavior]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -221,7 +221,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 0
-    - rid: 8488898533375607227
+    - rid: 8488898533375607492
       type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -229,7 +229,15 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 1
-    - rid: 8488898533375607228
+    - rid: 8488898533375607493
+      type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
+        m_Value: 0
+    - rid: 8488898533375607494
       type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -237,7 +245,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: Shoot
-    - rid: 8488898533375607229
+    - rid: 8488898533375607495
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -245,7 +253,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 2
-    - rid: 8488898533375607230
+    - rid: 8488898533375607496
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -253,7 +261,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 0.2
-    - rid: 8488898533375607231
+    - rid: 8488898533375607497
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -261,7 +269,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 0.5
-    - rid: 8488898533375607238
+    - rid: 8488898533375607504
       type: {class: 'BlackboardVariable`1[[Unity.Behavior.ConditionOperator, Unity.Behavior]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -269,7 +277,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 0
-    - rid: 8488898533375607239
+    - rid: 8488898533375607505
       type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -277,7 +285,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 1
-    - rid: 8488898533375607240
+    - rid: 8488898533375607506
       type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -285,7 +293,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: Losing Player
-    - rid: 8488898533375607241
+    - rid: 8488898533375607507
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -293,7 +301,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 2
-    - rid: 8488898533375607242
+    - rid: 8488898533375607508
       type: {class: 'BlackboardVariable`1[[System.String, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -301,7 +309,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: Player Lost!
-    - rid: 8488898533375607243
+    - rid: 8488898533375607509
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         GUID:
@@ -309,7 +317,7 @@ MonoBehaviour:
           m_Value1: 0
         Name: 
         m_Value: 2
-    - rid: 8488898533375607315
+    - rid: 8488898533375607510
       type: {class: Start, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -320,10 +328,10 @@ MonoBehaviour:
         m_Parent:
           rid: -2
         m_Child:
-          rid: 8488898533375607316
+          rid: 8488898533375607511
         Repeat: 1
         AllowMultipleRepeatsPerTick: 0
-    - rid: 8488898533375607316
+    - rid: 8488898533375607511
       type: {class: RepeaterModifier, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -332,11 +340,11 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607315
+          rid: 8488898533375607510
         m_Child:
-          rid: 8488898533375607317
+          rid: 8488898533375607512
         m_AllowMultipleRepeatsPerTick: 0
-    - rid: 8488898533375607317
+    - rid: 8488898533375607512
       type: {class: ParallelAllComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -345,13 +353,13 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607316
+          rid: 8488898533375607511
         m_Children:
-        - rid: 8488898533375607318
-        - rid: 8488898533375607319
-        - rid: 8488898533375607320
+        - rid: 8488898533375607513
+        - rid: 8488898533375607514
+        - rid: 8488898533375607515
         m_RegisteredObservers: []
-    - rid: 8488898533375607318
+    - rid: 8488898533375607513
       type: {class: AbortModifier, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -360,14 +368,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607317
+          rid: 8488898533375607512
         m_Child:
-          rid: 8488898533375607321
+          rid: 8488898533375607516
         m_Conditions:
-        - rid: 8488898533375607322
+        - rid: 8488898533375607517
         m_RequiresAllConditions: 0
         m_ObserverType: 0
-    - rid: 8488898533375607319
+    - rid: 8488898533375607514
       type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -376,12 +384,12 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607317
+          rid: 8488898533375607512
         m_Children:
-        - rid: 8488898533375607323
-        - rid: 8488898533375607324
+        - rid: 8488898533375607518
+        - rid: 8488898533375607519
         m_RegisteredObservers: []
-    - rid: 8488898533375607320
+    - rid: 8488898533375607515
       type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -390,13 +398,13 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607317
+          rid: 8488898533375607512
         m_Children:
-        - rid: 8488898533375607325
-        - rid: 8488898533375607326
-        - rid: 8488898533375607327
+        - rid: 8488898533375607520
+        - rid: 8488898533375607521
+        - rid: 8488898533375607522
         m_RegisteredObservers: []
-    - rid: 8488898533375607321
+    - rid: 8488898533375607516
       type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -405,12 +413,12 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607318
+          rid: 8488898533375607513
         m_Children:
-        - rid: 8488898533375607328
-        - rid: 8488898533375607329
+        - rid: 8488898533375607523
+        - rid: 8488898533375607524
         m_RegisteredObservers: []
-    - rid: 8488898533375607322
+    - rid: 8488898533375607517
       type: {class: PlayerDetectedCondition, ns: , asm: Assembly-CSharp}
       data:
         Graph:
@@ -419,7 +427,7 @@ MonoBehaviour:
           rid: 8488898533181620666
         Player:
           rid: 8488898533181620669
-    - rid: 8488898533375607323
+    - rid: 8488898533375607518
       type: {class: CitizenDetectAction, ns: , asm: Assembly-CSharp}
       data:
         ID:
@@ -428,14 +436,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607319
+          rid: 8488898533375607514
         Self:
           rid: 8488898533181620666
         Player:
           rid: 8488898533181620669
         Tag:
           rid: 8488898533181620670
-    - rid: 8488898533375607324
+    - rid: 8488898533375607519
       type: {class: TriggerEventAction, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -444,7 +452,7 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607319
+          rid: 8488898533375607514
         ChannelVariable:
           rid: 8488898533181620668
         MessageVariables:
@@ -452,7 +460,7 @@ MonoBehaviour:
         - rid: 8488898533181620669
         - rid: -2
         - rid: -2
-    - rid: 8488898533375607325
+    - rid: 8488898533375607520
       type: {class: WaitForEventAction, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -461,7 +469,7 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607320
+          rid: 8488898533375607515
         ChannelVariable:
           rid: 8488898533181620668
         MessageVariables:
@@ -469,7 +477,7 @@ MonoBehaviour:
         - rid: 8488898533181620669
         - rid: -2
         - rid: -2
-    - rid: 8488898533375607326
+    - rid: 8488898533375607521
       type: {class: TalkAction, ns: Unity.Behavior.Example, asm: Assembly-CSharp}
       data:
         ID:
@@ -478,14 +486,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607320
+          rid: 8488898533375607515
         Agent:
           rid: 8488898533181620666
         Sentence:
-          rid: 8488898533375607204
+          rid: 8488898533375607468
         Duration:
-          rid: 8488898533375607205
-    - rid: 8488898533375607327
+          rid: 8488898533375607469
+    - rid: 8488898533375607522
       type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -494,12 +502,12 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607320
+          rid: 8488898533375607515
         m_Children:
-        - rid: 8488898533375607330
-        - rid: 8488898533375607331
+        - rid: 8488898533375607525
+        - rid: 8488898533375607526
         m_RegisteredObservers: []
-    - rid: 8488898533375607328
+    - rid: 8488898533375607523
       type: {class: TalkAction, ns: Unity.Behavior.Example, asm: Assembly-CSharp}
       data:
         ID:
@@ -508,14 +516,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607321
+          rid: 8488898533375607516
         Agent:
           rid: 8488898533181620666
         Sentence:
-          rid: 8488898533375607208
+          rid: 8488898533375607472
         Duration:
-          rid: 8488898533375607209
-    - rid: 8488898533375607329
+          rid: 8488898533375607473
+    - rid: 8488898533375607524
       type: {class: PatrolAction, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -524,22 +532,22 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607321
+          rid: 8488898533375607516
         Agent:
           rid: 8488898533181620666
         Waypoints:
           rid: 8488898533181620667
         Speed:
-          rid: 8488898533375607210
+          rid: 8488898533375607474
         WaypointWaitTime:
-          rid: 8488898533375607211
+          rid: 8488898533375607475
         DistanceThreshold:
-          rid: 8488898533375607212
+          rid: 8488898533375607476
         AnimatorSpeedParam:
-          rid: 8488898533375607213
+          rid: 8488898533375607477
         PreserveLatestPatrolPoint:
-          rid: 8488898533375607214
-    - rid: 8488898533375607330
+          rid: 8488898533375607478
+    - rid: 8488898533375607525
       type: {class: DebugAction, ns: , asm: Assembly-CSharp}
       data:
         ID:
@@ -548,8 +556,8 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607327
-    - rid: 8488898533375607331
+          rid: 8488898533375607522
+    - rid: 8488898533375607526
       type: {class: ParallelAllComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -558,12 +566,12 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607327
+          rid: 8488898533375607522
         m_Children:
-        - rid: 8488898533375607332
-        - rid: 8488898533375607333
+        - rid: 8488898533375607527
+        - rid: 8488898533375607528
         m_RegisteredObservers: []
-    - rid: 8488898533375607332
+    - rid: 8488898533375607527
       type: {class: RepeaterModifier, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -572,11 +580,11 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607331
+          rid: 8488898533375607526
         m_Child:
-          rid: 8488898533375607334
+          rid: 8488898533375607529
         m_AllowMultipleRepeatsPerTick: 0
-    - rid: 8488898533375607333
+    - rid: 8488898533375607528
       type: {class: LineOfSightAction, ns: , asm: Assembly-CSharp}
       data:
         ID:
@@ -585,14 +593,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607331
+          rid: 8488898533375607526
         Self:
           rid: 8488898533181620666
         HasLineOfSight:
           rid: 8488898533181620672
         Player:
           rid: 8488898533181620669
-    - rid: 8488898533375607334
+    - rid: 8488898533375607529
       type: {class: BranchingConditionComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -601,22 +609,22 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607332
+          rid: 8488898533375607527
         m_Children:
-        - rid: 8488898533375607335
-        - rid: 8488898533375607336
+        - rid: 8488898533375607530
+        - rid: 8488898533375607531
         m_RegisteredObservers: []
         m_Conditions:
-        - rid: 8488898533375607337
+        - rid: 8488898533375607532
         m_RequiresAllConditions: 0
         True:
-          rid: 8488898533375607335
+          rid: 8488898533375607530
         False:
-          rid: 8488898533375607336
+          rid: 8488898533375607531
         m_CurrentChild:
           rid: -2
         m_ObserverType: 0
-    - rid: 8488898533375607335
+    - rid: 8488898533375607530
       type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -625,12 +633,12 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607334
+          rid: 8488898533375607529
         m_Children:
-        - rid: 8488898533375607338
-        - rid: 8488898533375607339
+        - rid: 8488898533375607533
+        - rid: 8488898533375607534
         m_RegisteredObservers: []
-    - rid: 8488898533375607336
+    - rid: 8488898533375607531
       type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -639,14 +647,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607334
+          rid: 8488898533375607529
         m_Children:
-        - rid: 8488898533375607340
-        - rid: 8488898533375607341
-        - rid: 8488898533375607342
-        - rid: 8488898533375607343
+        - rid: 8488898533375607535
+        - rid: 8488898533375607536
+        - rid: 8488898533375607537
+        - rid: 8488898533375607538
         m_RegisteredObservers: []
-    - rid: 8488898533375607337
+    - rid: 8488898533375607532
       type: {class: VariableComparisonCondition, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         Graph:
@@ -654,10 +662,10 @@ MonoBehaviour:
         Variable:
           rid: 8488898533181620672
         Operator:
-          rid: 8488898533375607226
+          rid: 8488898533375607491
         ComparisonValue:
-          rid: 8488898533375607227
-    - rid: 8488898533375607338
+          rid: 8488898533375607492
+    - rid: 8488898533375607533
       type: {class: AttackAction, ns: , asm: Assembly-CSharp}
       data:
         ID:
@@ -666,12 +674,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607335
+          rid: 8488898533375607530
         Self:
           rid: 8488898533181620666
         Player:
           rid: 8488898533181620669
-    - rid: 8488898533375607339
+        HasLineOfSight:
+          rid: 8488898533375607493
+    - rid: 8488898533375607534
       type: {class: TalkAction, ns: Unity.Behavior.Example, asm: Assembly-CSharp}
       data:
         ID:
@@ -680,14 +690,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607335
+          rid: 8488898533375607530
         Agent:
           rid: 8488898533181620666
         Sentence:
-          rid: 8488898533375607228
+          rid: 8488898533375607494
         Duration:
-          rid: 8488898533375607229
-    - rid: 8488898533375607340
+          rid: 8488898533375607495
+    - rid: 8488898533375607535
       type: {class: WaitRangeAction, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -696,12 +706,12 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607336
+          rid: 8488898533375607531
         Min:
-          rid: 8488898533375607230
+          rid: 8488898533375607496
         Max:
-          rid: 8488898533375607231
-    - rid: 8488898533375607341
+          rid: 8488898533375607497
+    - rid: 8488898533375607536
       type: {class: GetPlayerLastPosAction, ns: , asm: Assembly-CSharp}
       data:
         ID:
@@ -710,12 +720,12 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607336
+          rid: 8488898533375607531
         LastPlayerPos:
           rid: 8488898533181620673
         Player:
           rid: 8488898533181620669
-    - rid: 8488898533375607342
+    - rid: 8488898533375607537
       type: {class: NavigateToVector3Action, ns: , asm: Assembly-CSharp}
       data:
         ID:
@@ -724,14 +734,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607336
+          rid: 8488898533375607531
         Self:
           rid: 8488898533181620666
         LastPlayerPos:
           rid: 8488898533181620673
         HasLineOfSight:
           rid: 8488898533181620672
-    - rid: 8488898533375607343
+    - rid: 8488898533375607538
       type: {class: BranchingConditionComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -740,21 +750,21 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607336
+          rid: 8488898533375607531
         m_Children:
-        - rid: 8488898533375607344
+        - rid: 8488898533375607539
         m_RegisteredObservers: []
         m_Conditions:
-        - rid: 8488898533375607345
+        - rid: 8488898533375607540
         m_RequiresAllConditions: 0
         True:
           rid: -2
         False:
-          rid: 8488898533375607344
+          rid: 8488898533375607539
         m_CurrentChild:
           rid: -2
         m_ObserverType: 0
-    - rid: 8488898533375607344
+    - rid: 8488898533375607539
       type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         ID:
@@ -763,14 +773,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607343
+          rid: 8488898533375607538
         m_Children:
-        - rid: 8488898533375607346
-        - rid: 8488898533375607347
-        - rid: 8488898533375607348
-        - rid: 8488898533375607349
+        - rid: 8488898533375607541
+        - rid: 8488898533375607542
+        - rid: 8488898533375607543
+        - rid: 8488898533375607544
         m_RegisteredObservers: []
-    - rid: 8488898533375607345
+    - rid: 8488898533375607540
       type: {class: VariableComparisonCondition, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
         Graph:
@@ -778,10 +788,10 @@ MonoBehaviour:
         Variable:
           rid: 8488898533181620672
         Operator:
-          rid: 8488898533375607238
+          rid: 8488898533375607504
         ComparisonValue:
-          rid: 8488898533375607239
-    - rid: 8488898533375607346
+          rid: 8488898533375607505
+    - rid: 8488898533375607541
       type: {class: TalkAction, ns: Unity.Behavior.Example, asm: Assembly-CSharp}
       data:
         ID:
@@ -790,14 +800,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607344
+          rid: 8488898533375607539
         Agent:
           rid: 8488898533181620666
         Sentence:
-          rid: 8488898533375607240
+          rid: 8488898533375607506
         Duration:
-          rid: 8488898533375607241
-    - rid: 8488898533375607347
+          rid: 8488898533375607507
+    - rid: 8488898533375607542
       type: {class: LosePlayerrAction, ns: , asm: Assembly-CSharp}
       data:
         ID:
@@ -806,7 +816,7 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607344
+          rid: 8488898533375607539
         Self:
           rid: 8488898533181620666
         Player:
@@ -815,7 +825,7 @@ MonoBehaviour:
           rid: 8488898533181620672
         LosingTime:
           rid: 8488898533181620674
-    - rid: 8488898533375607348
+    - rid: 8488898533375607543
       type: {class: TalkAction, ns: Unity.Behavior.Example, asm: Assembly-CSharp}
       data:
         ID:
@@ -824,14 +834,14 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607344
+          rid: 8488898533375607539
         Agent:
           rid: 8488898533181620666
         Sentence:
-          rid: 8488898533375607242
+          rid: 8488898533375607508
         Duration:
-          rid: 8488898533375607243
-    - rid: 8488898533375607349
+          rid: 8488898533375607509
+    - rid: 8488898533375607544
       type: {class: RestartAction, ns: , asm: Assembly-CSharp}
       data:
         ID:
@@ -840,7 +850,7 @@ MonoBehaviour:
         Graph:
           rid: 3130484035978264839
         m_Parent:
-          rid: 8488898533375607344
+          rid: 8488898533375607539
         Self:
           rid: 8488898533181620666
 --- !u!114 &-307570579712710937
@@ -1001,7 +1011,7 @@ MonoBehaviour:
   - rid: 8488898533375606873
   - rid: 8488898533375607071
   - rid: 8488898533375607177
-  m_VersionTimestamp: 639115373912630721
+  m_VersionTimestamp: 639115400322850016
   m_SerializedVersion: 2
   m_DebugInfo: {fileID: -3434644108501326915}
   m_RuntimeGraph: {fileID: -582874144839336215}
@@ -1196,6 +1206,11 @@ MonoBehaviour:
       Type:
         m_SerializableType: UnityEngine.GameObject, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
+      Tooltip: 
+    - Name: HasLineOfSight
+      Type:
+        m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
       Tooltip: 
     NamedChildren: []
     IsPlaceholder: 0
@@ -2471,7 +2486,7 @@ MonoBehaviour:
     - rid: 8488898525716021433
       type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
-        Position: {x: 482.34415, y: 906.1495}
+        Position: {x: 482.34415, y: 841.00806}
         ID:
           m_Value0: 1437107435741363590
           m_Value1: 18226548708804297899
@@ -2489,6 +2504,7 @@ MonoBehaviour:
         m_FieldValues:
         - rid: 8488898525716021436
         - rid: 8488898525716021437
+        - rid: 8488898533375607443
     - rid: 8488898525716021434
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
@@ -2822,7 +2838,7 @@ MonoBehaviour:
     - rid: 8488898531936436560
       type: {class: ActionNodeModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
       data:
-        Position: {x: 494.51492, y: 925.31836}
+        Position: {x: 497.0695, y: 860.177}
         ID:
           m_Value0: 3526377490968820463
           m_Value1: 2330040356564637771
@@ -4193,6 +4209,25 @@ MonoBehaviour:
         Name: HasLineOfSight
         IsExposed: 1
         m_IsShared: 0
+        m_Value: 0
+    - rid: 8488898533375607443
+      type: {class: BehaviorGraphNodeModel/FieldModel, ns: Unity.Behavior, asm: Unity.Behavior.Authoring}
+      data:
+        FieldName: HasLineOfSight
+        Type:
+          m_SerializableType: System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        LocalValue:
+          rid: 8488898533375607448
+        LinkedVariable:
+          rid: -2
+    - rid: 8488898533375607448
+      type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 0
+          m_Value1: 0
+        Name: 
         m_Value: 0
 --- !u!114 &6654071320462185429
 MonoBehaviour:

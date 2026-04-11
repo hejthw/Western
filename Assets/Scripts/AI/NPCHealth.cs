@@ -43,6 +43,6 @@ public class NPCHealth : NetworkBehaviour
         if (_isDead.Value) return;
         
         _isDead.Value = true;
-        ServerManager.Despawn(this);
+        ServerManager.Despawn(this, DespawnType.Pool);
     }
 }

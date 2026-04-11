@@ -10,19 +10,15 @@ public partial class AttackAction : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Self;
     [SerializeReference] public BlackboardVariable<GameObject> Player;
+    [SerializeReference] public BlackboardVariable<bool> HasLineOfSight;
+    
+    private Transform _selfTransform;
+    private Transform _playerTransform;
+    private float _fireTimer;
 
-    protected override Status OnStart()
-    {
-        return Status.Running;
-    }
-
-    protected override Status OnUpdate()
-    {
-        return Status.Success;
-    }
-
-    protected override void OnEnd()
-    {
-    }
+    private Enforcer _enforcer;
+    private NPCAttackData _data;
+    
+    
 }
 
