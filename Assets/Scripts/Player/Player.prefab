@@ -2621,7 +2621,7 @@ MonoBehaviour:
   input: {fileID: 2479261188838793012}
   weaponHoldPoint: {fileID: 6787961388630782479}
   localUI: {fileID: 5375274108382611991}
-  kinematicDelay: 5
+  kinematicDelay: 3
 --- !u!114 &2479261188838793012
 MonoBehaviour:
   m_ObjectHideFlags: 0

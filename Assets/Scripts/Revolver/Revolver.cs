@@ -129,6 +129,7 @@ public class Revolver: NetworkBehaviour
     {
         _playerController?.UnequipWeapon();
 
+        // GetPooledInstantiate
         NetworkObject pickup = Instantiate(revolverPickupPrefab, pos, rot);
         NetworkManager.ServerManager.Spawn(pickup);
         pickup.GetComponent<RevolverPickup>().SetBullets(_bullets.Value);
