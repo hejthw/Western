@@ -11,6 +11,25 @@ public class PlayerInput : MonoBehaviour
     public Vector2 MoveInput {get ; private set;}
     
     public bool SprintHeld { get; private set; }
+    public bool CrouchHeld { get ; private set;}
+    public bool IsHoldingFinish { get; private set; }
+
+    public bool isDead { get ; private set ; }
+    
+     private void OnEnable()
+     {
+        // PlayerEvents.OnDeadEvent += bred;
+      }
+    
+    private void OnDisable()
+     {
+      // PlayerEvents.OnDeadEvent -= bred;
+    }
+   
+     private void bred(bool a)
+    {
+         isDead = a;
+    }
     
     public event Action JumpPressedEvent;
     public event Action OnSprintEvent;
@@ -20,15 +39,21 @@ public class PlayerInput : MonoBehaviour
     public event Action OnPickupEvent;
     public event Action OnDropEvent;
     public event Action<int> OnSlotKeyPressed;
-      public event Action OnLassoPullStarted;   
-      public event Action OnLassoPullEnded;
-      
+    public event Action OnLassoPullStarted;   
+    public event Action OnLassoPullEnded;
+
     public void OnMove(InputValue value) => MoveInput = value.Get<Vector2>();
 
     public void OnSprint(InputValue value)
     {
         SprintHeld = value.Get<float>() > 0.5; 
         OnSprintEvent?.Invoke();
+    }
+    
+    public void OnCrouch(InputValue value)
+    {
+        CrouchHeld = value.Get<float>() > 0.5;
+        OnCrouchEvent?.Invoke();
     }
 
     public void OnJump(InputValue value)
@@ -40,11 +65,14 @@ public class PlayerInput : MonoBehaviour
     {
         if (value.Get<float>() > 0.5f)
         {
-            OnAttackEvent?.Invoke();
-            PlayerEvents.RaisePrevTargetEvent();
+            Debug.Log("[PlayerInput] OnAttack triggered");
+            if (isDead)
+                PlayerEvents.RaisePrevTargetEvent();
+            else
+                OnAttackEvent?.Invoke();
         }
     }
-    
+
     public void OnAim(InputValue value)
     {
         if (value.Get<float>() > 0.5f)
@@ -85,16 +113,16 @@ public class PlayerInput : MonoBehaviour
     {
         if (value.Get<float>() > 0.5f) OnSlotKeyPressed?.Invoke(2);
     }
-     public void OnLassoPull(InputValue value)
- {
-     Debug.Log($"[PlayerInput] OnLassoPull: value={value.Get<float>()}");
-     if (value.Get<float>() > 0.4f)
-         OnLassoPullStarted?.Invoke();
-     else
-         OnLassoPullEnded?.Invoke();
- }
- public void OnFinish(InputValue value)
- {
-     IsHoldingFinish = value.Get<float>() > 0.5f;
- }
+    public void OnLassoPull(InputValue value)
+    {
+        Debug.Log($"[PlayerInput] OnLassoPull: value={value.Get<float>()}");
+        if (value.Get<float>() > 0.4f)
+            OnLassoPullStarted?.Invoke();
+        else
+            OnLassoPullEnded?.Invoke();
+    }
+    public void OnFinish(InputValue value)
+    {
+        IsHoldingFinish = value.Get<float>() > 0.5f;
+    }
 }
