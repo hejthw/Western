@@ -2,46 +2,107 @@
 using FishNet.Connection;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
+using FishNet.Component.Transforming;
 
 public class LightObject : NetworkBehaviour, ILassoInteractable
 {
     private Rigidbody rb;
-
     protected readonly SyncVar<ItemState> state = new SyncVar<ItemState>();
     protected readonly SyncVar<NetworkObject> holder = new SyncVar<NetworkObject>();
 
     [SerializeField] private bool fragile = false;
     [SerializeField] private float pullSpeed = 15f;
+    [SerializeField] private bool semiFragile = false;
+
     private bool _isLocallyHeld = false;
     public bool IsLocallyHeld => _isLocallyHeld;
 
-    public void SetLocallyHeld(bool held)
-    {
-        _isLocallyHeld = held;
-        Debug.Log($"[LightObject] SetLocallyHeld({held}) on {name}");
-    }
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
+
+    private void Start()
+    {
+        state.OnChange += OnStateChanged;
+        UpdateVisibility(state.Value);
+    }
+
+    private void OnDestroy()
+    {
+        state.OnChange -= OnStateChanged;
+    }
+
+    private void OnStateChanged(ItemState oldState, ItemState newState, bool asServer)
+    {
+        if (asServer) return;
+        UpdateVisibility(newState);
+    }
+
+    [Server]
+    public void OnShot()
+    {
+        if (!semiFragile) return;
+        if (state.Value == ItemState.Held) return; 
+
+        Debug.Log($"[LightObject] Destroyed by shot (semi-fragile)");
+        Despawn();
+    }
+
+    private void UpdateVisibility(ItemState currentState)
+    {
+        var netTransform = GetComponent<NetworkTransform>();
+        if (netTransform != null)
+        {
+            bool shouldBeEnabled = (currentState != ItemState.Held);
+            if (netTransform.enabled != shouldBeEnabled)
+                netTransform.enabled = shouldBeEnabled;
+        }
+    }
+
     public LassoInteractionType GetInteractionType()
     {
         return LassoInteractionType.PullObject;
     }
 
-
     [ServerRpc(RequireOwnership = false)]
     public void ServerPickup(NetworkObject player)
     {
-        Debug.Log($"[LightObject] ServerPickup called on {name}, state={state.Value}, player={player.name}, owner={player.Owner?.ClientId}");
         if (state.Value != ItemState.World) return;
 
         holder.Value = player;
         state.Value = ItemState.Held;
         GiveOwnership(player.Owner);
 
-        Debug.Log($"[LightObject] About to call TargetConfirmPickup for connection {player.Owner?.ClientId}");
+        bool handled = OnPickup(player);
+        Debug.Log($"[LightObject] ServerPickup: OnPickup returned {handled}");
+        if (handled) return;
+
         TargetConfirmPickup(player.Owner, player);
+    }
+
+    protected virtual bool OnPickup(NetworkObject player)
+    {
+        return false;
+    }
+
+    [TargetRpc]
+    public void TargetConfirmPickup(NetworkConnection target, NetworkObject playerObject)
+    {
+        if (playerObject == null) return;
+        if (playerObject.Owner != LocalConnection) return;
+
+        var pickup = playerObject.GetComponent<PickupController>();
+        if (pickup != null)
+        {
+            pickup.AttachLocal(gameObject);
+            SetLocallyHeld(true);
+        }
+    }
+
+    public void SetLocallyHeld(bool held)
+    {
+        _isLocallyHeld = held;
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -51,17 +112,32 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
 
         state.Value = ItemState.Thrown;
         holder.Value = null;
-
         RemoveOwnership();
+
         transform.position = pos;
         rb.isKinematic = false;
         rb.useGravity = true;
         rb.linearVelocity = velocity;
 
-        // Сбросить локальный флаг у предыдущего владельца
-        TargetResetLocallyHeld(Owner);
+        var nt = GetComponent<NetworkTransform>();
+        if (nt != null) nt.enabled = true;
 
         ObserversApplyThrow(pos, velocity);
+        TargetResetLocallyHeld(Owner);
+    }
+
+    [ObserversRpc]
+    private void ObserversApplyThrow(Vector3 pos, Vector3 velocity)
+    {
+        if (IsOwner) return;
+
+        transform.position = pos;
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        rb.linearVelocity = velocity;
+
+        var nt = GetComponent<NetworkTransform>();
+        if (nt != null) nt.enabled = true;
     }
 
     [TargetRpc]
@@ -70,26 +146,34 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         SetLocallyHeld(false);
     }
 
-
-    [ObserversRpc]
-    private void ObserversApplyThrow(Vector3 pos, Vector3 velocity)
-    {
-        if (IsOwner) return;
-
-        transform.position = pos;
-
-        rb.isKinematic = false;
-        rb.useGravity = true;
-        rb.linearVelocity = velocity;
-    }
-
-
-
     private void OnCollisionEnter(Collision collision)
     {
         if (!IsServer) return;
-
         if (state.Value != ItemState.Thrown) return;
+
+  
+        if (collision.collider.TryGetComponent(out PlayerHealth playerHealth))
+        {
+
+            Vector3 hitDirection = collision.transform.position - transform.position;
+            hitDirection.y = 0.5f; 
+            hitDirection.Normalize();
+
+            playerHealth.StunWithDirection(Vector3.zero, 2f);
+
+            if (fragile)
+            {
+                Despawn();
+            }
+            else
+            {
+                state.Value = ItemState.World;
+                var nt = GetComponent<NetworkTransform>();
+                if (nt != null) nt.enabled = true;
+                if (rb != null) rb.linearVelocity = Vector3.zero;
+            }
+            return;
+        }
 
         if (fragile)
         {
@@ -98,6 +182,8 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         }
 
         state.Value = ItemState.World;
+        var netTransform = GetComponent<NetworkTransform>();
+        if (netTransform != null) netTransform.enabled = true;
     }
 
     [Server]
@@ -105,11 +191,16 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     {
         holder.Value = null;
         state.Value = ItemState.World;
+
+        var nt = GetComponent<NetworkTransform>();
+        if (nt != null) nt.enabled = true;
+
+        TargetResetLocallyHeld(Owner);
     }
+
     public void OnLassoAttach(LassoNetwork lasso)
     {
         if (!IsServer) return;
-
         if (rb != null)
         {
             rb.linearVelocity = Vector3.zero;
@@ -117,63 +208,34 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         }
     }
 
-
-
-
     public void OnLassoPull(LassoNetwork lasso)
     {
         if (!IsServer) return;
-
         if (rb == null) return;
 
         rb.isKinematic = false;
         rb.useGravity = true;
+        var playerNetObj = lasso.OwnerNetObj;
+        if (playerNetObj == null) return;
 
-        Vector3 dir = (lasso.Owner.transform.position - transform.position).normalized;
+        var playerObj = playerNetObj.gameObject;
+        if (playerObj == null) return;
 
+        Vector3 dir = (playerObj.transform.position - transform.position).normalized;
         rb.linearVelocity = Vector3.zero;
         rb.AddForce(dir * 20f, ForceMode.Impulse);
     }
 
-    [ObserversRpc]
-    private void ObserversMove(Vector3 pos)
-    {
-        if (IsServer) return;
-        transform.position = pos;
-    }
     public void OnLassoDetach(LassoNetwork lasso)
     {
         if (!IsServer) return;
-
         if (rb != null)
         {
             rb.isKinematic = false;
             rb.useGravity = true;
         }
     }
-    [TargetRpc]
-    public void TargetConfirmPickup(NetworkConnection target, NetworkObject playerObject)
-    {
-        Debug.Log($"[LightObject] TargetConfirmPickup received on client. target={target?.ClientId}, LocalConnection={LocalConnection?.ClientId}, playerObject={playerObject?.name}");
-        if (playerObject == null)
-        {
-            Debug.Log("[LightObject] playerObject is null");
-            return;
-        }
-        if (playerObject.Owner != LocalConnection)
-        {
-            Debug.Log($"[LightObject] Owner mismatch: playerObject.Owner={playerObject.Owner?.ClientId}, LocalConnection={LocalConnection?.ClientId}");
-            return;
-        }
 
-        var pickup = playerObject.GetComponent<PickupController>();
-        Debug.Log($"[LightObject] pickup component = {(pickup != null ? "found" : "null")}");
-        if (pickup != null)
-        {
-            pickup.AttachLocal(gameObject);
-            SetLocallyHeld(true);
-        }
-    }
     public virtual byte[] SerializeState()
     {
         return null;
@@ -181,6 +243,14 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
 
     public virtual void DeserializeState(byte[] data)
     {
-        
+    }
+    public void SetFragile(bool value)
+    {
+        fragile = value;
+    }
+
+    public void SetSemiFragile(bool value)
+    {
+        semiFragile = value;
     }
 }

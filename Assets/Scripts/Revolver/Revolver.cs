@@ -22,7 +22,7 @@ public class Revolver: NetworkBehaviour
 
     private void Awake()
     {
-        _hitboxMask = LayerMask.GetMask("Hitbox");
+        _hitboxMask = LayerMask.GetMask("Hitbox","Breakable");
     }
 
     private void Update()

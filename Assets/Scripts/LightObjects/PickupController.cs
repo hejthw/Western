@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using FishNet.Object;
+using FishNet.Component.Transforming;
+using System.Collections;
 
 public class PickupController : NetworkBehaviour
 {
@@ -12,6 +14,7 @@ public class PickupController : NetworkBehaviour
     private Rigidbody heldRb;
     private Transform cam;
     private PlayerInput input;
+  
 
     private void Awake()
     {
@@ -46,6 +49,7 @@ public class PickupController : NetworkBehaviour
             input.OnDropEvent -= HandleDrop;
         }
     }
+    
 
     private void HandleAttack()
     {
@@ -60,18 +64,69 @@ public class PickupController : NetworkBehaviour
     private void HandlePickup()
     {
         if (!IsOwner) return;
+        if (TryInteractDoor())
+            return;
+        if (TryCashIn())
+            return;
         if (heldObject == null)
             TryPickup();
         else
             Throw();
     }
+    private bool TryInteractDoor()
+    {
+        Ray ray = new Ray(cam.position, cam.forward);
 
+        if (!Physics.Raycast(ray, out var hit, pickupDistance))
+            return false;
+
+        var door = hit.collider.GetComponentInParent<HeistDoor>();
+        if (door == null) return false;
+
+        door.ServerToggleDoor();
+        return true;
+    }
+    private bool TryCashIn()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 2f);
+
+        foreach (var hit in hits)
+        {
+            var zone = hit.GetComponent<CashZone>();
+            if (zone == null) continue;
+
+            if (heldObject == null) return false;
+
+            var treasure = heldObject.GetComponent<Treasure>();
+            if (treasure == null) return false;
+
+            ServerCashIn(heldObject.GetComponent<NetworkObject>());
+            return true;
+        }
+
+        return false;
+    }
+    [ServerRpc]
+    private void ServerCashIn(NetworkObject itemNetObj)
+    {
+        if (itemNetObj == null) return;
+
+        var treasure = itemNetObj.GetComponent<Treasure>();
+        if (treasure == null) return;
+
+        int value = treasure.GetValue();
+
+        CashManager.Instance.AddCash(value);
+
+        itemNetObj.Despawn();
+
+        ClearHeldObjectClient();
+    }
     private void TryPickup()
     {
         Ray ray = new Ray(cam.position, cam.forward);
         if (!Physics.Raycast(ray, out var hit, pickupDistance, pickupLayer)) return;
         if (!hit.collider.TryGetComponent(out LightObject obj)) return;
-
         obj.ServerPickup(GetComponent<NetworkObject>());
     }
 
@@ -79,15 +134,19 @@ public class PickupController : NetworkBehaviour
     {
         heldObject = obj;
         heldRb = obj.GetComponent<Rigidbody>();
-
         heldRb.isKinematic = true;
         heldRb.useGravity = false;
         heldRb.linearVelocity = Vector3.zero;
         heldRb.angularVelocity = Vector3.zero;
 
+        // Отключаем NetworkTransform
+        var nt = obj.GetComponent<NetworkTransform>();
+        if (nt != null) nt.enabled = false;
+
         obj.transform.SetParent(holdPoint, false);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
+
         Debug.Log("Attached " + obj.name + " locally");
     }
 
@@ -102,6 +161,9 @@ public class PickupController : NetworkBehaviour
         heldRb.useGravity = true;
         heldRb.linearVelocity = velocity;
 
+        var nt = heldObject.GetComponent<NetworkTransform>();
+        if (nt != null) nt.enabled = true;
+
         heldObject.GetComponent<LightObject>().ServerThrow(pos, velocity);
         heldObject = null;
         heldRb = null;
@@ -114,10 +176,6 @@ public class PickupController : NetworkBehaviour
             Throw();
     }
 
-    // =========================
-    // INVENTORY
-    // =========================
-
     private void HandleSlotKey(int slot)
     {
         if (!IsOwner) return;
@@ -125,12 +183,10 @@ public class PickupController : NetworkBehaviour
 
         if (heldObject != null)
         {
-            // Предмет в руках – сохраняем в слот
             ServerStoreItem(slot, heldObject.GetComponent<NetworkObject>());
         }
         else
         {
-            // Руки пусты – пытаемся достать из слота
             ServerEquipFromSlot(slot);
         }
     }
@@ -140,15 +196,12 @@ public class PickupController : NetworkBehaviour
     {
         Debug.Log($"[PickupController] ServerStoreItem slot={slot}, item={itemNetObj?.name}");
         if (itemNetObj == null) return;
-
         LightObject lightObj = itemNetObj.GetComponent<LightObject>();
         if (lightObj == null) return;
-
         PlayerInventory inv = GetComponent<PlayerInventory>();
         if (inv == null) return;
 
         inv.StoreItemFromHand(slot, lightObj);
-        // Очищаем heldObject у всех клиентов (особенно у владельца)
         ClearHeldObjectClient();
     }
 
@@ -158,7 +211,6 @@ public class PickupController : NetworkBehaviour
         Debug.Log($"[PickupController] ServerEquipFromSlot slot={slot}");
         PlayerInventory inv = GetComponent<PlayerInventory>();
         if (inv == null) return;
-
         inv.EquipFromSlot(slot, GetComponent<NetworkObject>());
     }
 
@@ -174,6 +226,23 @@ public class PickupController : NetworkBehaviour
 
     public GameObject GetHeldObject() => heldObject;
 
+
+    private void LateUpdate()
+    {
+        if (!IsOwner) return;
+        if (heldObject != null)
+        {
+            heldObject.transform.position = holdPoint.position;
+            heldObject.transform.rotation = holdPoint.rotation;
+            
+            if (heldObject.transform.parent != holdPoint)
+            {
+                heldObject.transform.SetParent(holdPoint);
+                heldObject.transform.localPosition = Vector3.zero;
+                heldObject.transform.localRotation = Quaternion.identity;
+            }
+        }
+    }
     public void SetHeldWeapon(GameObject weapon)
     {
         if (heldObject != null) return;

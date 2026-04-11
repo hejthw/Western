@@ -8,64 +8,35 @@ using System.Collections;
 /// Пикак револьвера на сцене. Является LightObject
 /// </summary>
 [RequireComponent(typeof(LightObject))]
-public class RevolverPickup: NetworkBehaviour, IPickupable
+public class RevolverPickup : LightObject
 {
-    [SerializeField] private NetworkObject revolverWeaponPrefab;
-    [SerializeField] public RevolverData revolverData;
-    
-    private readonly SyncVar<int> _bullets = new SyncVar<int>(new SyncTypeSettings());
-    
-    /// <summary> Вызывается при спавне на сцене. Устанавливается кол-во патрон</summary>
+    public RevolverData revolverData;
+    public NetworkObject revolverWeaponPrefab;
+
+    private readonly SyncVar<int> _bullets = new SyncVar<int>();
+
+    public void SetBullets(int count)
+    {
+        if (IsServer) _bullets.Value = count;
+    }
+
+   
     public override void OnStartServer()
     {
         base.OnStartServer();
-        _bullets.Value = revolverData.bullets;
+        if (_bullets.Value == 0)
+            _bullets.Value = revolverData.bullets;
     }
-    
-    /// <summary> Вызывается сервером при дропе оружия для передачи патронов</summary>
-    public void SetBullets(int count)
+
+    public override byte[] SerializeState()
     {
-        _bullets.Value = count;
-        
-        // если нет патрон => обьект удалиться через n секунд
-        if (count == 0)
-            StartCoroutine(DespawnAfterDelay(revolverData.timeBeforeDespawn));
+        return System.BitConverter.GetBytes(_bullets.Value);
     }
 
-    /// <summary>
-    /// Вызывывается из PickupController
-    /// </summary>
-    /// <param name="player"></param>
-    public void Interact(GameObject player)
+    public override void DeserializeState(byte[] data)
     {
-        if (!IsServer) return;
-
-        var playerController = player.GetComponent<PlayerController>();
-        if (playerController == null || playerController.IsArmed) return;
-
-        var playerNetObj = player.GetComponent<NetworkObject>();
-
-        NetworkObject weaponInstance = Instantiate(
-            revolverWeaponPrefab,
-            playerController.weaponHoldPoint.position,
-            playerController.weaponHoldPoint.rotation
-        );
-
-        NetworkManager.ServerManager.Spawn(weaponInstance, playerNetObj.Owner);
-
-        Revolver revolver = weaponInstance.GetComponent<Revolver>();
-        revolver.SetBullets(_bullets.Value);
-        revolver.AttachToPlayer(playerController, _bullets.Value);
-
-        playerController.EquipWeapon(revolver);
-
-        NetworkObject.Despawn();
+        if (data != null && data.Length >= 4)
+            _bullets.Value = System.BitConverter.ToInt32(data, 0);
     }
 
-    private IEnumerator DespawnAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if (IsSpawned)
-            NetworkObject.Despawn();
-    }
 }

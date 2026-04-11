@@ -147,7 +147,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584262126767181631
+  _initializedTimestamp: -8584256976866114015
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 1
@@ -163,7 +163,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 12
+  <PrefabId>k__BackingField: 13
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 9186469064024101902
   SceneId: 0
@@ -190,7 +190,7 @@ MonoBehaviour:
   throwSpeed: 20
   returnSpeed: 10
   maxDistance: 30
-  playerPullSpeed: 15
+  playerPullSpeed: 5
 --- !u!114 &5569764543513671404
 MonoBehaviour:
   m_ObjectHideFlags: 0

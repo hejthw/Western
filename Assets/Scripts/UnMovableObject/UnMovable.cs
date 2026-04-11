@@ -9,9 +9,7 @@ public class UnMovable : NetworkBehaviour, ILassoInteractable
 
     public void OnLassoPull(LassoNetwork lasso)
     {
-        if (!IsServer) return;
 
-        lasso.StartPullingPlayer(lasso.HitPoint);
     }
 
     public void OnLassoDetach(LassoNetwork lasso)

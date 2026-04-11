@@ -12,23 +12,24 @@ public class PlayerInput : MonoBehaviour
     
     public bool SprintHeld { get; private set; }
     public bool CrouchHeld { get ; private set;}
+    public bool IsHoldingFinish { get; private set; }
+
+    public bool isDead { get ; private set ; }
     
-    // public bool isDead { get ; private set ; }
-    //
-    // private void OnEnable()
-    // {
-    //     PlayerEvents.OnDeadEvent += bred;
-    // }
-    //
-    // private void OnDisable()
-    // {
-    //     PlayerEvents.OnDeadEvent -= bred;
-    // }
-    //
-    // private void bred(bool a)
-    // {
-    //     isDead = a;
-    // }
+     private void OnEnable()
+     {
+        // PlayerEvents.OnDeadEvent += bred;
+      }
+    
+    private void OnDisable()
+     {
+      // PlayerEvents.OnDeadEvent -= bred;
+    }
+   
+     private void bred(bool a)
+    {
+         isDead = a;
+    }
     
     public event Action JumpPressedEvent;
     public event Action OnSprintEvent;
@@ -38,6 +39,8 @@ public class PlayerInput : MonoBehaviour
     public event Action OnPickupEvent;
     public event Action OnDropEvent;
     public event Action<int> OnSlotKeyPressed;
+    public event Action OnLassoPullStarted;   
+    public event Action OnLassoPullEnded;
 
     public void OnMove(InputValue value) => MoveInput = value.Get<Vector2>();
 
@@ -110,5 +113,16 @@ public class PlayerInput : MonoBehaviour
     {
         if (value.Get<float>() > 0.5f) OnSlotKeyPressed?.Invoke(2);
     }
-
+    public void OnLassoPull(InputValue value)
+    {
+        Debug.Log($"[PlayerInput] OnLassoPull: value={value.Get<float>()}");
+        if (value.Get<float>() > 0.4f)
+            OnLassoPullStarted?.Invoke();
+        else
+            OnLassoPullEnded?.Invoke();
+    }
+    public void OnFinish(InputValue value)
+    {
+        IsHoldingFinish = value.Get<float>() > 0.5f;
+    }
 }

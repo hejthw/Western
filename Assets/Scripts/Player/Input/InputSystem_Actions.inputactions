@@ -16,6 +16,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "LassoPull",
+                    "type": "Button",
+                    "id": "bd9588f2-c89b-4b7f-befb-3803843538b7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Look",
                     "type": "Value",
                     "id": "6b444451-8a00-4d00-a97e-f47457f736a8",
@@ -145,6 +154,15 @@
                     "name": "Slot3",
                     "type": "Button",
                     "id": "4b3f6e60-7478-434d-8991-174f99492722",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Finish",
+                    "type": "Button",
+                    "id": "c258384c-fd3f-4080-b01b-89fe3810c557",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -281,6 +299,17 @@
                     "processors": "",
                     "groups": "Joystick",
                     "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3c17953f-dd98-4a82-9ea6-0c6d1adc59b1",
+                    "path": "<Keyboard>/g",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LassoPull",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -611,6 +640,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Slot3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a4dc1acc-6bcc-45dc-bb36-c89f10dc337c",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Finish",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -1127,6 +1167,34 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Lasso",
+            "id": "41defb96-8e78-494e-9938-ff8accb2f93e",
+            "actions": [
+                {
+                    "name": "Pull",
+                    "type": "Button",
+                    "id": "8d4b6df6-e744-4dbe-885b-cdbd3d207745",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "53552ce3-a8e9-4ccb-9953-6d264f62f480",
+                    "path": "<Keyboard>/g",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pull",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

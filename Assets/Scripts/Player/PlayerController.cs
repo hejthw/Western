@@ -11,7 +11,7 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private PlayerPhysics physics;
     [SerializeField] private PlayerHealth health;
     [SerializeField] private PlayerInput input;
-
+    private Coroutine stunRoutine;
     [SerializeField] public Transform weaponHoldPoint;
     public bool IsLassoPulling { get; set; }
     // вынести отсюда
@@ -83,7 +83,7 @@ public class PlayerController : NetworkBehaviour
     {
         base.OnStartClient();
         cinemachineCamera.gameObject.SetActive(IsOwner);
-        localUI.SetActive(IsOwner);
+       
         if (!IsOwner) DisableLocalComponents();
         PlayerRegistry.Register(this);
     }
@@ -132,5 +132,27 @@ public class PlayerController : NetworkBehaviour
 
         string who = IsServer ? "SERVER (host)" : "CLIENT";
         Debug.Log($"[{who}] Lasso state: {state} | Physics enabled: {!state}");
+    }
+    
+
+    public void Stun(float duration)
+    {
+        if (stunRoutine != null) StopCoroutine(stunRoutine);
+        stunRoutine = StartCoroutine(StunCoroutine(duration));
+    }
+
+    private IEnumerator StunCoroutine(float duration)
+    {
+        // Отключаем управление (как при Knockout)
+        DisableMovement();
+        SetLassoState(true); // отключает физику и поворот, если нужно
+
+        yield return new WaitForSeconds(duration);
+
+        // Восстанавливаем управление
+        EnableMovement();
+        SetLassoState(false);
+
+        stunRoutine = null;
     }
 }

@@ -1,6 +1,8 @@
 ﻿using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
+using System.Collections;
+using FishNet.Connection;
 
 public class LassoNetwork : NetworkBehaviour
 {
@@ -18,24 +20,52 @@ public class LassoNetwork : NetworkBehaviour
 
     private bool isFlying;
     private bool isReturning;
-
-    private bool isPullingPlayer;
-    private Vector3 pullTarget;
+    private Coroutine clientPullCoroutine;
+    private bool isClientPulling;
     private Vector3 hitPoint;
     private Vector3 moveDir;
     private NetworkObject ownerNetObj;
+    private PlayerController cachedPlayerController;
+
     public bool CanThrow => !isFlying && !isReturning && attachedNetObj.Value == null;
     public GameObject Owner => ownerNetObj != null ? ownerNetObj.gameObject : null;
     public NetworkObject AttachedObject => attachedNetObj.Value;
-
     public Vector3 HitPoint => hitPoint;
-
+    public NetworkObject OwnerNetObj => ownerNetObj;
     private void Awake()
     {
         controller = GetComponentInParent<LassoController>();
     }
 
-    // ================= THROW =================
+    private PlayerController GetPlayerController()
+    {
+        if (cachedPlayerController != null)
+            return cachedPlayerController;
+        cachedPlayerController = GetComponentInParent<PlayerController>();
+        if (cachedPlayerController != null)
+        {
+            Debug.Log("[LassoNetwork] Found PlayerController in parent");
+            return cachedPlayerController;
+        }
+        if (controller != null)
+        {
+            cachedPlayerController = controller.GetComponent<PlayerController>();
+            if (cachedPlayerController != null)
+            {
+                Debug.Log("[LassoNetwork] Found PlayerController via LassoController");
+                return cachedPlayerController;
+            }
+            cachedPlayerController = controller.GetComponentInParent<PlayerController>();
+            if (cachedPlayerController != null)
+            {
+                Debug.Log("[LassoNetwork] Found PlayerController in parent of LassoController");
+                return cachedPlayerController;
+            }
+        }
+
+        Debug.LogError("[LassoNetwork] PlayerController not found! Check object hierarchy.");
+        return null;
+    }
 
     [ServerRpc(RequireOwnership = false)]
     public void ServerThrow(Vector3 startPos, Vector3 direction, NetworkObject owner)
@@ -53,6 +83,7 @@ public class LassoNetwork : NetworkBehaviour
         DoThrow(startPos, direction);
         RpcThrow(startPos, direction);
     }
+
     private void DoThrow(Vector3 startPos, Vector3 direction)
     {
         transform.SetParent(null);
@@ -78,8 +109,6 @@ public class LassoNetwork : NetworkBehaviour
         DoThrow(startPos, direction);
     }
 
-    // ================= UPDATE =================
-
     private void Update()
     {
         if (!IsServer) return;
@@ -90,34 +119,6 @@ public class LassoNetwork : NetworkBehaviour
         if (isReturning)
             MoveBack();
     }
-
-    private void FixedUpdate()
-    {
-        if (!IsServer) return;
-        if (ownerNetObj == null || !isPullingPlayer) return;
-
-        Vector3 dir = pullTarget - Owner.transform.position;
-
-        // Останавливаем притягивание, когда подошли близко
-        if (dir.magnitude < 1.5f)
-        {
-            Debug.Log("[SERVER] Reached target - stopping pull");
-            StopPullPlayer();
-            ReturnToPlayer();
-            return;
-        }
-
-        // Сервер форсирует скорость
-        if (Owner.TryGetComponent(out Rigidbody rb))
-        {
-            rb.linearVelocity = dir.normalized * playerPullSpeed;
-        }
-        else
-        {
-            Debug.LogError("[SERVER] Player has no Rigidbody!");
-        }
-    }
-    // ================= MOVE =================
 
     private void MoveForward()
     {
@@ -146,8 +147,6 @@ public class LassoNetwork : NetworkBehaviour
         if (dir.magnitude < 1.5f)
             ReturnToPlayer();
     }
-
-    // ================= HIT =================
 
     private void HandleHit(RaycastHit hit)
     {
@@ -181,8 +180,6 @@ public class LassoNetwork : NetworkBehaviour
         isFlying = false;
     }
 
-    // ================= INPUT =================
-
     [ServerRpc(RequireOwnership = false)]
     public void ServerPullPressed()
     {
@@ -201,75 +198,89 @@ public class LassoNetwork : NetworkBehaviour
         }
 
         var type = interactable.GetInteractionType();
-
         Debug.Log($"[SERVER] Interaction type: {type}");
 
         switch (type)
         {
             case LassoInteractionType.PullObject:
                 Debug.Log("[SERVER] PullObject");
-
                 interactable.OnLassoPull(this);
                 interactable.OnLassoDetach(this);
-
                 RpcPullObject();
                 ReturnToPlayer();
                 break;
 
             case LassoInteractionType.PullPlayer:
-                Debug.Log("[SERVER] PullPlayer");
-
-                // 🔥 ВАЖНО: задаем точку притяжения
-                pullTarget = transform.position;
-
-                interactable.OnLassoPull(this);
-
-                RpcStartPullPlayer(pullTarget);
+                Debug.Log("[SERVER] PullPlayer - sending TargetRpc to client");
+                if (ownerNetObj != null)
+                {
+                    TargetStartPullPlayer(base.Owner, ownerNetObj, hitPoint);
+                }
+                else
+                {
+                    Debug.LogError("[SERVER] ownerNetObj is null!");
+                }
                 break;
         }
     }
 
-    [ObserversRpc]
-    private void RpcPullObject()
+    [TargetRpc]
+    private void TargetStartPullPlayer(NetworkConnection connection, NetworkObject targetPlayer, Vector3 targetPoint)
     {
-        // чисто визуал если нужно
+        if (!IsOwner) return;
+        Debug.Log($"[CLIENT] Starting pull towards {targetPoint}");
+        if (clientPullCoroutine != null)
+            StopCoroutine(clientPullCoroutine);
+
+        clientPullCoroutine = StartCoroutine(PullPlayerCoroutine(targetPoint));
     }
 
-    [ObserversRpc]
-    private void RpcStartPullPlayer(Vector3 target)
+    private IEnumerator PullPlayerCoroutine(Vector3 targetPoint)
     {
-        Debug.Log("[SERVER] StartPullingPlayer");
-        if (IsServer) return;
+        isClientPulling = true;
 
-        isPullingPlayer = true;
-        pullTarget = target;
-    }
-
-    // ================= PLAYER PULL =================
-
-    [Server]
-    public void StartPullingPlayer(Vector3 point)
-    {
-        if (Owner.TryGetComponent(out PlayerController pc))
+        PlayerController pc = GetPlayerController();
+        if (pc == null)
         {
-            pc.SetLassoState(true);
+            Debug.LogError("[CLIENT] No PlayerController found!");
+            isClientPulling = false;
+            clientPullCoroutine = null;
+            yield break;
         }
-        isPullingPlayer = true;
-        pullTarget = point;
 
-        RpcStartPullPlayer(point);
-    }
+        pc.DisableMovement();
+        pc.SetLassoState(true);
 
-    private void StopPullPlayer()
-    {
-        if (Owner.TryGetComponent(out PlayerController pc))
+        Transform playerTransform = pc.transform;
+        float speed = playerPullSpeed;
+
+        while (Vector3.Distance(playerTransform.position, targetPoint) > 1.5f)
         {
-            pc.SetLassoState(false);
+            Vector3 dir = (targetPoint - playerTransform.position).normalized;
+            playerTransform.position += dir * speed * Time.deltaTime;
+            yield return null;
         }
-        isPullingPlayer = false;
+
+        Debug.Log("[CLIENT] Reached target point");
+
+        ServerPullFinished();
+
+        pc.EnableMovement();
+        pc.SetLassoState(false);
+
+        isClientPulling = false;
+        clientPullCoroutine = null;
     }
 
-    // ================= RETURN =================
+    [ServerRpc(RequireOwnership = false)]
+    private void ServerPullFinished()
+    {
+        Debug.Log("[SERVER] Client finished pulling, returning lasso");
+        ReturnToPlayer();
+    }
+
+    [ObserversRpc]
+    private void RpcPullObject() { }
 
     [ServerRpc(RequireOwnership = false)]
     public void ServerDetachAndReturn()
@@ -281,7 +292,6 @@ public class LassoNetwork : NetworkBehaviour
     {
         isFlying = false;
         isReturning = true;
-
         RpcStartReturn();
     }
 
@@ -289,33 +299,38 @@ public class LassoNetwork : NetworkBehaviour
     private void RpcStartReturn()
     {
         if (IsServer) return;
-
         isFlying = false;
         isReturning = true;
     }
 
     private void ReturnToPlayer()
     {
+        if (IsOwner && clientPullCoroutine != null)
+        {
+            StopCoroutine(clientPullCoroutine);
+            clientPullCoroutine = null;
+            PlayerController pc = GetPlayerController();
+            if (pc != null)
+            {
+                pc.EnableMovement();
+                pc.SetLassoState(false);
+            }
+            isClientPulling = false;
+        }
+
         currentInteractable?.OnLassoDetach(this);
-
-        StopPullPlayer();
-
         currentInteractable = null;
         attachedNetObj.Value = null;
-
         isFlying = false;
         isReturning = false;
 
         transform.SetParent(controller.transform);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-
         gameObject.SetActive(false);
-
         IgnorePlayerCollision(false);
 
         RpcReturn();
-
         controller.OnLassoReturnedServer();
     }
 
@@ -327,11 +342,8 @@ public class LassoNetwork : NetworkBehaviour
         transform.SetParent(controller.transform);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-
         gameObject.SetActive(false);
     }
-
-    // ================= UTILS =================
 
     private void IgnorePlayerCollision(bool ignore)
     {

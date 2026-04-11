@@ -1592,7 +1592,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584262043606150414
+  _initializedTimestamp: -8584260334010719894
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -1754,7 +1754,7 @@ MonoBehaviour:
   knockoutInputController: {fileID: 7653360756303194320}
   orbitRadius: 2
   orbitHeight: 1
-  _knockoutPivot: {fileID: 434668095162423598}
+  knockoutPivot: {fileID: 0}
   playerTag: Player
 --- !u!1 &7075362909638396278
 GameObject:
@@ -2037,7 +2037,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584262043606150414
+  _initializedTimestamp: -8584260334010719894
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -2053,7 +2053,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 17
+  <PrefabId>k__BackingField: 20
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 13623089071726480599
   SceneId: 0
@@ -2175,11 +2175,7 @@ MonoBehaviour:
   _componentIndexCache: 2
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
-  maxHealth: 100
-  respawnDelay: 10
-  knockoutDelay: 15
-  spawnPoints: []
-  localUI: {fileID: 5375274108382611991}
+  data: {fileID: 11400000, guid: 917b28ece089295e2a6a124bd5ae2a9d, type: 2}
 --- !u!114 &657205347255209784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2426,11 +2422,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: _initializedTimestamp
-      value: -8584262043606150414
+      value: -8584260334010719894
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: <IsNested>k__BackingField
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
+      propertyPath: <PrefabId>k__BackingField
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: <ComponentIndex>k__BackingField

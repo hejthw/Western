@@ -64,30 +64,51 @@ public class PlayerInventory : NetworkBehaviour
         int prefabId = itemPrefabIds[slot];
         byte[] state = itemStates[slot];
 
-        // Спавним предмет
         NetworkObject prefab = NetworkManager.GetPrefab(prefabId, true);
-        if (prefab == null)
+        if (prefab == null) return;
+
+        // Проверяем, является ли предмет RevolverPickup
+        RevolverPickup revolverPickupPrefab = prefab.GetComponent<RevolverPickup>();
+        if (revolverPickupPrefab != null && revolverPickupPrefab.revolverWeaponPrefab != null)
         {
-            Debug.LogError($"[Inventory] Prefab with id {prefabId} not found");
-            return;
+            // Спавним оружие напрямую
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                int bullets = revolverPickupPrefab.revolverData.bullets;
+                if (state != null && state.Length >= 4)
+                    bullets = System.BitConverter.ToInt32(state, 0);
+
+                NetworkObject weaponInstance = Instantiate(
+                    revolverPickupPrefab.revolverWeaponPrefab,
+                    playerController.weaponHoldPoint.position,
+                    playerController.weaponHoldPoint.rotation
+                );
+                NetworkManager.ServerManager.Spawn(weaponInstance, player.Owner);
+
+                Revolver revolver = weaponInstance.GetComponent<Revolver>();
+                revolver.SetBullets(bullets);
+                revolver.AttachToPlayer(playerController, bullets);
+                playerController.EquipWeapon(revolver);
+            }
         }
-
-        Vector3 spawnPos = transform.position + transform.forward * 1.5f;
-        NetworkObject spawned = Instantiate(prefab, spawnPos, Quaternion.identity);
-        NetworkManager.ServerManager.Spawn(spawned, Owner);
-
-        // Восстанавливаем состояние
-        if (spawned.TryGetComponent<LightObject>(out var lightObj))
+        else
         {
-            lightObj.DeserializeState(state);
-            lightObj.ServerPickup(player);
+            // Обычный LightObject
+            Vector3 spawnPos = player.transform.position + player.transform.forward * 1.5f;
+            NetworkObject spawned = Instantiate(prefab, spawnPos, Quaternion.identity);
+            NetworkManager.ServerManager.Spawn(spawned, player.Owner);
+            LightObject lightObj = spawned.GetComponent<LightObject>();
+            if (lightObj != null)
+            {
+                lightObj.DeserializeState(state);
+                lightObj.ServerPickup(player);
+            }
         }
 
         // Очищаем слот
         itemPrefabIds[slot] = -1;
         itemStates[slot] = null;
-
-        Debug.Log($"[Inventory] Equipped item {prefabId} from slot {slot}");
     }
 
     // Для отладки: вывод содержимого инвентаря
