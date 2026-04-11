@@ -159,7 +159,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
             hitDirection.y = 0.5f; 
             hitDirection.Normalize();
 
-            playerHealth.StunWithDirection(Vector3.zero, 2f);
+            //playerHealth.StunWithDirection(Vector3.zero, 2f);
 
             if (fragile)
             {
