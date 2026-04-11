@@ -12,10 +12,9 @@ public class PlayerController : NetworkBehaviour
     [SerializeField] private PlayerPhysics physics;
     [SerializeField] private PlayerHealth health;
     [SerializeField] private PlayerInput input;
-
+    private Coroutine stunRoutine;
     [SerializeField] public Transform weaponHoldPoint;
-    [SerializeField] private GameObject localUI;
-    
+    public bool IsLassoPulling { get; set; }
     // вынести отсюда
     private Rigidbody rb;
     private PlayerRotate playerRotate;
@@ -85,7 +84,7 @@ public class PlayerController : NetworkBehaviour
     {
         base.OnStartClient();
         cinemachineCamera.gameObject.SetActive(IsOwner);
-        localUI.SetActive(IsOwner);
+       
         if (!IsOwner) DisableLocalComponents();
         PlayerRegistry.Register(this);
     }
@@ -94,7 +93,7 @@ public class PlayerController : NetworkBehaviour
     {
         GetComponent<PlayerInput>().enabled  = false;
         GetComponent<PlayerPhysics>().enabled = false;
-        enabled = false;
+      
     }
 
     private void Test()
@@ -119,9 +118,42 @@ public class PlayerController : NetworkBehaviour
     {
         health.TakeDamage(damage);
     }
-
-    public override void OnStopClient()
+    public void SetLassoState(bool state)
     {
-        PlayerRegistry.Unregister(this);
+        IsLassoPulling = state;
+
+   
+        if (physics != null)
+            physics.enabled = !state;
+
+        if (playerRotate != null)
+            playerRotate.enabled = !state;
+
+      
+
+        string who = IsServer ? "SERVER (host)" : "CLIENT";
+        Debug.Log($"[{who}] Lasso state: {state} | Physics enabled: {!state}");
+    }
+    
+
+    public void Stun(float duration)
+    {
+        if (stunRoutine != null) StopCoroutine(stunRoutine);
+        stunRoutine = StartCoroutine(StunCoroutine(duration));
+    }
+
+    private IEnumerator StunCoroutine(float duration)
+    {
+        // Отключаем управление (как при Knockout)
+        DisableMovement();
+        SetLassoState(true); // отключает физику и поворот, если нужно
+
+        yield return new WaitForSeconds(duration);
+
+        // Восстанавливаем управление
+        EnableMovement();
+        SetLassoState(false);
+
+        stunRoutine = null;
     }
 }

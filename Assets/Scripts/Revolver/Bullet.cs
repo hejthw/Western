@@ -97,7 +97,14 @@ public class Bullet : NetworkBehaviour
             int finalDamage = Mathf.RoundToInt(_damage * npcHitbox.GetMultiplier());
             npcHitbox.OwnerHealth.TakeDamage(finalDamage);
         }
-        
+
+        var lightObj = hit.collider.GetComponent<LightObject>();
+        if (lightObj != null && lightObj.IsServer)
+        {
+            lightObj.OnShot(); 
+            NetworkObject.Despawn(); 
+            return;
+        }
         NetworkObject.Despawn();
     }
 }

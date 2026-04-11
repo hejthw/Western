@@ -1,16 +1,23 @@
+using FishNet.Object;
 using UnityEngine;
 
-public class UnMovable : MonoBehaviour
+public class UnMovable : NetworkBehaviour, ILassoInteractable
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void OnLassoAttach(LassoNetwork lasso)
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnLassoPull(LassoNetwork lasso)
     {
-        
+
+    }
+
+    public void OnLassoDetach(LassoNetwork lasso)
+    {
+    }
+
+    public LassoInteractionType GetInteractionType()
+    {
+        return LassoInteractionType.PullPlayer;
     }
 }

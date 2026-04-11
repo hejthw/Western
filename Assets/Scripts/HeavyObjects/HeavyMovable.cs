@@ -2,13 +2,12 @@ using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
 
-public class HeavyMovable : NetworkBehaviour
+public class HeavyMovable : NetworkBehaviour, ILassoInteractable
 {
-    [Header("Позиции")]
     public Transform startPosition;
     public Transform endPosition;
 
-    [Header("Настройки")]
+   
     public int requiredPulls = 3;
     public float moveSpeed = 5f;
 
@@ -26,6 +25,10 @@ public class HeavyMovable : NetworkBehaviour
     {
         rb = GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = true;
+    }
+    public LassoInteractionType GetInteractionType()
+    {
+        return LassoInteractionType.PullObject;
     }
 
     public override void OnStartNetwork()
@@ -94,5 +97,23 @@ public class HeavyMovable : NetworkBehaviour
         bool back = backDist < threshold;
 
         return isAtStart ? front : back;
+    }
+    public void OnLassoAttach(LassoNetwork lasso)
+    {
+        
+    }
+
+    public void OnLassoPull(LassoNetwork lasso)
+    {
+        if (!IsServer) return;
+
+        RegisterPull();
+    }
+
+    public void OnLassoDetach(LassoNetwork lasso)
+    {
+        if (!IsServer) return;
+
+        ResetPullCount();
     }
 }
