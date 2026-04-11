@@ -324,6 +324,7 @@ MonoBehaviour:
   m_BlackboardVariableOverridesList:
   - rid: 3130484035978264892
   - rid: 3130484047327264849
+  - rid: 8488898533181621222
   m_OriginalGraph: {fileID: 0}
   m_IsInitialised: 0
   m_IsStarted: 0
@@ -349,6 +350,16 @@ MonoBehaviour:
         - {fileID: 0}
         - {fileID: 0}
         - {fileID: 0}
+        - {fileID: 0}
+        - {fileID: 0}
+    - rid: 8488898533181621222
+      type: {class: 'BlackboardVariable`1[[System.Int32, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 17108804463988125056
+          m_Value1: 7117817550553913064
+        Name: LosingTime
+        m_Value: 10
 --- !u!195 &4497231934169299779
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -383,30 +394,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 0
-  _predictionType: 0
-  _localReconcileCorrectionType: 2
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 255
-  _spectatorInterpolation: 2
-  _enableTeleport: 0
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 2
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 2090765972082189796
-  SceneId: 0
-  SerializedTransformProperties:
-    Position: {x: -7.9687266, y: 0.99999994, z: 0.83100235}
-    Rotation: {x: 0, y: 0, z: 0, w: 1}
-    Scale: {x: 1, y: 1, z: 1}
-    IsValid: 1
   <IsNested>k__BackingField: 0
   WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
@@ -427,8 +414,32 @@ MonoBehaviour:
   _isGlobal: 0
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
-  _initializedTimestamp: -8584262069938745198
+  _defaultDespawnType: 1
+  _initializedTimestamp: -8584256807948771766
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 0
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 2090765972082189796
+  SceneId: 0
+  SerializedTransformProperties:
+    Position: {x: -7.9687266, y: 0.99999994, z: 0.83100235}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!114 &460620546247179870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,10 +488,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0e728e7ba064296a39aab5b1958b662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sensor
-  detectionRadius: 10
+  detectionRadius: 5
   targetTags:
-  - Player
+  - Suspicion
   updateInterval: 0.5
+  detectionSphere: {fileID: 0}
+  lineOfSightSphere: {fileID: 0}
 --- !u!114 &9110340404155981805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,8 +573,8 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 577405625571252360}
   _behaviorAgent: {fileID: 6856290257989824021}
   _navMeshAgent: {fileID: 4497231934169299779}
-  _criticalRange: 3
-  damage: 100
+  AttackData: {fileID: 11400000, guid: 974017e5273cb4a4087a6d53e0f8f6fd, type: 2}
+  RevolverMuzzle: {fileID: 907529417449354944}
 --- !u!1001 &5901501430087918975
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -572,7 +585,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.536
+      value: 0.33
       objectReference: {fileID: 0}
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalPosition.y
@@ -580,7 +593,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.542
+      value: 0.722
       objectReference: {fileID: 0}
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalRotation.w
@@ -636,6 +649,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
+--- !u!4 &907529417449354944 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6736938065762227135, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
+  m_PrefabInstance: {fileID: 5901501430087918975}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5396281404760279485 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}

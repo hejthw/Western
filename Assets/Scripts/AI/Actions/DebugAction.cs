@@ -5,10 +5,9 @@ using Action = Unity.Behavior.Action;
 using Unity.Properties;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "ChoosePlayerToAttack", story: "[Self] choose Player", category: "Action", id: "4e6a1d62560785f8e63e7fd9afb77b42")]
-public partial class ChoosePlayerToAttackAction : Action
+[NodeDescription(name: "Debug", story: "Debug", category: "Action", id: "0155a6cce57926b21ad3aa06d2ca9491")]
+public partial class DebugAction : Action
 {
-    [SerializeReference] public BlackboardVariable<GameObject> Self;
 
     protected override Status OnStart()
     {
@@ -17,6 +16,7 @@ public partial class ChoosePlayerToAttackAction : Action
 
     protected override Status OnUpdate()
     {
+        Debug.Log("Success");
         return Status.Success;
     }
 

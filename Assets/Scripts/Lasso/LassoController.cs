@@ -46,6 +46,7 @@ public class LassoController : NetworkBehaviour
             {
                
                 Vector3 direction = cameraTransform.forward;
+                PlayerEvents.RaiseSuspicion();
                 lasso.ServerThrow(direction);
                 Vector3 startPos = launchPoint != null ? launchPoint.position :
                                    cameraTransform.position + cameraTransform.forward * 0.5f;

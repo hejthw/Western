@@ -23,7 +23,7 @@ public class NPCHealth : NetworkBehaviour
 
     private void OnHealthChanged(int prev, int next, bool asServer)
     {
-        Debug.Log($"Health changed from {prev} to {next}");
+        //Debug.Log($"Health changed from {prev} to {next}");
     }
 
     [Server]
@@ -43,6 +43,6 @@ public class NPCHealth : NetworkBehaviour
         if (_isDead.Value) return;
         
         _isDead.Value = true;
-        ServerManager.Despawn(this);
+        ServerManager.Despawn(this, DespawnType.Pool);
     }
 }

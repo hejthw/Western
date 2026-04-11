@@ -77,7 +77,7 @@ public class Lasso : NetworkBehaviour
         isHeavyMovable.Value = false;
         isUnMovable.Value = false;
         
-        PlayerEvents.RaiseSuspicion();
+
     }
 
     public void ClientThrowPrediction(Vector3 startPosition, Vector3 direction)
