@@ -6,11 +6,12 @@ using Unity.Properties;
 using UnityEngine.AI;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "NavigateToVector3", story: "[Self] navigates to [LastPlayerPos]", category: "Action", id: "85b8d503866904b54825ae5dcceb4ec6")]
+[NodeDescription(name: "NavigateToVector3", story: "[Self] navigates to [LastPlayerPos] until [HasLineOfSight]", category: "Action", id: "974f9e1dc39498eb2a72b6b058f4d0ff")]
 public partial class NavigateToVector3Action : Action
 {
     [SerializeReference] public BlackboardVariable<GameObject> Self;
     [SerializeReference] public BlackboardVariable<Vector3> LastPlayerPos;
+    [SerializeReference] public BlackboardVariable<bool> HasLineOfSight;
 
     private NavMeshAgent _agent;
     private Transform _selfTransform;
@@ -35,16 +36,19 @@ public partial class NavigateToVector3Action : Action
 
     protected override Status OnUpdate()
     {
+        if (HasLineOfSight.Value)
+        {
+            _agent.ResetPath();
+            return Status.Failure;
+        }
+
         if (_agent.pathPending)
             return Status.Running;
 
-        // pathStatus проверяем — вдруг путь недостижим
         if (_agent.pathStatus == NavMeshPathStatus.PathInvalid)
             return Status.Failure;
 
-        float stopping = Mathf.Max(_stoppingDistance, 0.1f);
-
-        if (_agent.remainingDistance <= stopping)
+        if (_agent.remainingDistance <= Mathf.Max(_stoppingDistance, 0.1f))
             return Status.Success;
 
         return Status.Running;
