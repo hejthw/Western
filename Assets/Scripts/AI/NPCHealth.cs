@@ -23,7 +23,7 @@ public class NPCHealth : NetworkBehaviour
 
     private void OnHealthChanged(int prev, int next, bool asServer)
     {
-        Debug.Log($"Health changed from {prev} to {next}");
+        //Debug.Log($"Health changed from {prev} to {next}");
     }
 
     [Server]

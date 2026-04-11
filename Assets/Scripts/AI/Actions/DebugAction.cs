@@ -5,10 +5,9 @@ using Action = Unity.Behavior.Action;
 using Unity.Properties;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "GetLastPlayerPos", story: "Get [LastPlayerPos]", category: "Action", id: "ef1b731d4966661c18de81e927bb43d7")]
-public partial class GetLastPlayerPosAction : Action
+[NodeDescription(name: "Debug", story: "Debug", category: "Action", id: "0155a6cce57926b21ad3aa06d2ca9491")]
+public partial class DebugAction : Action
 {
-    [SerializeReference] public BlackboardVariable<Vector3> LastPlayerPos;
 
     protected override Status OnStart()
     {
@@ -17,6 +16,7 @@ public partial class GetLastPlayerPosAction : Action
 
     protected override Status OnUpdate()
     {
+        Debug.Log("Success");
         return Status.Success;
     }
 

@@ -40,13 +40,13 @@ public partial class LineOfSightAction : Action
                 Debug.DrawLine(origin, target, Color.green);
                 HasLineOfSight.Value = true;
                 RotateSelf();
-                return Status.Success;
+                return Status.Running;
             }
         }
         
         HasLineOfSight.Value = false;
         Debug.DrawLine(origin, target, Color.red);
-        return Status.Success;
+        return Status.Running;
     }
 
     protected override void OnEnd()
