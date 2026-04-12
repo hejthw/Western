@@ -58,7 +58,6 @@ public class RevolverRecoilAI : NetworkBehaviour
         float elapsed = 0f;
         while (elapsed < recoilUpDuration)
         {
-            Debug.Log("a");
             elapsed += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, elapsed / recoilUpDuration);
             gunTransform.localRotation = Quaternion.Lerp(startRot, recoilRot, t);
