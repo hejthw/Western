@@ -1,5 +1,7 @@
 public enum SoundID
 {
-    Shoot = 0,
-    Jump = 1
+    Shoot,
+    Jump,
+    LassoThrow,
+    LightObjectCaptured
 }

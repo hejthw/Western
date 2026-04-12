@@ -7,12 +7,6 @@ public static  class PlayerEvents
     public static event Action NextTargetEvent;
     public static event Action PrevTargetEvent;
     public static event Action OnSuspicion;
-    public static event Action<int> OnShoot;
-
-    public static void RaiseShoot(int amount)
-    {
-        OnShoot?.Invoke(amount);
-    }
     
     public static void RaiseSuspicion()
     {

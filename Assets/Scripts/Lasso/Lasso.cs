@@ -161,6 +161,8 @@ public class LassoNetwork : NetworkBehaviour
 
             currentInteractable = netObj.GetComponent<ILassoInteractable>();
             currentInteractable?.OnLassoAttach(this);
+            SoundBus.Play(SoundID.LightObjectCaptured);
+            
 
             RpcAttach(netObj);
             controller.OnLassoAttachedServer(netObj.gameObject);
