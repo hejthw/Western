@@ -1,7 +1,11 @@
 public enum SoundID
 {
-    Shoot,
-    Jump,
+    Shoot, 
+    PlayerJump,
     LassoThrow,
-    LightObjectCaptured
+    LightObjectCaptured,
+    PlayerFootstepWalk,
+    PlayerFootstepSprint,
+    PlayerHurt
+    
 }

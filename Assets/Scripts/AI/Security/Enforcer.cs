@@ -10,4 +10,5 @@ public class Enforcer: NetworkNPC
 {
     public NPCAttackData AttackData;
     public Transform RevolverMuzzle;
+    public RevolverRecoilAI RevolverRecoilAI;
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6143946665814662978}
   - component: {fileID: 9175134048067860785}
   - component: {fileID: 7850980470964567478}
+  - component: {fileID: 2036171635012879548}
   m_Layer: 0
   m_Name: Sound
   m_TagString: Untagged
@@ -147,6 +148,20 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4737990210302664583}
   audioSource: {fileID: 9175134048067860785}
   library: {fileID: 11400000, guid: 23ecb596fa1b8f34498f9d6bbf2e102d, type: 2}
+--- !u!114 &2036171635012879548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314026070052452883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e205bebde240a4a72ddd8306a8b0af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSoundController
+  physics: {fileID: 3873198404099586706}
+  data: {fileID: 11400000, guid: d862853dda2c3566fb738a368d7bae17, type: 2}
 --- !u!1 &538829022233379768
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,7 +756,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.10484081, y: 0.8066238, z: -0.5618847, w: 0.15050612}
+  m_LocalRotation: {x: 0.104840815, y: 0.8066238, z: -0.56188476, w: 0.15050614}
   m_LocalPosition: {x: -0.444297, y: 1.2280381, z: 2.000391}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

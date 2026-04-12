@@ -28,3 +28,19 @@ MonoBehaviour:
     - {fileID: 8300000, guid: e57b16a3820de5b4f878fbeb2945ab5a, type: 3}
     - {fileID: 8300000, guid: f85c3c77120e3324b827c6e2270603c3, type: 3}
     - {fileID: 8300000, guid: db2ef6989fc42164db8e3b7dabcaf412, type: 3}
+  - id: 4
+    clips:
+    - {fileID: 8300000, guid: eea835a431bfca3498157abe30240700, type: 3}
+    - {fileID: 8300000, guid: 24b50daf372f4cd4997bfdacb1680dc3, type: 3}
+    - {fileID: 8300000, guid: 67086fcdc95d17343a7a490f447f4550, type: 3}
+  - id: 5
+    clips:
+    - {fileID: 8300000, guid: eea835a431bfca3498157abe30240700, type: 3}
+    - {fileID: 8300000, guid: 24b50daf372f4cd4997bfdacb1680dc3, type: 3}
+    - {fileID: 8300000, guid: 67086fcdc95d17343a7a490f447f4550, type: 3}
+  - id: 1
+    clips:
+    - {fileID: 8300000, guid: bb6d7f191104bca479564c2fd87ddf02, type: 3}
+  - id: 6
+    clips:
+    - {fileID: 8300000, guid: 57eb545aa2ec295439a84acf00c15a20, type: 3}
