@@ -95,7 +95,7 @@ public class Revolver: NetworkBehaviour
         Vector3 direction = muzzle.forward;
 
         ShootServerRpc(origin, direction);
-        PlayerEvents.RaiseShoot(0);
+        SoundBus.Play(SoundID.Shoot);
         _fireTimer = revolverData.timeBeforeShot;
         
     }

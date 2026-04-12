@@ -4,48 +4,31 @@ using UnityEngine;
 public class NetworkSoundManager : NetworkBehaviour
 {
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip[] clips; // массив всех звуков, порядок важен
+    [SerializeField] private SoundLibrary library;
 
-    private void OnEnable()
-    {
-        PlayerEvents.OnShoot += HandleShoot;
-    }
+    private void OnEnable()  => SoundBus.OnPlay += HandlePlay;
+    private void OnDisable() => SoundBus.OnPlay -= HandlePlay;
 
-    private void OnDisable()
-    {
-        PlayerEvents.OnShoot -= HandleShoot;
-    }
-
-    private void HandleShoot(int clipIndex)
+    private void HandlePlay(SoundID id)
     {
         if (!IsOwner) return;
-        PlayOnOwner(clipIndex);
-    }
-
-    public void PlayOnOwner(int clipIndex)
-    {
-        // Локально — мгновенно
-        PlayClip(clipIndex);
-
-        // Просим сервер разослать остальным
-        CmdRequestSound(clipIndex);
+        PlayLocally(id);
+        CmdRequestSound((int)id);
     }
 
     [ServerRpc]
-    private void CmdRequestSound(int clipIndex)
-    {
-        RpcPlayOnObservers(clipIndex);
-    }
+    private void CmdRequestSound(int rawId) =>
+        RpcPlayOnObservers(rawId);
 
     [ObserversRpc(ExcludeOwner = true)]
-    private void RpcPlayOnObservers(int clipIndex)
-    {
-        PlayClip(clipIndex);
-    }
+    private void RpcPlayOnObservers(int rawId) =>
+        PlayLocally((SoundID)rawId);
 
-    private void PlayClip(int clipIndex)
+    private void PlayLocally(SoundID id)
     {
-        if (clipIndex < 0 || clipIndex >= clips.Length) return;
-        audioSource.PlayOneShot(clips[clipIndex]);
+        if (library.TryGetClip(id, out var clip))
+            audioSource.PlayOneShot(clip);
+        else
+            Debug.LogWarning($"[SoundManager] Клип для {id} не найден в библиотеке.");
     }
 }
