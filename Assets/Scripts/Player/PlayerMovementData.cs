@@ -14,13 +14,11 @@ public class PlayerMovementData : ScriptableObject
     public float turnSpeed = 8f;
     public float brakingForce = 4f; 
     
-    [Header("Stamina")]
-    public float maxStamina = 100f;
-    public float drainPerSecond = 20f;
-    public float regenPerSecond = 10f;
-    public float regenDelay = 1.5f;
-    
     [Header("Jump")] public float jumpForce = 10f;
+    
+    [Header("Sound")]
+    public float walkStepInterval   = 0.5f;
+    public float sprintStepInterval = 0.3f;
 
     [Header("Physics")] 
     public float groundCheckDistance = 0.15f;

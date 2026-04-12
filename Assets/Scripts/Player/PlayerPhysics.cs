@@ -76,6 +76,7 @@ public class PlayerPhysics : MonoBehaviour
     private void Jump()
     {
         if (!IsGrounded) return;
+        SoundBus.Play(SoundID.PlayerJump);
         _isJumping = true;
         
         rb.linearVelocity = new Vector3(
