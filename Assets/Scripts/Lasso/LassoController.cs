@@ -42,13 +42,15 @@ public class LassoController : NetworkBehaviour
         if (lasso.CanThrow)
         {
             lasso.ServerThrow(startPos, dir, base.NetworkObject);
-            PlayerEvents.RaiseSuspicion();
         }
         else
         {
             lasso.ServerDetachAndReturn();
             Invoke(nameof(ThrowAgain), 0.05f);
         }
+        
+        PlayerEvents.RaiseSuspicion();
+        SoundBus.Play(SoundID.LassoThrow);
     }
 
     private void HandlePull()
