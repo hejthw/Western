@@ -14,7 +14,7 @@ public class PlayerRotate : NetworkBehaviour
             enabled = false;
     }
     
-    void FixedUpdate()
+    void Update()
     {
         float yaw = panTilt.PanAxis.Value;
         float pitch = panTilt.TiltAxis.Value;

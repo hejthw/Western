@@ -8,8 +8,8 @@ using System.Collections.Generic;
 public class PlayerInventory : NetworkBehaviour
 {
     [SerializeField] private int slotsCount = 3;
+    public event System.Action<int, bool> OnSlotChanged;
 
-    // Структура для хранения данных предмета
     [System.Serializable]
     private class ItemData
     {
@@ -27,34 +27,36 @@ public class PlayerInventory : NetworkBehaviour
             itemPrefabIds.Add(-1);
             itemStates.Add(null);
         }
+        itemPrefabIds.OnChange += ItemPrefabIds_OnChange;
+    }
+    private void ItemPrefabIds_OnChange(SyncListOperation op, int index, int oldItem, int newItem, bool asServer)
+    {
+        if (asServer) return;
+
+        bool isOccupied = newItem != -1;
+        OnSlotChanged?.Invoke(index, isOccupied);
     }
 
     public bool IsSlotEmpty(int slot) => itemPrefabIds[slot] == -1;
     public int GetItemPrefabId(int slot) => itemPrefabIds[slot];
     public byte[] GetItemState(int slot) => itemStates[slot];
 
-    // Вызывается из PickupController при сохранении предмета из рук
+   
     [Server]
     public void StoreItemFromHand(int slot, LightObject lightObj)
     {
         if (slot < 0 || slot >= slotsCount) return;
-        if (itemPrefabIds[slot] != -1) return; // слот занят
-
+        if (itemPrefabIds[slot] != -1) return; 
         NetworkObject netObj = lightObj.NetworkObject;
         int prefabId = netObj.PrefabId;
         byte[] state = lightObj.SerializeState();
-
-        // Деспавним предмет (удаляем из мира)
         netObj.Despawn();
-
-        // Сохраняем в слот
         itemPrefabIds[slot] = prefabId;
         itemStates[slot] = state;
-
+        OnSlotChanged?.Invoke(slot, true);
         Debug.Log($"[Inventory] Stored item {prefabId} in slot {slot}");
     }
 
-    // Вызывается из PickupController при экипировке предмета из слота
     [Server]
     public void EquipFromSlot(int slot, NetworkObject player)
     {
@@ -66,12 +68,9 @@ public class PlayerInventory : NetworkBehaviour
 
         NetworkObject prefab = NetworkManager.GetPrefab(prefabId, true);
         if (prefab == null) return;
-
-        // Проверяем, является ли предмет RevolverPickup
         RevolverPickup revolverPickupPrefab = prefab.GetComponent<RevolverPickup>();
         if (revolverPickupPrefab != null && revolverPickupPrefab.revolverWeaponPrefab != null)
         {
-            // Спавним оружие напрямую
             PlayerController playerController = player.GetComponent<PlayerController>();
             if (playerController != null)
             {
@@ -94,24 +93,23 @@ public class PlayerInventory : NetworkBehaviour
         }
         else
         {
-            // Обычный LightObject
-            Vector3 spawnPos = player.transform.position + player.transform.forward * 1.5f;
-            NetworkObject spawned = Instantiate(prefab, spawnPos, Quaternion.identity);
+            NetworkObject spawned = Instantiate(prefab, player.transform.position, Quaternion.identity);
             NetworkManager.ServerManager.Spawn(spawned, player.Owner);
+
             LightObject lightObj = spawned.GetComponent<LightObject>();
             if (lightObj != null)
             {
                 lightObj.DeserializeState(state);
-                lightObj.ServerPickup(player);
+                lightObj.EquipToPlayer(player);
             }
         }
 
-        // Очищаем слот
+       
         itemPrefabIds[slot] = -1;
         itemStates[slot] = null;
+        OnSlotChanged?.Invoke(slot, false);
     }
 
-    // Для отладки: вывод содержимого инвентаря
     public void DebugPrintInventory()
     {
         string debug = "Inventory: ";

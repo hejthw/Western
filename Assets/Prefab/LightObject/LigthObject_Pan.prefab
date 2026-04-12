@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4527212752731319846}
   - component: {fileID: 699250205459573484}
   - component: {fileID: 5249904289038808321}
+  - component: {fileID: 5725561691456581795}
   m_Layer: 3
   m_Name: LigthObject_Pan
   m_TagString: Grabbable
@@ -137,6 +138,9 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 699250205459573484}
   _networkObjectCache: {fileID: 699250205459573484}
   fragile: 0
+  pullSpeed: 15
+  semiFragile: 1
+  thirdPersonVisualPrefab: {fileID: 0}
 --- !u!114 &699250205459573484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,8 +161,6 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 4527212752731319846}
-  - {fileID: 0}
-  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -169,7 +171,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584263647018828712
+  _initializedTimestamp: -8584256238493754758
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -185,13 +187,13 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 13
+  <PrefabId>k__BackingField: 17
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 10373554352105528963
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 11.384, y: 0.603, z: 1.458}
-    Rotation: {x: -0.7071069, y: 0, z: 0, w: 0.7071067}
+    Rotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
     Scale: {x: 300, y: 300, z: 300}
     IsValid: 1
 --- !u!65 &5249904289038808321
@@ -215,3 +217,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.002426885, y: 0.0019512058, z: 0.003057007}
   m_Center: {x: -0.0000038083394, y: -0.000001488328, z: 0.0011271503}
+--- !u!114 &5725561691456581795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7103095680108300308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b328335d90303224a87f186e49ddea90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PushableObject
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 699250205459573484}
+  _networkObjectCache: {fileID: 0}

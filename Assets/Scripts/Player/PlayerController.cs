@@ -93,7 +93,8 @@ public class PlayerController : NetworkBehaviour
     {
         GetComponent<PlayerInput>().enabled  = false;
         GetComponent<PlayerPhysics>().enabled = false;
-      
+        GetComponent<PlayerRotate>().enabled = false;
+
     }
 
     private void Test()

@@ -1,5 +1,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using FishNet.Object;
 
 /// <summary>
 /// Класс, отвечающий за RigidBody и его логику.
@@ -53,6 +54,7 @@ public class PlayerPhysics : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!GetComponent<NetworkObject>().IsOwner) return;
         ApplyMovement();
     }
 
