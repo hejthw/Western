@@ -1329,10 +1329,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6509024294491109918, guid: 24bbc8e678383eb359cd2fce00f9c13b, type: 3}
-      propertyPath: RevolverMuzzle
-      value: 
-      objectReference: {fileID: 1629214352}
     - target: {fileID: 6856290257989824021, guid: 24bbc8e678383eb359cd2fce00f9c13b, type: 3}
       propertyPath: 'managedReferences[3130484047327264849].m_Value.Array.data[0]'
       value: 
@@ -7128,7 +7124,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1334938813}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.31270248, y: -0.33550453, z: 0.11913792, w: 0.8806021}
+  m_LocalRotation: {x: -0.15907618, y: 0.840748, z: 0.37520468, w: 0.35645342}
   m_LocalPosition: {x: -0.21768, y: 1.763, z: -10.574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9002,11 +8998,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8017566174234000633, guid: b7b1076b30762c242b9261b7519f19b0, type: 3}
---- !u!4 &1629214352 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 907529417449354944, guid: 24bbc8e678383eb359cd2fce00f9c13b, type: 3}
-  m_PrefabInstance: {fileID: 221187422}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1633273370
 GameObject:
   m_ObjectHideFlags: 0

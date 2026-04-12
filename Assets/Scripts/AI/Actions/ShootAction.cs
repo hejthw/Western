@@ -18,6 +18,7 @@ public partial class ShootAction : Action
     
     private Enforcer _enforcer;
     private NPCAttackData _data;
+    private RevolverRecoilAI _recoilAI;
     private Transform _muzzleTransform;
     
     protected override Status OnStart()
@@ -25,6 +26,7 @@ public partial class ShootAction : Action
         _enforcer = Self.Value.GetComponent<Enforcer>();
         _data = _enforcer.AttackData;
         _muzzleTransform = _enforcer.RevolverMuzzle;
+        _recoilAI = _enforcer.RevolverRecoilAI;
         
         if (Self?.Value == null || Player?.Value == null)
             return Status.Failure;
@@ -63,9 +65,13 @@ public partial class ShootAction : Action
 
         Vector3 direction = toPlayer / distance;
         direction = ApplySpread(direction, distance);
-
+        
+        SoundBus.Play(SoundID.Shoot);
+        _recoilAI.TriggerRecoil();
+        
         if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, _data.HitMask, QueryTriggerInteraction.Collide))
         {
+
             var playerHitbox = hit.collider.GetComponentInParent<PlayerHitbox>();
             if (playerHitbox != null)
             {
