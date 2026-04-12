@@ -13,9 +13,11 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     [SerializeField] private bool fragile = false;
     [SerializeField] private float pullSpeed = 15f;
     [SerializeField] private bool semiFragile = false;
+    [SerializeField] private GameObject thirdPersonVisualPrefab;
 
     private bool _isLocallyHeld = false;
     public bool IsLocallyHeld => _isLocallyHeld;
+    private GameObject _currentVisual;
 
     private void Awake()
     {
@@ -73,7 +75,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         holder.Value = player;
         state.Value = ItemState.Held;
         GiveOwnership(player.Owner);
-
+        ShowVisualForObservers(player);
         bool handled = OnPickup(player);
         Debug.Log($"[LightObject] ServerPickup: OnPickup returned {handled}");
         if (handled) return;
@@ -109,7 +111,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     public void ServerThrow(Vector3 pos, Vector3 velocity)
     {
         if (state.Value != ItemState.Held) return;
-
+        HideVisualForObservers();
         state.Value = ItemState.Thrown;
         holder.Value = null;
         RemoveOwnership();
@@ -167,6 +169,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
             }
             else
             {
+                HideVisualForObservers();
                 state.Value = ItemState.World;
                 var nt = GetComponent<NetworkTransform>();
                 if (nt != null) nt.enabled = true;
@@ -180,7 +183,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
             Despawn();
             return;
         }
-
+        HideVisualForObservers();
         state.Value = ItemState.World;
         var netTransform = GetComponent<NetworkTransform>();
         if (netTransform != null) netTransform.enabled = true;
@@ -189,6 +192,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     [Server]
     public void ForceDrop()
     {
+        HideVisualForObservers();
         holder.Value = null;
         state.Value = ItemState.World;
 
@@ -252,5 +256,49 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     public void SetSemiFragile(bool value)
     {
         semiFragile = value;
+    }
+    [Server]
+    public void EquipToPlayer(NetworkObject player)
+    {
+        if (player == null) return;
+        if (state.Value == ItemState.Held) return;
+        holder.Value = player;
+        state.Value = ItemState.Held;
+        GiveOwnership(player.Owner);
+        bool handled = OnPickup(player);
+        if (handled) return;
+        TargetConfirmPickup(player.Owner, player);
+    }
+
+    [ObserversRpc]
+    public void ShowVisualForObservers(NetworkObject holderNetObj)
+    {
+        if (IsOwner) return;
+        if (_currentVisual != null) Destroy(_currentVisual);
+        if (thirdPersonVisualPrefab == null)
+        {
+            Debug.LogWarning($"{name} has no thirdPersonVisualPrefab assigned!");
+            return;
+        }
+        var controller = holderNetObj.GetComponent<PlayerController>();
+        if (controller == null || controller.weaponHoldPoint == null)
+        {
+            Debug.LogError("Cannot attach visual: PlayerController or weaponHoldPoint missing");
+            return;
+        }
+        _currentVisual = Instantiate(thirdPersonVisualPrefab, controller.weaponHoldPoint);
+        _currentVisual.transform.localPosition = Vector3.zero;
+        _currentVisual.transform.localRotation = Quaternion.identity;
+    }
+
+    [ObserversRpc]
+    public void HideVisualForObservers()
+    {
+        if (IsOwner) return;
+        if (_currentVisual != null)
+        {
+            Destroy(_currentVisual);
+            _currentVisual = null;
+        }
     }
 }

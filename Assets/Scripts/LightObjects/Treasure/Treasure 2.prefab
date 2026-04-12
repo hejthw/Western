@@ -141,6 +141,7 @@ MonoBehaviour:
   fragile: 0
   pullSpeed: 15
   semiFragile: 0
+  thirdPersonVisualPrefab: {fileID: 0}
 --- !u!114 &4750788578392893553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,4 +282,5 @@ MonoBehaviour:
   fragile: 0
   pullSpeed: 15
   semiFragile: 0
-  value: 100
+  thirdPersonVisualPrefab: {fileID: 7103095680108300308, guid: 8881b14c5a6333d46b1fd7ebf427542c, type: 3}
+  value: 200
