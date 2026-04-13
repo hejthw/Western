@@ -33,7 +33,8 @@ public class PlayerHUD : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        if (!IsOwner) enabled = false;
+        if (!IsOwner)
+            gameObject.SetActive(false);
     }
 
     private void OnTeammateJoined(PlayerHealth player, string nickname)
