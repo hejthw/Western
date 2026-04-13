@@ -4,7 +4,7 @@ using TMPro;
 using Steamworks;
 using UnityEngine;
 
-public class PlayerHUD : MonoBehaviour
+public class PlayerHUD : NetworkBehaviour
 {
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text healthText;
