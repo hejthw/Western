@@ -13,10 +13,8 @@ public class PlayerName : NetworkBehaviour
     {
         base.OnStartNetwork();
         _steamName.OnChange += OnNameChanged;
-
-        if (Owner.IsLocalClient)
-            CmdSetName(SteamFriends.GetPersonaName());
     }
+    
 
     public override void OnStopNetwork()
     {
@@ -39,6 +37,8 @@ public class PlayerName : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
+        if (IsOwner)
+            CmdSetName(SteamFriends.GetPersonaName());
         if (!IsOwner)
             PlayerEvents.RaisePlayerRegistered(this, _steamName.Value);
     }
@@ -46,6 +46,7 @@ public class PlayerName : NetworkBehaviour
     public override void OnStopClient()
     {
         base.OnStopClient();
+        
         if (!IsOwner)
             PlayerEvents.RaisePlayerUnregistered(this);
     }
