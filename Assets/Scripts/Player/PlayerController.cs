@@ -89,6 +89,13 @@ public class PlayerController : NetworkBehaviour
         PlayerRegistry.Register(this);
     }
 
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        
+        PlayerRegistry.Unregister(this);
+    }
+
     private void DisableLocalComponents()
     {
         GetComponent<PlayerInput>().enabled  = false;
