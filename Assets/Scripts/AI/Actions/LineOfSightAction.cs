@@ -14,9 +14,16 @@ public partial class LineOfSightAction : Action
 
     private Transform _selfTransform;
     private Transform _playerTransform;
+
+    private const float _losInterval = 0.2f;
+    private float _losTimer;
+    private bool _cachedLoS;
     
     protected override Status OnStart()
     {
+        if (Self?.Value == null || Player?.Value == null)
+            return Status.Failure;
+        
         _selfTransform = Self.Value.transform;
         _playerTransform = Player.Value.transform;
         
@@ -28,6 +35,27 @@ public partial class LineOfSightAction : Action
         if (Self?.Value == null || Player?.Value == null)
             return Status.Failure;
 
+        _losTimer -= Time.deltaTime;
+    
+        if (_losTimer <= 0f)
+        {
+            _losTimer = _losInterval;
+            _cachedLoS = CheckLineOfSight();
+        }
+
+        HasLineOfSight.Value = _cachedLoS;
+    
+        if (_cachedLoS) RotateSelf();
+        
+        return Status.Running;
+    }
+
+    protected override void OnEnd()
+    {
+    }
+
+    private bool CheckLineOfSight()
+    {
         Vector3 origin = _selfTransform.position;
         Vector3 target = _playerTransform.position;
         Vector3 direction = target - origin;
@@ -37,20 +65,20 @@ public partial class LineOfSightAction : Action
         {
             if (hit.collider.gameObject == Player.Value)
             {
+#if UNITY_EDITOR
                 Debug.DrawLine(origin, target, Color.green);
+#endif
                 HasLineOfSight.Value = true;
                 RotateSelf();
-                return Status.Running;
+                return true;
             }
         }
         
         HasLineOfSight.Value = false;
+#if UNITY_EDITOR
         Debug.DrawLine(origin, target, Color.red);
-        return Status.Running;
-    }
-
-    protected override void OnEnd()
-    {
+#endif
+        return false;
     }
 
 
