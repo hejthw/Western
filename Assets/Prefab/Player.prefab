@@ -1881,7 +1881,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
@@ -1992,7 +1992,6 @@ GameObject:
   - component: {fileID: 4721819606701415218}
   - component: {fileID: 1251119359451297248}
   - component: {fileID: 5763580016565780240}
-  - component: {fileID: 735084233661156771}
   m_Layer: 5
   m_Name: MainHealthElement
   m_TagString: Untagged
@@ -2059,22 +2058,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &735084233661156771
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6487323029215314845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a03696678ea42b0b085894b7f5f1df7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHUD
-  nameText: {fileID: 8990631498777757072}
-  healthText: {fileID: 8961458103767659077}
-  teamHUDContainer: {fileID: 907699394190580194}
-  teamEntryPrefab: {fileID: 1844037279763963224, guid: ccd60425bfc788f788b54604a6912ead, type: 3}
 --- !u!1 &6741484574031347934
 GameObject:
   m_ObjectHideFlags: 0
@@ -2416,6 +2399,7 @@ GameObject:
   - component: {fileID: 191303042818185563}
   - component: {fileID: 9106320914675195185}
   - component: {fileID: 2102189724618178019}
+  - component: {fileID: 2447267575867540026}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2877,6 +2861,21 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4737990210302664583}
   slotPrefab: {fileID: 3929976265598659023, guid: 01889a12b99f9d44398db8c93c375a42, type: 3}
   slotsParent: {fileID: 1978485132004035348}
+--- !u!114 &2447267575867540026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7179411760756142996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df86b0541cbc4640b46b11078ccd804f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerName
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
 --- !u!1 &7766854876694965244
 GameObject:
   m_ObjectHideFlags: 0
@@ -2958,6 +2957,7 @@ GameObject:
   - component: {fileID: 8663475743685947999}
   - component: {fileID: 4702888268898700527}
   - component: {fileID: 7301368636097612423}
+  - component: {fileID: 9051995908773769935}
   m_Layer: 5
   m_Name: HealthBox
   m_TagString: Untagged
@@ -3024,6 +3024,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9051995908773769935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8175003173598247294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a03696678ea42b0b085894b7f5f1df7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHUD
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
+  nameText: {fileID: 8990631498777757072}
+  healthText: {fileID: 8961458103767659077}
+  teamHUDContainer: {fileID: 907699394190580194}
+  teamEntryPrefab: {fileID: 1844037279763963224, guid: ccd60425bfc788f788b54604a6912ead, type: 3}
 --- !u!1001 &421283244982108841
 PrefabInstance:
   m_ObjectHideFlags: 0

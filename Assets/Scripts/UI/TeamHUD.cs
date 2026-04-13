@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -8,55 +6,56 @@ public class TeamHUDEntry : MonoBehaviour
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text healthText;
 
-    private PlayerNameView _nameView;
-    private PlayerHealth _tracked;
+    private PlayerHealth _trackedHealth;
+    private PlayerName _trackedIdentity;
 
-    private void Awake()
+    public bool IsTracking(PlayerHealth player) => _trackedHealth == player;
+
+    public void Track(PlayerHealth health, PlayerName identity, string playerName)
     {
-        _nameView = FindFirstObjectByType<PlayerNameView>();
-    }
+        _trackedHealth   = health;
+        _trackedIdentity = identity;
 
-    public bool IsTracking(PlayerHealth player) => _tracked == player;
-
-    public void Track(PlayerHealth player, string playerName)
-    {
-        _tracked = player;
-        nameText.text = playerName;
-        StartCoroutine(WaitForName());
-        Refresh(player.GetHealth());
+        nameText.text = string.IsNullOrEmpty(playerName) ? "..." : playerName;
+        Refresh(health.GetHealth());
 
         PlayerHealthEvents.OnTeammateHealthChange += OnHealthChanged;
-        PlayerHealthEvents.OnTeammateStateChange  += OnStateChanged;
+        PlayerHealthEvents.OnTeammateStateChange += OnStateChanged;
+        PlayerEvents.OnPlayerNameChanged += OnNameChanged;
     }
 
     public void Untrack()
     {
         PlayerHealthEvents.OnTeammateHealthChange -= OnHealthChanged;
-        PlayerHealthEvents.OnTeammateStateChange  -= OnStateChanged;
-        _tracked = null;
+        PlayerHealthEvents.OnTeammateStateChange -= OnStateChanged;
+        PlayerEvents.OnPlayerNameChanged -= OnNameChanged;
+
+        _trackedHealth = null;
+        _trackedIdentity = null;
     }
 
-    private IEnumerator WaitForName()
+    private void OnNameChanged(PlayerName identity, string name)
     {
-        yield return new WaitForSeconds(1f);
-        nameText.text = _nameView.PlayerName.Value;
+        if (identity != _trackedIdentity) return;
+        if (!string.IsNullOrEmpty(name))
+            nameText.text = name;
     }
 
     private void OnHealthChanged(PlayerHealth player, int health)
     {
-        if (player != _tracked) return;
+        if (player != _trackedHealth) return;
         Refresh(health);
     }
 
     private void OnStateChanged(PlayerHealth player, PlayerHealthState state)
     {
-        if (player != _tracked) return;
+        if (player != _trackedHealth) return;
 
         healthText.text = state switch
         {
             PlayerHealthState.Knockout => "Knock",
-            PlayerHealthState.Dead     => "Dead",
-            _                          => _tracked.GetHealth().ToString()
+            PlayerHealthState.Dead => "Dead",
+            _ => _trackedHealth.GetHealth().ToString()
         };
     }
 
@@ -65,8 +64,8 @@ public class TeamHUDEntry : MonoBehaviour
         healthText.text = hp switch
         {
             -1 => "Dead",
-            0  => "Knock",
-            _  => hp.ToString()
+            0 => "Knock",
+            _ => hp.ToString()
         };
     }
 
