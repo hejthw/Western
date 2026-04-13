@@ -16,25 +16,9 @@ public class PlayerInput : MonoBehaviour
 
     public bool isDead { get ; private set ; }
     
-     private void OnEnable()
-     {
-        // PlayerEvents.OnDeadEvent += bred;
-      }
-    
-    private void OnDisable()
-     {
-      // PlayerEvents.OnDeadEvent -= bred;
-    }
-   
-     private void bred(bool a)
-    {
-         isDead = a;
-    }
-    
     public event Action JumpPressedEvent;
     public event Action OnSprintEvent;
     public event Action OnTestEvent;
-    public event Action OnCrouchEvent;
     public event Action OnAttackEvent;
     public event Action OnPickupEvent;
     public event Action OnDropEvent;
@@ -50,12 +34,6 @@ public class PlayerInput : MonoBehaviour
         OnSprintEvent?.Invoke();
     }
     
-    public void OnCrouch(InputValue value)
-    {
-        CrouchHeld = value.Get<float>() > 0.5;
-        OnCrouchEvent?.Invoke();
-    }
-
     public void OnJump(InputValue value)
     {
         if (value.Get<float>() > 0.5f) JumpPressedEvent?.Invoke();

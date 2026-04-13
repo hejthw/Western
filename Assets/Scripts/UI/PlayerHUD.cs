@@ -13,22 +13,20 @@ public class PlayerHUD : NetworkBehaviour
     [SerializeField] private Transform teamHUDContainer;
     [SerializeField] private TeamHUDEntry teamEntryPrefab;
 
-    private readonly Dictionary<PlayerHealth, TeamHUDEntry> _teamEntries = new();
+    private readonly Dictionary<PlayerName, TeamHUDEntry> _teamEntries = new();
 
     private void OnEnable()
     {
-        PlayerHealthEvents.OnLocalHealthChange     += UpdateHealthText;
-        PlayerHealthEvents.OnTeammateRegistered    += OnTeammateJoined;
-        PlayerHealthEvents.OnTeammateUnregistered  += OnTeammateLeft;
-        PlayerHealthEvents.OnLocalHealthChange += UpdateHealthText;
+        PlayerHealthEvents.OnLocalHealthChange       += UpdateHealthText;
+        PlayerEvents.OnPlayerRegistered      += OnTeammateJoined;
+        PlayerEvents.OnPlayerUnregistered    += OnTeammateLeft;
     }
 
     private void OnDisable()
     {
-        PlayerHealthEvents.OnLocalHealthChange     -= UpdateHealthText;
-        PlayerHealthEvents.OnTeammateRegistered    -= OnTeammateJoined;
-        PlayerHealthEvents.OnTeammateUnregistered  -= OnTeammateLeft;
-        PlayerHealthEvents.OnLocalHealthChange -= UpdateHealthText;
+        PlayerHealthEvents.OnLocalHealthChange       -= UpdateHealthText;
+        PlayerEvents.OnPlayerRegistered      -= OnTeammateJoined;
+        PlayerEvents.OnPlayerUnregistered    -= OnTeammateLeft;
     }
 
     public override void OnStartClient()
@@ -37,22 +35,25 @@ public class PlayerHUD : NetworkBehaviour
             gameObject.SetActive(false);
     }
 
-    private void OnTeammateJoined(PlayerHealth player, string nickname)
+    private void OnTeammateJoined(PlayerName identity, string name)
     {
+        // PlayerHealth лежит на том же GameObject
+        var health = identity.GetComponent<PlayerHealth>();
+        if (health == null) return;
+
         var entry = Instantiate(teamEntryPrefab, teamHUDContainer);
-        entry.Track(player, nickname); 
-        _teamEntries[player] = entry;
+        entry.Track(health, identity, name);
+        _teamEntries[identity] = entry;
     }
 
-    private void OnTeammateLeft(PlayerHealth player)
+    private void OnTeammateLeft(PlayerName identity)
     {
-        if (!_teamEntries.TryGetValue(player, out var entry)) return;
-    
+        if (!_teamEntries.TryGetValue(identity, out var entry)) return;
+
         entry.Untrack();
         Destroy(entry.gameObject);
-        _teamEntries.Remove(player);
+        _teamEntries.Remove(identity);
     }
-    
     
     public void Awake()
     {
@@ -70,17 +71,4 @@ public class PlayerHUD : NetworkBehaviour
         else
             healthText.text = "Knock";
     }
-    
-    // [ServerRpc]
-    // private void SetPlayerName(string playerName)
-    // {
-    //     SetPlayerNameForObservers(playerName);
-    // }
-    //
-    // [ObserversRpc(BufferLast = true)]
-    // private void SetPlayerNameForObservers(string playerName)
-    // {
-    //     nameText.text = playerName;
-    // }
-
 }

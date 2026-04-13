@@ -1,5 +1,6 @@
 using System.Collections;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using Steamworks;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
@@ -22,6 +23,8 @@ public class PlayerController : NetworkBehaviour
     
     private bool _isDied;
     private bool movementDisabled = false;
+    
+    private readonly SyncVar<string> username = new  SyncVar<string>("Username");
     
     private Revolver _currentWeapon;
     public bool IsArmed {get ; private set;}

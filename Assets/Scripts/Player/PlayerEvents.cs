@@ -27,4 +27,18 @@ public static  class PlayerEvents
     {
         OnLocalStaminaChange?.Invoke(amount);
     }
+    
+    public static event Action<PlayerName, string> OnPlayerRegistered;
+    public static event Action<PlayerName> OnPlayerUnregistered;
+    public static event Action<PlayerName, string> OnPlayerNameChanged;
+
+    public static void RaisePlayerRegistered(PlayerName player, string name)
+        => OnPlayerRegistered?.Invoke(player, name);
+
+    public static void RaisePlayerUnregistered(PlayerName player)
+        => OnPlayerUnregistered?.Invoke(player);
+
+    public static void RaisePlayerNameChanged(PlayerName player, string name)
+        => OnPlayerNameChanged?.Invoke(player, name);
+    
 }

@@ -2399,6 +2399,7 @@ GameObject:
   - component: {fileID: 191303042818185563}
   - component: {fileID: 9106320914675195185}
   - component: {fileID: 2102189724618178019}
+  - component: {fileID: 2447267575867540026}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2860,6 +2861,21 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4737990210302664583}
   slotPrefab: {fileID: 3929976265598659023, guid: 01889a12b99f9d44398db8c93c375a42, type: 3}
   slotsParent: {fileID: 1978485132004035348}
+--- !u!114 &2447267575867540026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7179411760756142996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df86b0541cbc4640b46b11078ccd804f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerName
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
 --- !u!1 &7766854876694965244
 GameObject:
   m_ObjectHideFlags: 0

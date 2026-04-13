@@ -100,20 +100,4 @@ public class PlayerHealth : NetworkBehaviour
         _health.Value = data.maxHealth;
         PlayerHealthEvents.RaiseRespawnEvent();
     }
-    
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        if (!IsOwner)
-        {
-            PlayerHealthEvents.RaiseTeammateRegistered(this, "nickname");
-        }
-    }
-
-    public override void OnStopClient()
-    {
-        base.OnStopClient();
-        if (!IsOwner)
-            PlayerHealthEvents.RaiseTeammateUnregistered(this);
-    }
 }
