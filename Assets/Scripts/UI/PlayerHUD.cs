@@ -31,6 +31,11 @@ public class PlayerHUD : NetworkBehaviour
         PlayerHealthEvents.OnLocalHealthChange -= UpdateHealthText;
     }
 
+    public override void OnStartClient()
+    {
+        if (!IsOwner) enabled = false;
+    }
+
     private void OnTeammateJoined(PlayerHealth player, string nickname)
     {
         var entry = Instantiate(teamEntryPrefab, teamHUDContainer);
