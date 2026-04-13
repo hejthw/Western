@@ -1,14 +1,10 @@
 using FishNet.Object;
-using FishNet.Object.Synchronizing;
 using TMPro;
-using Steamworks;
 using UnityEngine;
 
 public class PlayerNameView : NetworkBehaviour
 {
     [SerializeField] private TMP_Text text;
-    
-    public readonly SyncVar<string> PlayerName = new SyncVar<string>("PlayerName"); 
     
     public override void OnStartClient()
     {
@@ -17,11 +13,22 @@ public class PlayerNameView : NetworkBehaviour
         if (IsOwner)
         {
             text.gameObject.SetActive(false);
-            string myName = SteamFriends.GetPersonaName();
-            PlayerName.Value = myName;
-            text.text = myName;
-            SetPlayerName(myName);
         }
+    }
+
+    private void OnEnable()
+    {
+        PlayerEvents.OnPlayerNameChanged += ChangeName;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.OnPlayerNameChanged -= ChangeName;
+    }
+
+    private void ChangeName(PlayerName playerName, string newName)
+    {
+        SetPlayerName(newName);
     }
     
     [ServerRpc]
@@ -34,7 +41,5 @@ public class PlayerNameView : NetworkBehaviour
     private void SetPlayerNameForObservers(string playerName)
     {
         text.text = playerName;
-        PlayerName.Value = playerName;
     }
-
 }

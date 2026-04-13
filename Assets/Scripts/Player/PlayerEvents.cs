@@ -2,8 +2,6 @@ using System;
 
 public static  class PlayerEvents
 {
-    public static event Action<float> OnLocalStaminaChange;
-    
     public static event Action NextTargetEvent;
     public static event Action PrevTargetEvent;
     public static event Action OnSuspicion;
@@ -23,11 +21,6 @@ public static  class PlayerEvents
         PrevTargetEvent?.Invoke();
     }
     
-    public static void RaiseStaminaChange(float amount)
-    {
-        OnLocalStaminaChange?.Invoke(amount);
-    }
-    
     public static event Action<PlayerName, string> OnPlayerRegistered;
     public static event Action<PlayerName> OnPlayerUnregistered;
     public static event Action<PlayerName, string> OnPlayerNameChanged;
@@ -40,5 +33,6 @@ public static  class PlayerEvents
 
     public static void RaisePlayerNameChanged(PlayerName player, string name)
         => OnPlayerNameChanged?.Invoke(player, name);
+    
     
 }
