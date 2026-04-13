@@ -17,16 +17,16 @@ public class PlayerHUD : NetworkBehaviour
 
     private void OnEnable()
     {
-        PlayerHealthEvents.OnLocalHealthChange       += UpdateHealthText;
-        PlayerEvents.OnPlayerRegistered      += OnTeammateJoined;
-        PlayerEvents.OnPlayerUnregistered    += OnTeammateLeft;
+        PlayerHealthEvents.OnLocalHealthChange += UpdateHealthText;
+        PlayerEvents.OnPlayerRegistered += OnTeammateJoined;
+        PlayerEvents.OnPlayerUnregistered += OnTeammateLeft;
     }
 
     private void OnDisable()
     {
-        PlayerHealthEvents.OnLocalHealthChange       -= UpdateHealthText;
-        PlayerEvents.OnPlayerRegistered      -= OnTeammateJoined;
-        PlayerEvents.OnPlayerUnregistered    -= OnTeammateLeft;
+        PlayerHealthEvents.OnLocalHealthChange  -= UpdateHealthText;
+        PlayerEvents.OnPlayerRegistered -= OnTeammateJoined;
+        PlayerEvents.OnPlayerUnregistered -= OnTeammateLeft;
     }
 
     public override void OnStartClient()

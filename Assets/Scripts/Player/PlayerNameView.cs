@@ -1,4 +1,5 @@
 using FishNet.Object;
+using Steamworks;
 using TMPro;
 using UnityEngine;
 
@@ -13,22 +14,10 @@ public class PlayerNameView : NetworkBehaviour
         if (IsOwner)
         {
             text.gameObject.SetActive(false);
+            name = SteamFriends.GetPersonaName();
+            text.text = name;
+            SetPlayerName(name);
         }
-    }
-
-    private void OnEnable()
-    {
-        PlayerEvents.OnPlayerNameChanged += ChangeName;
-    }
-
-    private void OnDisable()
-    {
-        PlayerEvents.OnPlayerNameChanged -= ChangeName;
-    }
-
-    private void ChangeName(PlayerName playerName, string newName)
-    {
-        SetPlayerName(newName);
     }
     
     [ServerRpc]
@@ -36,6 +25,7 @@ public class PlayerNameView : NetworkBehaviour
     {
         SetPlayerNameForObservers(playerName);
     }
+
 
     [ObserversRpc(BufferLast = true)]
     private void SetPlayerNameForObservers(string playerName)

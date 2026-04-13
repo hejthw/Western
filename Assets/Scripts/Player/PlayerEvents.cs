@@ -33,6 +33,4 @@ public static  class PlayerEvents
 
     public static void RaisePlayerNameChanged(PlayerName player, string name)
         => OnPlayerNameChanged?.Invoke(player, name);
-    
-    
 }

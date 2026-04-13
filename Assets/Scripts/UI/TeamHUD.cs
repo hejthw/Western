@@ -19,18 +19,18 @@ public class TeamHUDEntry : MonoBehaviour
         nameText.text = string.IsNullOrEmpty(playerName) ? "..." : playerName;
         Refresh(health.GetHealth());
 
-        PlayerHealthEvents.OnTeammateHealthChange  += OnHealthChanged;
-        PlayerHealthEvents.OnTeammateStateChange   += OnStateChanged;
-        PlayerEvents.OnPlayerNameChanged   += OnNameChanged;
+        PlayerHealthEvents.OnTeammateHealthChange += OnHealthChanged;
+        PlayerHealthEvents.OnTeammateStateChange += OnStateChanged;
+        PlayerEvents.OnPlayerNameChanged += OnNameChanged;
     }
 
     public void Untrack()
     {
-        PlayerHealthEvents.OnTeammateHealthChange  -= OnHealthChanged;
-        PlayerHealthEvents.OnTeammateStateChange   -= OnStateChanged;
-        PlayerEvents.OnPlayerNameChanged   -= OnNameChanged;
+        PlayerHealthEvents.OnTeammateHealthChange -= OnHealthChanged;
+        PlayerHealthEvents.OnTeammateStateChange -= OnStateChanged;
+        PlayerEvents.OnPlayerNameChanged -= OnNameChanged;
 
-        _trackedHealth   = null;
+        _trackedHealth = null;
         _trackedIdentity = null;
     }
 
@@ -54,8 +54,8 @@ public class TeamHUDEntry : MonoBehaviour
         healthText.text = state switch
         {
             PlayerHealthState.Knockout => "Knock",
-            PlayerHealthState.Dead     => "Dead",
-            _                          => _trackedHealth.GetHealth().ToString()
+            PlayerHealthState.Dead => "Dead",
+            _ => _trackedHealth.GetHealth().ToString()
         };
     }
 
@@ -64,8 +64,8 @@ public class TeamHUDEntry : MonoBehaviour
         healthText.text = hp switch
         {
             -1 => "Dead",
-            0  => "Knock",
-            _  => hp.ToString()
+            0 => "Knock",
+            _ => hp.ToString()
         };
     }
 
