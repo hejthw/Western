@@ -23,24 +23,23 @@ public partial class ShootAction : Action
     
     protected override Status OnStart()
     {
+        if (Self?.Value == null || Player?.Value == null)
+            return Status.Failure;
+        
         _enforcer = Self.Value.GetComponent<Enforcer>();
         _data = _enforcer.AttackData;
         _muzzleTransform = _enforcer.RevolverMuzzle;
         _recoilAI = _enforcer.RevolverRecoilAI;
         
-        if (Self?.Value == null || Player?.Value == null)
-            return Status.Failure;
-
         _selfTransform = Self.Value.transform;
         _playerTransform = Player.Value.transform;
-        _fireTimer = 0f; // стреляем сразу при входе
+        _fireTimer = 0f;
 
         return Status.Running;
     }
 
     protected override Status OnUpdate()
     {
-        // Потеряли LoS — выходим, BT переключится на LosePlayer
         if (!HasLineOfSight.Value)
             return Status.Failure;
 
@@ -105,7 +104,7 @@ public partial class ShootAction : Action
         // Локальные оси относительно направления выстрела
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         Vector3 right = lookRotation * Vector3.right;
-        Vector3 up    = lookRotation * Vector3.up;
+        Vector3 up = lookRotation * Vector3.up;
 
         Quaternion spreadRotation = Quaternion.AngleAxis(angleX, up) *
                                     Quaternion.AngleAxis(angleY, right);
