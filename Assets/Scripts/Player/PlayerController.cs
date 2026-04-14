@@ -23,8 +23,8 @@ public class PlayerController : NetworkBehaviour
     
     private bool _isDied;
     private bool movementDisabled = false;
-    
-    private readonly SyncVar<string> username = new  SyncVar<string>("Username");
+
+    public Transform recoilPivot;
     
     private Revolver _currentWeapon;
     public bool IsArmed {get ; private set;}
@@ -103,8 +103,7 @@ public class PlayerController : NetworkBehaviour
     {
         GetComponent<PlayerInput>().enabled  = false;
         GetComponent<PlayerPhysics>().enabled = false;
-        GetComponent<PlayerRotate>().enabled = false;
-
+        enabled = false;
     }
 
     private void Test()
