@@ -17,7 +17,7 @@ public class RevolverRecoil : MonoBehaviour
 
     public void Init(RevolverData data, PlayerController controller)
     {
-        _data    = data;
+        _data = data;
         _panTilt = controller.cinemachineCamera.GetComponent<CinemachinePanTilt>();
     }
 
@@ -43,7 +43,7 @@ public class RevolverRecoil : MonoBehaviour
         }
 
         _targetPitch -= upKick;
-        _targetYaw   += sideKick;
+        _targetYaw += sideKick;
         
         _targetPitch = Mathf.Clamp(_targetPitch, -25f, 0f);
     }
@@ -60,19 +60,19 @@ public class RevolverRecoil : MonoBehaviour
         }
 
         _targetPitch = Mathf.Lerp(_targetPitch, 0f, Time.deltaTime * _data.recoverySpeed);
-        _targetYaw   = Mathf.Lerp(_targetYaw,   0f, Time.deltaTime * _data.recoverySpeed);
+        _targetYaw = Mathf.Lerp(_targetYaw, 0f, Time.deltaTime * _data.recoverySpeed);
         
         float newPitch = Mathf.Lerp(_appliedPitch, _targetPitch, Time.deltaTime * _data.recoilApplySpeed);
-        float newYaw   = Mathf.Lerp(_appliedYaw,   _targetYaw,   Time.deltaTime * _data.recoilApplySpeed);
+        float newYaw = Mathf.Lerp(_appliedYaw, _targetYaw, Time.deltaTime * _data.recoilApplySpeed);
         
         float deltaPitch = newPitch - _appliedPitch;
-        float deltaYaw   = newYaw   - _appliedYaw;
+        float deltaYaw = newYaw - _appliedYaw;
 
         _panTilt.TiltAxis.Value += deltaPitch;
-        _panTilt.PanAxis.Value  += deltaYaw;
+        _panTilt.PanAxis.Value += deltaYaw;
         
         _appliedPitch = newPitch;
-        _appliedYaw   = newYaw;
+        _appliedYaw = newYaw;
     }
 
     public void ResetImmediate()
@@ -81,8 +81,8 @@ public class RevolverRecoil : MonoBehaviour
             _panTilt.TiltAxis.Value -= _appliedPitch;
 
         _appliedPitch = 0f;
-        _targetPitch  = 0f;
-        _shotsFired   = 0;
-        _resetTimer   = 0f;
+        _targetPitch = 0f;
+        _shotsFired = 0;
+        _resetTimer = 0f;
     }
 }
