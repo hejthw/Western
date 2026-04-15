@@ -22,18 +22,12 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
     private Coroutine holdCoroutine;
     private Coroutine knockdownCoroutine;
     private bool isKnockedDown;
-    
 
     private void Awake()
     {
         if (rb == null)
             rb = GetComponent<Rigidbody>();
-        
     }
-
-    // ─────────────────────────────────────────────
-    //  ILassoInteractable
-    // ─────────────────────────────────────────────
 
     public LassoInteractionType GetInteractionType() => LassoInteractionType.PullCharacter;
 
@@ -49,7 +43,6 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
             rb.angularVelocity = Vector3.zero;
         }
 
-        // Останавливаем AI сразу при захвате
         RpcSetNPCAI(false);
 
         if (holdCoroutine != null)
@@ -62,15 +55,11 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
     {
         if (!IsServer) return;
         if (isKnockedDown) return;
-
         if (rb == null) return;
 
         var playerNetObj = lasso.OwnerNetObj;
         if (playerNetObj == null) return;
 
-        DropActiveItem();
-
-        // Импульс в сторону игрока — аналогично OnLassoPull в LightObject
         Vector3 dir = (playerNetObj.transform.position - transform.position).normalized;
         rb.linearVelocity = Vector3.zero;
         rb.isKinematic = false;
@@ -93,16 +82,11 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
             holdCoroutine = null;
         }
 
-        // Восстанавливаем AI только если не в нокдауне
         if (!isKnockedDown)
             RpcSetNPCAI(true);
 
         attachedLasso = null;
     }
-
-    // ─────────────────────────────────────────────
-    //  Server coroutines
-    // ─────────────────────────────────────────────
 
     private IEnumerator HoldRoutine(LassoNetwork lasso)
     {
@@ -133,49 +117,13 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
     private IEnumerator KnockdownRoutine()
     {
         isKnockedDown = true;
-        RpcSetKnockdown(true);
+        RpcSetNPCAI(false);
 
         yield return new WaitForSeconds(knockdownDuration);
 
         isKnockedDown = false;
-        RpcSetKnockdown(false);
+        RpcSetNPCAI(true);
         knockdownCoroutine = null;
-    }
-
-    // ─────────────────────────────────────────────
-    //  Helpers
-    // ─────────────────────────────────────────────
-
-    private void DropActiveItem()
-    {
-    }
-
-    // ─────────────────────────────────────────────
-    //  Observer RPCs
-    // ─────────────────────────────────────────────
-
-    [ObserversRpc]
-    private void RpcSetKnockdown(bool knocked)
-    {
-        var pc = GetComponent<PlayerController>();
-        if (pc != null)
-        {
-            if (knocked) pc.DisableMovement();
-            else pc.EnableMovement();
-            pc.SetLassoState(knocked);
-        }
-
-        // NPC: при выходе из нокдауна восстанавливаем AI
-        // (при входе — уже отключён с OnLassoAttach)
-        if (!knocked)
-        {
-            var npc = GetComponent<NetworkNPC>();
-            if (npc != null)
-            {
-                npc.EnableAI();
-            }
-                
-        }
     }
 
     [ObserversRpc]

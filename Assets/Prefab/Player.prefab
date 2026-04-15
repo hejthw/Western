@@ -1607,7 +1607,7 @@ GameObject:
   - component: {fileID: 6657445138780899547}
   - component: {fileID: 1835402252551627959}
   - component: {fileID: 1772565907744420026}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Suspicion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2894,11 +2894,9 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   holdDuration: 20
   maxHoldDistance: 25
-  yankDistance: 4
-  yankSpeed: 20
+  yankForce: 10
   knockdownDuration: 3
   rb: {fileID: 3110369444958837593}
-  animator: {fileID: 0}
 --- !u!1 &7766854876694965244
 GameObject:
   m_ObjectHideFlags: 0
