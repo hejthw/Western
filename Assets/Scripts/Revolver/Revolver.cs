@@ -15,6 +15,9 @@ public class Revolver: NetworkBehaviour
     private float _fireTimer;
     private RevolverRecoil _recoil;
     private LayerMask _hitboxMask;
+    private PlayerInventory _boundInventory;
+    private int _boundSlot = -1;
+    private int _boundPickupPrefabId = -1;
 
     private readonly SyncVar<int> _bullets = new SyncVar<int>();
     
@@ -105,6 +108,7 @@ public class Revolver: NetworkBehaviour
     {
         if (_bullets.Value <= 0) return;
         _bullets.Value--;
+        SaveBulletsToInventorySlot();
 
         SpawnBullet(pos, dir);
     }
@@ -133,7 +137,30 @@ public class Revolver: NetworkBehaviour
         NetworkObject pickup = Instantiate(revolverPickupPrefab, pos, rot);
         NetworkManager.ServerManager.Spawn(pickup);
         pickup.GetComponent<RevolverPickup>().SetBullets(_bullets.Value);
+        
+        if (_boundInventory != null && _boundSlot >= 0)
+            _boundInventory.ClearSlot(_boundSlot);
 
         NetworkObject.Despawn();
+    }
+    
+    [Server]
+    public void BindInventorySlot(PlayerInventory inventory, int slot, int pickupPrefabId)
+    {
+        _boundInventory = inventory;
+        _boundSlot = slot;
+        _boundPickupPrefabId = pickupPrefabId;
+        SaveBulletsToInventorySlot();
+    }
+    
+    [Server]
+    private void SaveBulletsToInventorySlot()
+    {
+        if (_boundInventory == null || _boundSlot < 0) return;
+        
+        if (_boundInventory.GetItemPrefabId(_boundSlot) != _boundPickupPrefabId)
+            return;
+        
+        _boundInventory.UpdateSlotState(_boundSlot, System.BitConverter.GetBytes(_bullets.Value));
     }
 }

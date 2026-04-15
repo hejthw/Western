@@ -126,8 +126,35 @@ public class PickupController : NetworkBehaviour
     {
         Ray ray = new Ray(cam.position, cam.forward);
         if (!Physics.Raycast(ray, out var hit, pickupDistance, pickupLayer)) return;
-        if (!hit.collider.TryGetComponent(out LightObject obj)) return;
+        
+        var revolverPickup = hit.collider.GetComponentInParent<RevolverPickup>();
+        if (revolverPickup != null)
+        {
+            ServerTryPickupRevolver(revolverPickup.NetworkObject);
+            return;
+        }
+        
+        if (!hit.collider.TryGetComponent(out LightObject obj))
+            obj = hit.collider.GetComponentInParent<LightObject>();
+        if (obj == null) return;
         obj.ServerPickup(GetComponent<NetworkObject>());
+    }
+    
+    [ServerRpc]
+    private void ServerTryPickupRevolver(NetworkObject revolverNetObj)
+    {
+        if (revolverNetObj == null) return;
+        
+        RevolverPickup revolverPickup = revolverNetObj.GetComponent<RevolverPickup>();
+        if (revolverPickup == null) return;
+        
+        PlayerInventory inventory = GetComponent<PlayerInventory>();
+        if (inventory == null) return;
+        
+        bool equipped = inventory.TryStoreRevolverAndEquip(revolverPickup, GetComponent<NetworkObject>());
+        if (!equipped) return;
+        
+        revolverNetObj.Despawn();
     }
 
     public void AttachLocal(GameObject obj)

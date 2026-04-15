@@ -5,9 +5,24 @@ public class NetworkSoundManager : NetworkBehaviour
 {
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private SoundLibrary library;
+    private static NetworkSoundManager _localInstance;
 
     private void OnEnable()  => SoundBus.OnPlay += HandlePlay;
     private void OnDisable() => SoundBus.OnPlay -= HandlePlay;
+    
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        if (IsOwner)
+            _localInstance = this;
+    }
+    
+    public override void OnStopClient()
+    {
+        if (_localInstance == this)
+            _localInstance = null;
+        base.OnStopClient();
+    }
 
     private void HandlePlay(SoundID id)
     {
@@ -30,5 +45,13 @@ public class NetworkSoundManager : NetworkBehaviour
             audioSource.PlayOneShot(clip);
         else
             Debug.LogWarning($"[SoundManager] Клип для {id} не найден в библиотеке.");
+    }
+    
+    public static void PlayImpactLocal(SoundID id)
+    {
+        if (_localInstance == null)
+            return;
+        
+        _localInstance.PlayLocally(id);
     }
 }

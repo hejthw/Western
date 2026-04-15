@@ -44,11 +44,33 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     [Server]
     public void OnShot()
     {
-        if (!semiFragile) return;
-        if (state.Value == ItemState.Held) return; 
+      
+        if (semiFragile)
+        {
+            PlayImpactSound(SoundID.RevolverImpactSemiFragile);
+            Debug.Log($"[LightObject] Destroyed by shot (semi-fragile)");
+            Despawn();
+            return;
+        }
 
-        Debug.Log($"[LightObject] Destroyed by shot (semi-fragile)");
-        Despawn();
+    
+        if (fragile)
+        {
+            PlayImpactSound(SoundID.RevolverImpactFragile);
+            Debug.Log($"[LightObject] Destroyed by shot (fragile)");
+            Despawn();
+            return;
+        }
+
+        PlayImpactSound(SoundID.RevolverImpactDefault);
+    }
+
+
+    public SoundID GetRevolverImpactSound()
+    {
+        if (fragile) return SoundID.RevolverImpactFragile;
+        if (semiFragile) return SoundID.RevolverImpactSemiFragile;
+        return SoundID.RevolverImpactDefault;
     }
 
     private void UpdateVisibility(ItemState currentState)
@@ -70,22 +92,31 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     [ServerRpc(RequireOwnership = false)]
     public void ServerPickup(NetworkObject player)
     {
+        if (player == null) return;
         if (state.Value != ItemState.World) return;
+        if (!CanPickup(player)) return;
 
         holder.Value = player;
         state.Value = ItemState.Held;
+        ApplyHeldPhysics();
         GiveOwnership(player.Owner);
-        ShowVisualForObservers(player);
         bool handled = OnPickup(player);
         Debug.Log($"[LightObject] ServerPickup: OnPickup returned {handled}");
         if (handled) return;
 
+        ShowVisualForObservers(player);
         TargetConfirmPickup(player.Owner, player);
     }
 
     protected virtual bool OnPickup(NetworkObject player)
     {
         return false;
+    }
+    
+    [Server]
+    protected virtual bool CanPickup(NetworkObject player)
+    {
+        return true;
     }
 
     [TargetRpc]
@@ -111,21 +142,23 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     public void ServerThrow(Vector3 pos, Vector3 velocity)
     {
         if (state.Value != ItemState.Held) return;
+        NetworkConnection previousHolder = holder.Value != null ? holder.Value.Owner : null;
+        
         HideVisualForObservers();
         state.Value = ItemState.Thrown;
         holder.Value = null;
         RemoveOwnership();
 
         transform.position = pos;
-        rb.isKinematic = false;
-        rb.useGravity = true;
+        ApplyWorldPhysics();
         rb.linearVelocity = velocity;
 
         var nt = GetComponent<NetworkTransform>();
         if (nt != null) nt.enabled = true;
 
         ObserversApplyThrow(pos, velocity);
-        TargetResetLocallyHeld(Owner);
+        if (previousHolder != null)
+            TargetResetLocallyHeld(previousHolder);
     }
 
     [ObserversRpc]
@@ -134,8 +167,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         if (IsOwner) return;
 
         transform.position = pos;
-        rb.isKinematic = false;
-        rb.useGravity = true;
+        ApplyWorldPhysics();
         rb.linearVelocity = velocity;
 
         var nt = GetComponent<NetworkTransform>();
@@ -153,53 +185,63 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         if (!IsServer) return;
         if (state.Value != ItemState.Thrown) return;
 
-  
+   
         if (collision.collider.TryGetComponent(out PlayerHealth playerHealth))
         {
-
             Vector3 hitDirection = collision.transform.position - transform.position;
-            hitDirection.y = 0.5f; 
+            hitDirection.y = 0.5f;
             hitDirection.Normalize();
-
-            //playerHealth.StunWithDirection(Vector3.zero, 2f);
 
             if (fragile)
             {
+
+                PlayImpactSound(SoundID.RevolverImpactFragile);
                 Despawn();
             }
             else
             {
+                PlayImpactSound(SoundID.RevolverImpactDefault);
                 HideVisualForObservers();
                 state.Value = ItemState.World;
                 var nt = GetComponent<NetworkTransform>();
                 if (nt != null) nt.enabled = true;
                 if (rb != null) rb.linearVelocity = Vector3.zero;
+                ApplyWorldPhysics();
             }
             return;
         }
 
+
         if (fragile)
         {
+ 
+            PlayImpactSound(SoundID.RevolverImpactFragile);
             Despawn();
             return;
         }
+
+        PlayImpactSound(SoundID.RevolverImpactDefault);
         HideVisualForObservers();
         state.Value = ItemState.World;
-        var netTransform = GetComponent<NetworkTransform>();
-        if (netTransform != null) netTransform.enabled = true;
+        var ntWorld = GetComponent<NetworkTransform>();
+        if (ntWorld != null) ntWorld.enabled = true;
+        ApplyWorldPhysics();
     }
-
     [Server]
     public void ForceDrop()
     {
+        NetworkConnection previousHolder = holder.Value != null ? holder.Value.Owner : null;
         HideVisualForObservers();
         holder.Value = null;
         state.Value = ItemState.World;
+        RemoveOwnership();
+        ApplyWorldPhysics();
 
         var nt = GetComponent<NetworkTransform>();
         if (nt != null) nt.enabled = true;
 
-        TargetResetLocallyHeld(Owner);
+        if (previousHolder != null)
+            TargetResetLocallyHeld(previousHolder);
     }
 
     public void OnLassoAttach(LassoNetwork lasso)
@@ -257,6 +299,23 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     {
         semiFragile = value;
     }
+    
+    private void ApplyHeldPhysics()
+    {
+        if (rb == null) return;
+        rb.isKinematic = true;
+        rb.useGravity = false;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+    
+    private void ApplyWorldPhysics()
+    {
+        if (rb == null) return;
+        rb.isKinematic = false;
+        rb.useGravity = true;
+    }
+    
     [Server]
     public void EquipToPlayer(NetworkObject player)
     {
@@ -264,6 +323,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         if (state.Value == ItemState.Held) return;
         holder.Value = player;
         state.Value = ItemState.Held;
+        ApplyHeldPhysics();
         GiveOwnership(player.Owner);
         bool handled = OnPickup(player);
         if (handled) return;
@@ -275,6 +335,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     {
         if (IsOwner) return;
         if (_currentVisual != null) Destroy(_currentVisual);
+        if (holderNetObj == null) return;
         if (thirdPersonVisualPrefab == null)
         {
             Debug.LogWarning($"{name} has no thirdPersonVisualPrefab assigned!");
@@ -301,4 +362,9 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
             _currentVisual = null;
         }
     }
+    private void PlayImpactSound(SoundID soundId)
+    {
+        SoundBus.Play(soundId);
+    }
+
 }

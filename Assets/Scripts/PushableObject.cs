@@ -17,7 +17,7 @@ public class PushableObject : NetworkBehaviour
         if (collision.gameObject.TryGetComponent<PlayerPhysics>(out var player))
         {
             Vector3 pushDirection = collision.contacts[0].normal;
-            float pushForce = player.GetComponent<Rigidbody>().linearVelocity.magnitude * 8f;
+            float pushForce = player.GetComponent<Rigidbody>().linearVelocity.magnitude * 3f;
 
             rb.AddForce(pushDirection * pushForce, ForceMode.Impulse);
         }

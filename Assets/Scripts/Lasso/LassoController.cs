@@ -7,12 +7,18 @@ public class LassoController : NetworkBehaviour
     [Header("Keys")]
     public Key throwKey = Key.F;
     public Key pullKey = Key.G;
+    public Key jumpOffKey = Key.Space;
 
     [Header("References")]
     public Transform launchPoint;
     public Transform cameraTransform;
+    
+    [Header("Network Sync")]
+    [SerializeField] private float pullInputSyncInterval = 0.05f;
 
     private LassoNetwork lasso;
+    private bool pullHeldLastFrame;
+    private float _pullInputSyncTimer;
 
     private void Start()
     {
@@ -27,7 +33,9 @@ public class LassoController : NetworkBehaviour
         if (!IsOwner || lasso == null) return;
 
         HandleThrow();
-        HandlePull();
+        HandlePullHold();
+        HandleJumpOff();
+        SyncPullHoldHeartbeat();
     }
 
     private void HandleThrow()
@@ -53,13 +61,38 @@ public class LassoController : NetworkBehaviour
         SoundBus.Play(SoundID.LassoThrow);
     }
 
-    private void HandlePull()
+    private void HandlePullHold()
     {
-        if (!Keyboard.current[pullKey].wasPressedThisFrame) return;
+        bool held = Keyboard.current[pullKey].isPressed;
+        if (held == pullHeldLastFrame) return;
+        
+        pullHeldLastFrame = held;
 
         if (lasso.AttachedObject == null) return;
 
-        lasso.ServerPullPressed();
+        if (held)
+            lasso.ServerPullPressed();
+        else
+            lasso.ServerSetPullHeld(false);
+    }
+    
+    private void SyncPullHoldHeartbeat()
+    {
+        if (lasso.AttachedObject == null) return;
+        
+        _pullInputSyncTimer -= Time.deltaTime;
+        if (_pullInputSyncTimer > 0f) return;
+        _pullInputSyncTimer = pullInputSyncInterval;
+        
+        bool held = Keyboard.current[pullKey].isPressed;
+        lasso.ServerSetPullHeld(held);
+    }
+    
+    private void HandleJumpOff()
+    {
+        if (!Keyboard.current[jumpOffKey].wasPressedThisFrame) return;
+        if (!lasso.IsPlayerPulling) return;
+        lasso.ServerJumpOffPull();
     }
 
     private void ThrowAgain()

@@ -12,6 +12,7 @@ public class PlayerInventoryUI : NetworkBehaviour
 
     private List<GameObject> slotObjects = new List<GameObject>();
     private PlayerInventory playerInventory;
+    private int _slotsCount;
 
     public override void OnStartClient()
     {
@@ -25,10 +26,11 @@ public class PlayerInventoryUI : NetworkBehaviour
             return;
         }
 
+        _slotsCount = playerInventory.SlotsCount;
         CreateSlots();
         playerInventory.OnSlotChanged += UpdateSlot;
       
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < _slotsCount; i++)
         {
             bool isOccupied = !playerInventory.IsSlotEmpty(i);
             UpdateSlot(i, isOccupied);
@@ -37,7 +39,7 @@ public class PlayerInventoryUI : NetworkBehaviour
 
     private void CreateSlots()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < _slotsCount; i++)
         {
             GameObject slot = Instantiate(slotPrefab, slotsParent);
             slotObjects.Add(slot);
