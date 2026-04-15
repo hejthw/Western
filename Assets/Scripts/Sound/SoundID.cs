@@ -6,6 +6,8 @@ public enum SoundID
     LightObjectCaptured,
     PlayerFootstepWalk,
     PlayerFootstepSprint,
-    PlayerHurt
-    
+    PlayerHurt,
+    RevolverImpactDefault,
+    RevolverImpactSemiFragile,
+    RevolverImpactFragile,
 }

@@ -108,7 +108,7 @@ public class PlayerController : NetworkBehaviour
     private void DisableLocalComponents()
     {
         GetComponent<PlayerInput>().enabled  = false;
-        GetComponent<PlayerPhysics>().enabled = false;
+        GetComponent<PlayerRotate>().enabled = false;
         enabled = false;
     }
 

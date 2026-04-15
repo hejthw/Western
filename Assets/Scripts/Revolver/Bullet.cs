@@ -80,13 +80,14 @@ public class Bullet : NetworkBehaviour
     private void OnHit(RaycastHit hit)
     {
         _hit = true;
+        SoundID impactSound = SoundID.RevolverImpactDefault;
 
         var playerHitbox = hit.collider.GetComponentInParent<PlayerHitbox>();
         if (playerHitbox != null)
         {
             int finalDamage = Mathf.RoundToInt(_damage * playerHitbox.GetMultiplier());
             playerHitbox.OwnerHealth.TakeDamage(finalDamage);
-            
+            PlayImpactSoundObservers((int)impactSound);
             NetworkObject.Despawn();
             return;
         }
@@ -98,13 +99,22 @@ public class Bullet : NetworkBehaviour
             npcHitbox.OwnerHealth.TakeDamage(finalDamage);
         }
 
-        var lightObj = hit.collider.GetComponent<LightObject>();
+        var lightObj = hit.collider.GetComponentInParent<LightObject>();
         if (lightObj != null && lightObj.IsServer)
         {
+            impactSound = lightObj.GetRevolverImpactSound();
             lightObj.OnShot(); 
+            PlayImpactSoundObservers((int)impactSound);
             NetworkObject.Despawn(); 
             return;
         }
+        PlayImpactSoundObservers((int)impactSound);
         NetworkObject.Despawn();
+    }
+    
+    [ObserversRpc]
+    private void PlayImpactSoundObservers(int rawSoundId)
+    {
+        NetworkSoundManager.PlayImpactLocal((SoundID)rawSoundId);
     }
 }

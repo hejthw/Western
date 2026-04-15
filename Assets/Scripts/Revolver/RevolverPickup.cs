@@ -38,5 +38,29 @@ public class RevolverPickup : LightObject
         if (data != null && data.Length >= 4)
             _bullets.Value = System.BitConverter.ToInt32(data, 0);
     }
+    
+    [Server]
+    protected override bool CanPickup(NetworkObject player)
+    {
+        if (player == null) return false;
+        PlayerInventory inventory = player.GetComponent<PlayerInventory>();
+        if (inventory == null) return false;
+        return inventory.HasFreeSlot();
+    }
+    
+    [Server]
+    protected override bool OnPickup(NetworkObject player)
+    {
+        if (player == null) return true;
+        
+        PlayerInventory inventory = player.GetComponent<PlayerInventory>();
+        if (inventory == null) return true;
+        
+        bool equipped = inventory.TryStoreRevolverAndEquip(this, player);
+        if (!equipped) return true;
+        
+        NetworkObject.Despawn();
+        return true;
+    }
 
 }
