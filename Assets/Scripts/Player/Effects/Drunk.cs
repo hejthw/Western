@@ -33,9 +33,11 @@ public class Drunk : MonoBehaviour
     {
         float speed = _data.walkSpeedBuff * _stack;
         float recoil = _data.recoilBuff * _stack;
+        float walk = _data.walkDebuff * _stack;
         
         PlayerEffectsEvents.RaiseSpeedBuff(speed);
         PlayerEffectsEvents.RaiseRecoilBuff(recoil);
+        PlayerEffectsEvents.RaiseWalkDebuff(walk);
     }
 
     private void ResetTimer()
@@ -48,17 +50,24 @@ public class Drunk : MonoBehaviour
 
     private IEnumerator BuffTimer()
     {
-        yield return new WaitForSeconds(30f);
+        yield return new WaitForSeconds(10f);
         RemoveBuffs();
     }
 
     private void RemoveBuffs()
     {
+        if (_stack == 3)
+        {
+            PlayerEffectsEvents.RaiseThrowup();
+            PlayerHealthEvents.RaiseKnockoutEvent(false);
+        }
         _stack = 0;
         _timerCoroutine = null;
 
         PlayerEffectsEvents.RaiseSpeedBuff(0f);
         PlayerEffectsEvents.RaiseRecoilBuff(0f);
+        PlayerEffectsEvents.RaiseWalkDebuff(0f);
+        PlayerEffectsEvents.RaiseDrunkExpired();
 
         Debug.Log("[Drunk] Buffs expired");
     }

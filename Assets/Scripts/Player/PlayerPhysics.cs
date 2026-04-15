@@ -106,17 +106,16 @@ public class PlayerPhysics : MonoBehaviour
     private Vector3 GetForward()
     {
         Vector3 a = cinemachineCamera.transform.forward;
-        Debug.Log(_walkDebuff);
-        float x = Random.Range(_walkDebuff, _walkDebuff);
-        float z = Random.Range(_walkDebuff, _walkDebuff);
+        float x = Random.Range(-_walkDebuff, _walkDebuff);
+        float z = Random.Range(-_walkDebuff, _walkDebuff);
         return new Vector3(a.x + x, 0, a.z + z);
     }
     
     private Vector3 GetRight()
     {
         Vector3 a = cinemachineCamera.transform.right;
-        float x = Random.Range(_walkDebuff, _walkDebuff);
-        float z = Random.Range(_walkDebuff, _walkDebuff);
+        float x = Random.Range(-_walkDebuff, _walkDebuff);
+        float z = Random.Range(-_walkDebuff, _walkDebuff);
         return new Vector3(a.x + x, 0, a.z + z);
     }
     

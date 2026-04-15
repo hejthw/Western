@@ -6,6 +6,7 @@ public static class PlayerEffectsEvents
     public static event Action<float> OnSpeedBuff;
     public static event Action<float> OnWalkDebuff;
     public static event Action<float> OnRecoilBuff;
+    public static event Action OnThrowup;
 
     public static void RaiseWhiskeyUse()
     {
@@ -26,5 +27,12 @@ public static class PlayerEffectsEvents
     {
         OnWalkDebuff?.Invoke(value);
     }
+
+    public static void RaiseThrowup()
+    {
+        OnThrowup?.Invoke();
+    }
     
+    public static event Action OnDrunkExpired;
+    public static void RaiseDrunkExpired() => OnDrunkExpired?.Invoke();
 }
