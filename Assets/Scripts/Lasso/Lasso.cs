@@ -253,6 +253,11 @@ public class LassoNetwork : NetworkBehaviour
                 isPullInputHeld = true;
                 StartPlayerPullServer();
                 break;
+            case LassoInteractionType.PullCharacter:
+                Debug.Log("[SERVER] PullCharacter — выполняем рывок");
+                interactable.OnLassoPull(this);
+                interactable.OnLassoDetach(this);
+                break;
         }
     }
 

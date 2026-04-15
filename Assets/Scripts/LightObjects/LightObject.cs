@@ -287,7 +287,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         return null;
     }
 
-    public virtual void DeserializeState(byte[] data)
+    public virtual void DeserializeState(byte[] data) 
     {
     }
     public void SetFragile(bool value)

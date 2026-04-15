@@ -5,8 +5,12 @@ public class HeadBob : MonoBehaviour
 {
     [SerializeField] private PlayerPhysics pp;
     [SerializeField] private CinemachineBasicMultiChannelPerlin perlinNoise;
+    [SerializeField] private CinemachineInputAxisController InputAxis;
     [SerializeField] private CameraData data;
 
+    public NoiseSettings NormalSettings;
+    public NoiseSettings DrunkSettings;
+    
     private float _currentFrequency;
     private float _currentAmplitude;
     private float _targetFrequency;
@@ -20,6 +24,57 @@ public class HeadBob : MonoBehaviour
         perlinNoise.FrequencyGain = 0f;
     }
 
+    private void OnEnable()
+    {
+        PlayerEffectsEvents.OnWhiskeyUse += DrunkProfile;
+        PlayerEffectsEvents.OnDrunkExpired += NormalProfile;
+    }
+    
+    private void OnDisable()
+    {
+        PlayerEffectsEvents.OnWhiskeyUse -= DrunkProfile;
+        PlayerEffectsEvents.OnDrunkExpired -= NormalProfile;
+    }
+
+    private void DrunkProfile()
+    {
+        perlinNoise.NoiseProfile = DrunkSettings;
+        foreach (var c in InputAxis.Controllers)
+        {
+            if (c.Name == "Look X (Pan)")
+            {
+                c.Driver.AccelTime = 0.9f;
+                c.Driver.DecelTime = 0.9f;
+
+            }
+            if (c.Name == "Look Y (Pan)")
+            {
+                c.Driver.AccelTime = 0.9f;
+                c.Driver.DecelTime = 0.9f;
+            }
+        }
+        
+    }
+
+    private void NormalProfile()
+    {
+        perlinNoise.NoiseProfile = NormalSettings;
+        foreach (var c in InputAxis.Controllers)
+        {
+            if (c.Name == "Look X (Pan)")
+            {
+                c.Driver.AccelTime = 0f;
+                c.Driver.DecelTime = 0f;
+
+            }
+            if (c.Name == "Look Y (Pan)")
+            {
+                c.Driver.AccelTime = 0f;
+                c.Driver.DecelTime = 0f;
+            }
+        }
+    }
+    
     void LateUpdate()
     {
         UpdateTargets();
