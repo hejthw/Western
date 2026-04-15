@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 244412688785977491}
   - component: {fileID: 6509024294491109918}
   - component: {fileID: 1700982779127843546}
+  - component: {fileID: 1592299294624308153}
   m_Layer: 0
   m_Name: Security
   m_TagString: Untagged
@@ -627,6 +628,28 @@ MonoBehaviour:
   recoilAngle: 15
   recoilUpDuration: 0.08
   recoilDownDuration: 0.2
+--- !u!114 &1592299294624308153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8855884429801940589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0348b7123ab44686a8f46ec9bedef64d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LassoCharacterInteractable
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 577405625571252360}
+  _networkObjectCache: {fileID: 0}
+  holdDuration: 20
+  maxHoldDistance: 25
+  yankDistance: 4
+  yankSpeed: 20
+  knockdownDuration: 3
+  characterController: {fileID: 0}
+  animator: {fileID: 0}
 --- !u!1001 &5901501430087918975
 PrefabInstance:
   m_ObjectHideFlags: 0

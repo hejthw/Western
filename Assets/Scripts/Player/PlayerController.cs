@@ -23,8 +23,6 @@ public class PlayerController : NetworkBehaviour
     
     private bool _isDied;
     private bool movementDisabled = false;
-
-    public Transform recoilPivot;
     
     private Revolver _currentWeapon;
     public bool IsArmed {get ; private set;}

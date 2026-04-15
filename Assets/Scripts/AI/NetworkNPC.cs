@@ -37,5 +37,24 @@ public class NetworkNPC : NetworkBehaviour
         _navMeshAgent.enabled = false;
     }
     
+    public void EnableAI()
+    {
+        Debug.Log("EnableAI");
+        if (!IsServerInitialized) return;
+        _behaviorAgent.enabled = true;
+        _navMeshAgent.enabled = true;
+    }
+    
+    public void DisableAI()
+    {
+        Debug.Log("DisableAI");
+        if (!IsServerInitialized) return;
+        _behaviorAgent.enabled = false;
+        _navMeshAgent.enabled = false;
+        
+    }
+    
+    
+    
     // private readonly SyncVar<CitizenStatus> _npcState = new SyncVar<CitizenStatus>();
 }
