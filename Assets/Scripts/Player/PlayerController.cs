@@ -25,6 +25,13 @@ public class PlayerController : NetworkBehaviour
     private bool movementDisabled = false;
     
     private Revolver _currentWeapon;
+    public float _recoilBuff;
+
+    private void ChangeRecoilBuff(float buff)
+    {
+        _recoilBuff = buff;
+    }
+    
     public bool IsArmed {get ; private set;}
     
     public void EquipWeapon(Revolver weapon)
@@ -51,13 +58,14 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable()
     {
         input.OnTestEvent += Test;
-
+        PlayerEffectsEvents.OnRecoilBuff += ChangeRecoilBuff;
         PlayerHealthEvents.OnKnockoutEvent += DisableMovement;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
+        PlayerEffectsEvents.OnRecoilBuff -= ChangeRecoilBuff;
         PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
     }
     

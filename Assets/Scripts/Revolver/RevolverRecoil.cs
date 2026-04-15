@@ -14,11 +14,13 @@ public class RevolverRecoil : MonoBehaviour
     
     private int _shotsFired;
     private float _resetTimer;
+    private float _recoilBuff;
 
     public void Init(RevolverData data, PlayerController controller)
     {
         _data = data;
         _panTilt = controller.cinemachineCamera.GetComponent<CinemachinePanTilt>();
+        _recoilBuff = controller._recoilBuff;
     }
 
     public void AddRecoil()
@@ -29,18 +31,24 @@ public class RevolverRecoil : MonoBehaviour
         float upKick;
         float sideKick;
 
+        float recoilUp = _data.recoilUp - (_data.recoilUp * _recoilBuff);
+        float recoilSideMax = _data.recoilSideMax - (_data.recoilSideMax * _recoilBuff);
+
         if (_shotsFired <= 1)
         {
-            upKick = _data.recoilUp;
-            sideKick = Random.Range(-_data.recoilSideMax, _data.recoilSideMax);
+            upKick = recoilUp;
+            sideKick = Random.Range(-recoilSideMax,
+                recoilSideMax);
         }
         else
         {
             float spray = Mathf.Min(_shotsFired, 6);
             float multi = 1f + (spray - 1f) * (_data.sprayMultiplier - 1f) / 5f;
-            upKick = _data.recoilUp * multi;
+            upKick = recoilUp * multi;
             sideKick = Random.Range(-_data.sprayRandomness, _data.sprayRandomness) * multi;
         }
+        
+        Debug.Log(recoilUp + " " + recoilSideMax);
 
         _targetPitch -= upKick;
         _targetYaw += sideKick;

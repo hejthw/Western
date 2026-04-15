@@ -172,6 +172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7635756975032730099}
   - component: {fileID: 6546633076592774692}
+  - component: {fileID: 155946318818008999}
   m_Layer: 6
   m_Name: Hitbox
   m_TagString: Untagged
@@ -216,6 +217,19 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   spawnPoints: []
+--- !u!114 &155946318818008999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 538829022233379768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7b51074d4904c1baf22a13dccf78cbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Drunk
+  _data: {fileID: 11400000, guid: 2f962e8c10e2d244a9d498de028dd583, type: 2}
 --- !u!1 &1056871110255555570
 GameObject:
   m_ObjectHideFlags: 0
@@ -756,8 +770,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.29197806, y: -0.7010673, z: 0.397381, w: 0.51511335}
-  m_LocalPosition: {x: 2.036182, y: 0.94075537, z: 0.3705244}
+  m_LocalRotation: {x: 0.24622485, y: -0.10509833, z: 0.02686866, w: 0.9631229}
+  m_LocalPosition: {x: 0.14462686, y: 1.219491, z: -1.9597244}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -840,7 +854,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: -99.05559
+    Value: -4.124292
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -850,7 +864,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 34.091152
+    Value: 44.25919
     Center: 17.5
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -884,7 +898,7 @@ MonoBehaviour:
   ReferenceFrame: 2
   RecenterTarget: 2
   PanAxis:
-    Value: -107.38639
+    Value: -12.45523
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -894,7 +908,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 59.091118
+    Value: 28.681307
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1107,7 +1121,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.10013558, y: 0.5944137, z: -0.07492934, w: 0.7943746}
+  m_LocalRotation: {x: 0.17987755, y: -0.27860656, z: 0.05320587, w: 0.94190854}
   m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1185,7 +1199,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: 73.61347
+    Value: -32.95532
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1195,7 +1209,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 14.36915
+    Value: 21.623346
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
