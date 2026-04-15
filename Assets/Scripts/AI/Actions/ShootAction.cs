@@ -68,26 +68,28 @@ public partial class ShootAction : Action
         SoundBus.Play(SoundID.Shoot);
         _recoilAI.TriggerRecoil();
         
-        if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, _data.HitMask, QueryTriggerInteraction.Collide))
-        {
-
-            var playerHitbox = hit.collider.GetComponentInParent<PlayerHitbox>();
-            if (playerHitbox != null)
-            {
-                int finalDamage = Mathf.RoundToInt(_data.Damage * playerHitbox.GetMultiplier());
-                playerHitbox.OwnerHealth.TakeDamage(finalDamage);
-            }
-
-#if UNITY_EDITOR
-            Debug.DrawLine(origin, hit.point, Color.red, 0.5f);
-#endif
-        }
-#if UNITY_EDITOR
-        else
-        {
-            Debug.DrawRay(origin, direction * 50f, Color.yellow, 0.5f);
-        }
-#endif
+        _enforcer.ShootServerRpc(origin, direction);
+        
+//         if (Physics.Raycast(origin, direction, out RaycastHit hit, Mathf.Infinity, _data.HitMask, QueryTriggerInteraction.Collide))
+//         {
+//
+//             var playerHitbox = hit.collider.GetComponentInParent<PlayerHitbox>();
+//             if (playerHitbox != null)
+//             {
+//                 int finalDamage = Mathf.RoundToInt(_data.Damage * playerHitbox.GetMultiplier());
+//                 playerHitbox.OwnerHealth.TakeDamage(finalDamage);
+//             }
+//
+// #if UNITY_EDITOR
+//             Debug.DrawLine(origin, hit.point, Color.red, 0.5f);
+// #endif
+//         }
+// #if UNITY_EDITOR
+//         else
+//         {
+//             Debug.DrawRay(origin, direction * 50f, Color.yellow, 0.5f);
+//         }
+// #endif
     }
 
     private Vector3 ApplySpread(Vector3 direction, float distance)

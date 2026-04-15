@@ -226,8 +226,7 @@ public class LassoNetwork : NetworkBehaviour
             case LassoInteractionType.PullCharacter:
                 Debug.Log("[SERVER] PullCharacter — выполняем рывок");
                 interactable.OnLassoPull(this);
-                // Лассо НЕ возвращается сразу — остаётся прикреплённым
-                // Отцепление произойдёт автоматически через HoldRoutine или по таймеру
+                interactable.OnLassoDetach(this);
                 break;
         }
     }

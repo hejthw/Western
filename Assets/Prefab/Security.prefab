@@ -429,7 +429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
+  WasActiveDuringEdit: 1
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
@@ -524,7 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0e728e7ba064296a39aab5b1958b662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sensor
-  detectionRadius: 5
+  detectionRadius: 2
   targetTags:
   - Suspicion
   updateInterval: 0.5
@@ -613,6 +613,10 @@ MonoBehaviour:
   AttackData: {fileID: 11400000, guid: 974017e5273cb4a4087a6d53e0f8f6fd, type: 2}
   RevolverMuzzle: {fileID: 3044029601952952943}
   RevolverRecoilAI: {fileID: 1700982779127843546}
+  bulletPrefab: {fileID: 277968445057594497, guid: b8ce27727a7d0bc009a4cac49f7d10ce, type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!114 &1700982779127843546
 MonoBehaviour:
   m_ObjectHideFlags: 0
