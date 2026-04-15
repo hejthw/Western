@@ -24,9 +24,14 @@ public class PlayerController : NetworkBehaviour
     private bool _isDied;
     private bool movementDisabled = false;
     
-    private readonly SyncVar<string> username = new  SyncVar<string>("Username");
-    
     private Revolver _currentWeapon;
+    public float _recoilBuff;
+
+    private void ChangeRecoilBuff(float buff)
+    {
+        _recoilBuff = buff;
+    }
+    
     public bool IsArmed {get ; private set;}
     
     public void EquipWeapon(Revolver weapon)
@@ -53,13 +58,14 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable()
     {
         input.OnTestEvent += Test;
-
+        PlayerEffectsEvents.OnRecoilBuff += ChangeRecoilBuff;
         PlayerHealthEvents.OnKnockoutEvent += DisableMovement;
     }
     
     private void OnDisable()
     {
         input.OnTestEvent -= Test;
+        PlayerEffectsEvents.OnRecoilBuff -= ChangeRecoilBuff;
         PlayerHealthEvents.OnKnockoutEvent -= DisableMovement;
     }
     
@@ -103,8 +109,7 @@ public class PlayerController : NetworkBehaviour
     {
         GetComponent<PlayerInput>().enabled  = false;
         GetComponent<PlayerPhysics>().enabled = false;
-        GetComponent<PlayerRotate>().enabled = false;
-
+        enabled = false;
     }
 
     private void Test()

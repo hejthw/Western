@@ -11,7 +11,6 @@ public class RevolverRecoilAI : NetworkBehaviour
     [SerializeField] private float recoilUpDuration = 0.08f; // Время подъёма
     [SerializeField] private float recoilDownDuration = 0.2f;// Время возврата
 
-    // SyncVar — оповещает всех при изменении
     private readonly SyncVar<bool> _recoilActive = new SyncVar<bool>();
 
     private Quaternion _originalLocalRotation;
@@ -26,12 +25,11 @@ public class RevolverRecoilAI : NetworkBehaviour
     
     public void TriggerRecoil()
     {
-        if (!IsServerInitialized) return; // Только сервер вызывает
+        if (!IsServerInitialized) return;
 
         _recoilActive.Value = !_recoilActive.Value;
-        RpcOnShoot(); // Сразу оповещаем всех клиентов
+        RpcOnShoot();
     }
-    
     
     [ObserversRpc(ExcludeOwner = false)]
     private void RpcOnShoot()

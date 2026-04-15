@@ -15,24 +15,32 @@ public class PlayerPhysics : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerInput input;
     [SerializeField] private Collider col;
+   
+    private float _currentSpeed;
+    private float _speedBuff;
+    private float _walkDebuff;
+    private Vector3 _momentum;
     
     private Player _player;
-    
     private bool _isJumping;
     
     public bool IsGrounded { get; private set; }
     public PlayerState CurrentState { get; private set; }
 
-    private void Awake() => _player = new Player(data);
+    private void Awake() => _player = new Player();
 
     private void OnEnable()
     {
         input.JumpPressedEvent += Jump;
+        PlayerEffectsEvents.OnSpeedBuff += ChangeSpeedBuff;
+        PlayerEffectsEvents.OnWalkDebuff += ChangeWalkDebuff;
     }
-
+    
     private void OnDisable()
     {
         input.JumpPressedEvent -= Jump;
+        PlayerEffectsEvents.OnSpeedBuff -= ChangeSpeedBuff;
+        PlayerEffectsEvents.OnWalkDebuff -= ChangeWalkDebuff;
     }
 
     void Update()
@@ -43,7 +51,7 @@ public class PlayerPhysics : MonoBehaviour
             data.whatIsGround);
 
         bool canSprint = input.SprintHeld;
-        _player.ChangeMaxSpeed(canSprint, Time.deltaTime);
+        ChangeMaxSpeed(canSprint, Time.deltaTime);
 
         CurrentState = _player.ResolvePlayerState(
             input.MoveInput != Vector2.zero,
@@ -64,7 +72,7 @@ public class PlayerPhysics : MonoBehaviour
             _isJumping = false;
 
         Vector3 desiredDir = GetMoveDirection();
-        Vector3 momentum   = _player.UpdateMomentum(desiredDir, Time.fixedDeltaTime);
+        Vector3 momentum   = UpdateMomentum(desiredDir, Time.fixedDeltaTime);
 
         float yVelocity = (IsGrounded && !_isJumping)
             ? 0f
@@ -88,13 +96,62 @@ public class PlayerPhysics : MonoBehaviour
     {
         if (input.MoveInput == Vector2.zero) return Vector3.zero;
 
-        Vector3 forward = cinemachineCamera.transform.forward;
-        Vector3 right = cinemachineCamera.transform.right;
-        forward.y = 0;
-        right.y = 0;
-
+        Vector3 forward = GetForward();
+        Vector3 right = GetRight();
+        
         return (forward.normalized * input.MoveInput.y
-              + right.normalized   * input.MoveInput.x).normalized;
+              + right.normalized * input.MoveInput.x).normalized;
+    }
+
+    private Vector3 GetForward()
+    {
+        Vector3 a = cinemachineCamera.transform.forward;
+        float x = Random.Range(-_walkDebuff, _walkDebuff);
+        float z = Random.Range(-_walkDebuff, _walkDebuff);
+        return new Vector3(a.x + x, 0, a.z + z);
+    }
+    
+    private Vector3 GetRight()
+    {
+        Vector3 a = cinemachineCamera.transform.right;
+        float x = Random.Range(-_walkDebuff, _walkDebuff);
+        float z = Random.Range(-_walkDebuff, _walkDebuff);
+        return new Vector3(a.x + x, 0, a.z + z);
+    }
+    
+    private void ChangeSpeedBuff(float buff) => _speedBuff = buff;
+    private void ChangeWalkDebuff(float buff) => _walkDebuff = buff;
+    
+    private void ChangeMaxSpeed(bool sprintHeld, float deltaTime)
+    {
+        var sprintSpeed = data.sprintSpeed;
+        var walkSpeed = data.walkSpeed;
+        
+        if (_speedBuff != 0)
+        {
+            sprintSpeed += (sprintSpeed * _speedBuff);
+            walkSpeed += (walkSpeed * _speedBuff);
+        }
+        
+        float targetSpeed = sprintHeld ? sprintSpeed : walkSpeed;
+        float acceleration = sprintHeld ? data.sprintAcceleration : data.walkAcceleration;
+        
+        _currentSpeed = Mathf.MoveTowards(_currentSpeed, targetSpeed, acceleration * deltaTime);
+    }
+    
+    private Vector3 UpdateMomentum(Vector3 desiredDirection, float deltaTime)
+    {
+        if (desiredDirection == Vector3.zero)
+        {
+            _momentum = Vector3.MoveTowards(_momentum, Vector3.zero, data.brakingForce * deltaTime);
+        }
+        else
+        {
+            Vector3 targetMomentum = desiredDirection * _currentSpeed;
+            _momentum = Vector3.MoveTowards(_momentum, targetMomentum, data.turnSpeed * deltaTime);
+        }
+
+        return _momentum;
     }
 
     // public void AddExternalForce(Vector3 force, ForceMode mode = ForceMode.Impulse)

@@ -223,6 +223,11 @@ public class LassoNetwork : NetworkBehaviour
                     Debug.LogError("[SERVER] ownerNetObj is null!");
                 }
                 break;
+            case LassoInteractionType.PullCharacter:
+                Debug.Log("[SERVER] PullCharacter — выполняем рывок");
+                interactable.OnLassoPull(this);
+                interactable.OnLassoDetach(this);
+                break;
         }
     }
 
