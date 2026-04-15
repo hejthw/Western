@@ -10,15 +10,13 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
     public float maxHoldDistance = 25f;
 
     [Header("Yank Settings")]
-    public float yankDistance = 4f;
-    public float yankSpeed = 20f;
+    public float yankForce = 10f;
 
     [Header("Knockdown Settings")]
     public float knockdownDuration = 3f;
 
     [Header("References")]
     public Rigidbody rb;
-    public Animator animator;
 
     private LassoNetwork attachedLasso;
     private Coroutine holdCoroutine;
@@ -30,10 +28,12 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
     {
         if (rb == null)
             rb = GetComponent<Rigidbody>();
-        if (animator == null)
-            animator = GetComponentInChildren<Animator>();
         
     }
+
+    // ─────────────────────────────────────────────
+    //  ILassoInteractable
+    // ─────────────────────────────────────────────
 
     public LassoInteractionType GetInteractionType() => LassoInteractionType.PullCharacter;
 
@@ -42,6 +42,15 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
         if (!IsServer) return;
 
         attachedLasso = lasso;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        // Останавливаем AI сразу при захвате
+        RpcSetNPCAI(false);
 
         if (holdCoroutine != null)
             StopCoroutine(holdCoroutine);
@@ -54,8 +63,24 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
         if (!IsServer) return;
         if (isKnockedDown) return;
 
-        Vector3 yankDirection = (lasso.Owner.transform.position - transform.position).normalized;
-        StartCoroutine(YankAndKnockdownRoutine(yankDirection));
+        if (rb == null) return;
+
+        var playerNetObj = lasso.OwnerNetObj;
+        if (playerNetObj == null) return;
+
+        DropActiveItem();
+
+        // Импульс в сторону игрока — аналогично OnLassoPull в LightObject
+        Vector3 dir = (playerNetObj.transform.position - transform.position).normalized;
+        rb.linearVelocity = Vector3.zero;
+        rb.isKinematic = false;
+        rb.useGravity = true;
+        rb.AddForce(dir * yankForce, ForceMode.Impulse);
+
+        if (knockdownCoroutine != null)
+            StopCoroutine(knockdownCoroutine);
+
+        knockdownCoroutine = StartCoroutine(KnockdownRoutine());
     }
 
     public void OnLassoDetach(LassoNetwork lasso)
@@ -68,8 +93,16 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
             holdCoroutine = null;
         }
 
+        // Восстанавливаем AI только если не в нокдауне
+        if (!isKnockedDown)
+            RpcSetNPCAI(true);
+
         attachedLasso = null;
     }
+
+    // ─────────────────────────────────────────────
+    //  Server coroutines
+    // ─────────────────────────────────────────────
 
     private IEnumerator HoldRoutine(LassoNetwork lasso)
     {
@@ -97,37 +130,6 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
         lasso.ServerDetachAndReturn();
     }
 
-    private IEnumerator YankAndKnockdownRoutine(Vector3 yankDirection)
-    {
-        DropActiveItem();
-
-        if (rb != null)
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.AddForce(yankDirection * yankSpeed, ForceMode.VelocityChange);
-        }
-
-        Vector3 startPos = transform.position;
-
-        while (Vector3.Distance(startPos, transform.position) < yankDistance)
-        {
-            yield return null;
-        }
-
-        if (rb != null)
-            rb.linearVelocity = Vector3.zero;
-
-        StartKnockdown();
-    }
-
-    private void StartKnockdown()
-    {
-        if (knockdownCoroutine != null)
-            StopCoroutine(knockdownCoroutine);
-
-        knockdownCoroutine = StartCoroutine(KnockdownRoutine());
-    }
-
     private IEnumerator KnockdownRoutine()
     {
         isKnockedDown = true;
@@ -140,16 +142,21 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
         knockdownCoroutine = null;
     }
 
+    // ─────────────────────────────────────────────
+    //  Helpers
+    // ─────────────────────────────────────────────
+
     private void DropActiveItem()
     {
     }
 
+    // ─────────────────────────────────────────────
+    //  Observer RPCs
+    // ─────────────────────────────────────────────
+
     [ObserversRpc]
     private void RpcSetKnockdown(bool knocked)
     {
-        if (animator != null)
-            animator.SetBool("IsKnockedDown", knocked);
-
         var pc = GetComponent<PlayerController>();
         if (pc != null)
         {
@@ -158,18 +165,26 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
             pc.SetLassoState(knocked);
         }
 
-        var npc = GetComponent<NetworkNPC>();
-        if (npc != null)
+        // NPC: при выходе из нокдауна восстанавливаем AI
+        // (при входе — уже отключён с OnLassoAttach)
+        if (!knocked)
         {
-            if (knocked) npc.DisableAI();
-            else npc.EnableAI();
+            var npc = GetComponent<NetworkNPC>();
+            if (npc != null)
+            {
+                npc.EnableAI();
+            }
+                
         }
+    }
 
-        // Rigidbody: включаем/выключаем гравитацию и кинематику при нокдауне
-        if (rb != null)
-        {
-            rb.isKinematic = false;
-            rb.useGravity = true;
-        }
+    [ObserversRpc]
+    private void RpcSetNPCAI(bool enabled)
+    {
+        var npc = GetComponent<NetworkNPC>();
+        if (npc == null) return;
+
+        if (enabled) npc.EnableAI();
+        else npc.DisableAI();
     }
 }

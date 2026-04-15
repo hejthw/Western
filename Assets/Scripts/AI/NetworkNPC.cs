@@ -7,7 +7,7 @@ public class NetworkNPC : NetworkBehaviour
 {
     [SerializeField] private BehaviorGraphAgent _behaviorAgent;
     [SerializeField] private NavMeshAgent _navMeshAgent;
-    
+    [SerializeField] private Rigidbody _rigidbody;
     
     // server-authority
     public override void OnStartServer()
@@ -43,6 +43,7 @@ public class NetworkNPC : NetworkBehaviour
         if (!IsServerInitialized) return;
         _behaviorAgent.enabled = true;
         _navMeshAgent.enabled = true;
+        _rigidbody.isKinematic = true;
     }
     
     public void DisableAI()
@@ -51,7 +52,7 @@ public class NetworkNPC : NetworkBehaviour
         if (!IsServerInitialized) return;
         _behaviorAgent.enabled = false;
         _navMeshAgent.enabled = false;
-        
+        _rigidbody.isKinematic = false;
     }
     
     
