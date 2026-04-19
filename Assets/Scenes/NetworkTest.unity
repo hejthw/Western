@@ -2101,6 +2101,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 242774313}
   _networkObjectCache: {fileID: 0}
+  rb: {fileID: 0}
+  pushForceMultiplier: 3
+  minPushForce: 1
 --- !u!114 &242774320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3857,6 +3860,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 539550978}
   _networkObjectCache: {fileID: 0}
+  rb: {fileID: 0}
+  pushForceMultiplier: 3
+  minPushForce: 1
 --- !u!65 &539550977
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8948,6 +8954,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1193321823}
   _networkObjectCache: {fileID: 0}
+  rb: {fileID: 0}
+  pushForceMultiplier: 3
+  minPushForce: 1
 --- !u!65 &1193321822
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10517,6 +10526,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1358772175}
   _networkObjectCache: {fileID: 0}
+  rb: {fileID: 0}
+  pushForceMultiplier: 3
+  minPushForce: 1
 --- !u!114 &1358772174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11069,6 +11081,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1437702652}
   _networkObjectCache: {fileID: 0}
+  rb: {fileID: 0}
+  pushForceMultiplier: 3
+  minPushForce: 1
 --- !u!114 &1437702651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14314,6 +14329,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1882830707}
   _networkObjectCache: {fileID: 0}
+  rb: {fileID: 0}
+  pushForceMultiplier: 3
+  minPushForce: 1
 --- !u!114 &1882830706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16606,6 +16624,9 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 2073009001}
   _networkObjectCache: {fileID: 0}
+  rb: {fileID: 0}
+  pushForceMultiplier: 3
+  minPushForce: 1
 --- !u!114 &2073009008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17525,3 +17546,17 @@ SceneRoots:
   - {fileID: 1193321818}
   - {fileID: 539550973}
   - {fileID: 1335484193735383435}
+  - {fileID: 342843397}
+  - {fileID: 1926456548}
+  - {fileID: 88018219}
+  - {fileID: 1656909955}
+  - {fileID: 1525733373}
+  - {fileID: 1830049440}
+  - {fileID: 202671076}
+  - {fileID: 369398371}
+  - {fileID: 35452256}
+  - {fileID: 34890159}
+  - {fileID: 1243085795}
+  - {fileID: 138807703}
+  - {fileID: 2143251750}
+  - {fileID: 1000395388}

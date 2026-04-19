@@ -48,7 +48,7 @@
                     "id": "852140f2-7766-474d-8707-702459ba45f3",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -574,17 +574,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "TestAction",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "f29b280b-1d1e-4737-9696-b49328ae0819",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Pickup",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
