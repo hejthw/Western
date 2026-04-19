@@ -1,5 +1,6 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using FishNet.Component.Transforming;
 using FishNet.Object;
 
 /// <summary>
@@ -15,6 +16,9 @@ public class PlayerPhysics : NetworkBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerInput input;
     [SerializeField] private Collider col;
+
+    [Tooltip("Если задан (обычно на том же объекте), удалённые копии двигаются только через NetworkTransform — без второго слоя lerp из BroadcastStateObserversRpc.")]
+    [SerializeField] private NetworkTransform networkTransform;
    
     private float _currentSpeed;
     private float _speedBuff;
@@ -38,7 +42,12 @@ public class PlayerPhysics : NetworkBehaviour
     [SerializeField] private float remoteRotationLerp = 20f;
     [SerializeField] private float snapDistance = 3f;
 
-    private void Awake() => _player = new Player();
+    private void Awake()
+    {
+        _player = new Player();
+        if (networkTransform == null)
+            networkTransform = GetComponent<NetworkTransform>();
+    }
 
     private void OnEnable()
     {
@@ -58,6 +67,10 @@ public class PlayerPhysics : NetworkBehaviour
     {
         if (!IsOwner)
         {
+            // Два независимых предиктора позиции (NT + этот lerp) дают дёрганье и «скольжение» при остановке.
+            if (networkTransform != null && networkTransform.enabled)
+                return;
+
             ApplyRemoteSmoothing();
             return;
         }
@@ -93,6 +106,61 @@ public class PlayerPhysics : NetworkBehaviour
         }
     }
     
+    /// <summary>
+    /// После Teleport/жёсткого сброса NT: гасим RB velocity и устаревшие цели BroadcastState на наблюдателях
+    /// (во время верёвки владелец не шлёт SendState — остаётся старая скорость → у хоста «скольжение» удалённого игрока).
+    /// </summary>
+    public void ClearStaleMotionAfterNetworkSnap()
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        if (!IsOwner)
+        {
+            _hasRemoteState = false;
+            _remoteVelocity = Vector3.zero;
+            _remoteTargetPos = transform.position;
+            _remoteTargetRot = transform.rotation;
+        }
+    }
+
+    /// <summary>Сброс внутреннего импульса движения у владельца после выхода с верёвки/лассо.</summary>
+    public void ResetOwnerMovementPredictionAfterForcedMove()
+    {
+        if (!IsOwner) return;
+        _momentum = Vector3.zero;
+        _currentSpeed = 0f;
+        _isJumping = false;
+    }
+
+    /// <summary>Игнор столкновений с маской whatIsGround (скольжение по полу во время лазания).</summary>
+    [Server]
+    public void ServerSetGroundCollisionIgnoreForRope(bool ignore)
+    {
+        ObserversSetGroundCollisionIgnoreForRope(ignore);
+    }
+
+    [ObserversRpc(RunLocally = true)]
+    private void ObserversSetGroundCollisionIgnoreForRope(bool ignore)
+    {
+        ApplyGroundLayerCollisionIgnore(ignore);
+    }
+
+    private void ApplyGroundLayerCollisionIgnore(bool ignore)
+    {
+        if (data == null) return;
+        int playerLayer = gameObject.layer;
+        int mask = data.whatIsGround.value;
+        for (int i = 0; i < 32; i++)
+        {
+            if ((mask & (1 << i)) != 0)
+                Physics.IgnoreLayerCollision(playerLayer, i, ignore);
+        }
+    }
+
     private void ApplyRemoteSmoothing()
     {
         if (!_hasRemoteState) return;

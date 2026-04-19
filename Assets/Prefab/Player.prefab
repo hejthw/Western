@@ -2477,7 +2477,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &7722940080758317849
@@ -2699,9 +2699,9 @@ MonoBehaviour:
     Scale: 0
   _useScaledTime: 1
   _interpolation: 2
-  _extrapolation: 2
-  _enableTeleport: 0
-  _teleportThreshold: 1
+  _extrapolation: 1
+  _enableTeleport: 1
+  _teleportThreshold: 0.15
   _clientAuthoritative: 1
   _sendToOwner: 1
   _interval: 1
@@ -2768,12 +2768,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d00b694abc464697b09864a47987d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPhysicsBridge
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
   data: {fileID: 11400000, guid: d862853dda2c3566fb738a368d7bae17, type: 2}
   cinemachineCamera: {fileID: 4685515460504658230}
   groundCheck: {fileID: 7726969895422599793}
   rb: {fileID: 3110369444958837593}
   input: {fileID: 2479261188838793012}
   col: {fileID: 2364090612570148680}
+  networkTransform: {fileID: 0}
+  stateSendInterval: 0.05
+  remotePositionLerp: 18
+  remoteRotationLerp: 20
+  snapDistance: 3
 --- !u!114 &657205347255209784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2791,8 +2799,10 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 4737990210302664583}
   throwKey: 20
   pullKey: 21
+  jumpOffKey: 1
   launchPoint: {fileID: 7610812819007157487}
   cameraTransform: {fileID: 5294464766596081686}
+  pullInputSyncInterval: 0.05
 --- !u!114 &6215445965447647855
 MonoBehaviour:
   m_ObjectHideFlags: 0

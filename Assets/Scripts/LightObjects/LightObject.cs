@@ -100,6 +100,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         state.Value = ItemState.Held;
         ApplyHeldPhysics();
         GiveOwnership(player.Owner);
+        SetVisibleForObservers(false);
         bool handled = OnPickup(player);
         Debug.Log($"[LightObject] ServerPickup: OnPickup returned {handled}");
         if (handled) return;
@@ -142,6 +143,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     public void ServerThrow(Vector3 pos, Vector3 velocity)
     {
         if (state.Value != ItemState.Held) return;
+        SetVisibleForObservers(true);
         NetworkConnection previousHolder = holder.Value != null ? holder.Value.Owner : null;
         
         HideVisualForObservers();
@@ -196,12 +198,14 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
             {
 
                 PlayImpactSound(SoundID.RevolverImpactFragile);
+                HideVisualForObservers();
                 Despawn();
             }
             else
             {
                 PlayImpactSound(SoundID.RevolverImpactDefault);
                 HideVisualForObservers();
+                SetVisibleForObservers(true);
                 state.Value = ItemState.World;
                 var nt = GetComponent<NetworkTransform>();
                 if (nt != null) nt.enabled = true;
@@ -216,12 +220,14 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         {
  
             PlayImpactSound(SoundID.RevolverImpactFragile);
+            HideVisualForObservers();
             Despawn();
             return;
         }
 
         PlayImpactSound(SoundID.RevolverImpactDefault);
         HideVisualForObservers();
+        SetVisibleForObservers(true);
         state.Value = ItemState.World;
         var ntWorld = GetComponent<NetworkTransform>();
         if (ntWorld != null) ntWorld.enabled = true;
@@ -232,6 +238,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     {
         NetworkConnection previousHolder = holder.Value != null ? holder.Value.Owner : null;
         HideVisualForObservers();
+        SetVisibleForObservers(true);
         holder.Value = null;
         state.Value = ItemState.World;
         RemoveOwnership();
@@ -325,6 +332,8 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         state.Value = ItemState.Held;
         ApplyHeldPhysics();
         GiveOwnership(player.Owner);
+        SetVisibleForObservers(false);
+        ShowVisualForObservers(player);
         bool handled = OnPickup(player);
         if (handled) return;
         TargetConfirmPickup(player.Owner, player);
@@ -365,6 +374,15 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
     private void PlayImpactSound(SoundID soundId)
     {
         SoundBus.Play(soundId);
+    }
+    [ObserversRpc]
+    public void SetVisibleForObservers(bool visible)
+    {
+        if (IsOwner) return; 
+        var renderers = GetComponentsInChildren<Renderer>();
+        foreach (var r in renderers) r.enabled = visible;
+        var colliders = GetComponentsInChildren<Collider>();
+        foreach (var c in colliders) c.enabled = visible;
     }
 
 }

@@ -37,8 +37,6 @@ public class LassoNetwork : NetworkBehaviour
     private bool isPullInputHeld;
     private float currentPullSpeed;
     private bool _isFinishingPull;
-    private Vector3 _lastOwnerSyncPos;
-    private bool _hasOwnerSyncPos;
 
     public bool CanThrow => !isFlying && !isReturning && attachedNetObj.Value == null;
     public GameObject Owner => ownerNetObj != null ? ownerNetObj.gameObject : null;
@@ -110,7 +108,6 @@ public class LassoNetwork : NetworkBehaviour
         isPullInputHeld = false;
         currentPullSpeed = 0f;
         _isFinishingPull = false;
-        _hasOwnerSyncPos = false;
         attachedNetObj.Value = null;
         currentInteractable = null;
 
@@ -187,7 +184,15 @@ public class LassoNetwork : NetworkBehaviour
                     return;
                 }
 
-                climbTargetPoint = unMovable.GetClimbTarget(hitPoint);
+                if (!unMovable.TryActivateRopeFromLassoHit())
+                {
+                    StartReturn();
+                    return;
+                }
+
+                SoundBus.Play(SoundID.LightObjectCaptured);
+                StartReturn();
+                return;
             }
             else
             {
@@ -274,6 +279,7 @@ public class LassoNetwork : NetworkBehaviour
         if (pullingPlayerRb == null) return;
 
         isPlayerPulling = true;
+        playerController.ServerSetForcedMoveNetworkMode(true);
         ApplyPulledStateLocal(ownerNetObj, true);
         RpcSetPulledState(ownerNetObj.ObjectId, true);
         currentInteractable?.OnLassoPull(this);
@@ -313,7 +319,6 @@ public class LassoNetwork : NetworkBehaviour
                 }
 
                 pullingPlayerRb.MovePosition(safeEndPos);
-                TargetSyncPulledOwnerPosition(playerNetObj.Owner, safeEndPos);
                 if (!_isFinishingPull)
                     StartCoroutine(FinishPullAfterSettle(safeEndPos, playerNetObj.Owner));
                 yield break;
@@ -331,34 +336,10 @@ public class LassoNetwork : NetworkBehaviour
             Vector3 nextPos = currentPos + step;
 
             pullingPlayerRb.MovePosition(nextPos);
-            TargetSyncPulledOwnerPosition(playerNetObj.Owner, nextPos);
             yield return new WaitForFixedUpdate();
         }
     }
 
-    [TargetRpc]
-    private void TargetSyncPulledOwnerPosition(NetworkConnection connection, Vector3 position)
-    {
-        if (_hasOwnerSyncPos && (position - _lastOwnerSyncPos).sqrMagnitude < 0.0001f)
-            return;
-
-        _lastOwnerSyncPos = position;
-        _hasOwnerSyncPos = true;
-        PlayerController pc = GetPlayerController();
-        if (pc == null) return;
-        Rigidbody rb = pc.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.position = position;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
-        else
-        {
-            pc.transform.position = position;
-        }
-    }
-    
     [Server]
     private IEnumerator FinishPullAfterSettle(Vector3 settlePosition, NetworkConnection ownerConnection)
     {
@@ -369,7 +350,6 @@ public class LassoNetwork : NetworkBehaviour
             if (pullingPlayerRb == null)
                 yield break;
             pullingPlayerRb.MovePosition(settlePosition);
-            TargetSyncPulledOwnerPosition(ownerConnection, settlePosition);
             t += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
@@ -416,9 +396,15 @@ public class LassoNetwork : NetworkBehaviour
         Rigidbody rb = pc.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.isKinematic = active;
             if (active)
             {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.isKinematic = true;
+            }
+            else
+            {
+                rb.isKinematic = false;
                 rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
             }
@@ -432,6 +418,8 @@ public class LassoNetwork : NetworkBehaviour
         else
         {
             pc.EnableMovement();
+            PlayerPhysics ph = pc.GetComponent<PlayerPhysics>();
+            ph?.ResetOwnerMovementPredictionAfterForcedMove();
             pc.SetLassoState(false);
         }
     }
@@ -469,7 +457,12 @@ public class LassoNetwork : NetworkBehaviour
         }
 
         if (isPlayerPulling && ownerNetObj != null)
+        {
+            PlayerController ownerPc = ownerNetObj.GetComponent<PlayerController>();
+            ownerPc?.ServerSetForcedMoveNetworkMode(false);
+            ownerPc?.ServerBroadcastPostForcedMoveResync();
             TargetSetPlayerPullState(ownerNetObj.Owner, false);
+        }
 
         if (ownerNetObj != null)
         {
@@ -524,19 +517,19 @@ public class LassoNetwork : NetworkBehaviour
         if (playerObj == null) return;
 
         Rigidbody rb = playerObj.GetComponent<Rigidbody>();
-        if (rb != null)
+        if (rb == null) return;
+
+        if (active)
         {
-            rb.isKinematic = active;
-            if (active)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-            else
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+        else
+        {
+            rb.isKinematic = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
     }
     

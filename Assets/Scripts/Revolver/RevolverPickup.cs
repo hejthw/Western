@@ -52,14 +52,15 @@ public class RevolverPickup : LightObject
     protected override bool OnPickup(NetworkObject player)
     {
         if (player == null) return true;
-        
+
         PlayerInventory inventory = player.GetComponent<PlayerInventory>();
         if (inventory == null) return true;
-        
-        bool equipped = inventory.TryStoreRevolverAndEquip(this, player);
-        if (!equipped) return true;
-        
+
+        int slot = inventory.TryStoreRevolverPickupInSlot(this, player);
+        if (slot < 0) return true;
+
         NetworkObject.Despawn();
+        inventory.EquipFromSlot(slot, player);
         return true;
     }
 

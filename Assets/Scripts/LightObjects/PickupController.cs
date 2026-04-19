@@ -66,12 +66,24 @@ public class PickupController : NetworkBehaviour
         if (!IsOwner) return;
         if (TryInteractDoor())
             return;
+        if (TryInteractRope())
+            return;
         if (TryCashIn())
             return;
-        if (heldObject == null)
-            TryPickup();
-        else
-            Throw();
+        if (heldObject != null)
+        {
+            Revolver revolver = heldObject.GetComponent<Revolver>();
+            if (revolver != null)
+            {
+                Debug.Log("Cannot pick up while holding a revolver");
+                return;
+            }
+            else
+            {
+                Throw();
+            }
+        }
+        TryPickup();
     }
     private bool TryInteractDoor()
     {
@@ -85,6 +97,29 @@ public class PickupController : NetworkBehaviour
 
         door.ServerToggleDoor();
         return true;
+    }
+
+    private bool TryInteractRope()
+    {
+        Ray ray = new Ray(cam.position, cam.forward);
+        if (!Physics.Raycast(ray, out var hit, pickupDistance))
+            return false;
+
+        var rope = hit.collider.GetComponentInParent<ClimbRopeNetwork>();
+        if (rope == null || !rope.IsRopeActive)
+            return false;
+
+        ServerTryBeginRopeClimb(rope.NetworkObject);
+        return true;
+    }
+
+    [ServerRpc]
+    private void ServerTryBeginRopeClimb(NetworkObject ropeNetObj)
+    {
+        if (ropeNetObj == null) return;
+        ClimbRopeNetwork rope = ropeNetObj.GetComponent<ClimbRopeNetwork>();
+        if (rope == null) return;
+        rope.ServerTryBeginClimb(GetComponent<NetworkObject>());
     }
     private bool TryCashIn()
     {
@@ -144,17 +179,19 @@ public class PickupController : NetworkBehaviour
     private void ServerTryPickupRevolver(NetworkObject revolverNetObj)
     {
         if (revolverNetObj == null) return;
-        
+
         RevolverPickup revolverPickup = revolverNetObj.GetComponent<RevolverPickup>();
         if (revolverPickup == null) return;
-        
+
         PlayerInventory inventory = GetComponent<PlayerInventory>();
         if (inventory == null) return;
-        
-        bool equipped = inventory.TryStoreRevolverAndEquip(revolverPickup, GetComponent<NetworkObject>());
-        if (!equipped) return;
-        
+
+        NetworkObject playerNetObj = GetComponent<NetworkObject>();
+        int slot = inventory.TryStoreRevolverPickupInSlot(revolverPickup, playerNetObj);
+        if (slot < 0) return;
+
         revolverNetObj.Despawn();
+        inventory.EquipFromSlot(slot, playerNetObj);
     }
 
     public void AttachLocal(GameObject obj)
@@ -177,7 +214,7 @@ public class PickupController : NetworkBehaviour
         Debug.Log("Attached " + obj.name + " locally");
     }
 
-    private void Throw()
+    public void Throw()
     {
         if (heldObject == null) return;
         Vector3 pos = heldObject.transform.position;
@@ -200,7 +237,17 @@ public class PickupController : NetworkBehaviour
     {
         if (!IsOwner) return;
         if (heldObject != null)
-            Throw();
+        {
+            Revolver revolver = heldObject.GetComponent<Revolver>();
+            if (revolver != null)
+            {
+                revolver.Drop();
+            }
+            else
+            {
+                Throw();
+            }
+        }
     }
 
     private void HandleSlotKey(int slot)
@@ -210,14 +257,33 @@ public class PickupController : NetworkBehaviour
 
         if (heldObject != null)
         {
-            ServerStoreItem(slot, heldObject.GetComponent<NetworkObject>());
+            // Для любого предмета (обычного или револьвера) вызываем обмен/сохранение
+            ServerProcessItemSlot(slot, heldObject.GetComponent<NetworkObject>());
         }
         else
         {
+            // Руки пусты – экипируем из слота
             ServerEquipFromSlot(slot);
         }
     }
+    [ServerRpc]
+    private void ServerTryUnequipRevolver(int pressedSlot)
+    {
+        PlayerController pc = GetComponent<PlayerController>();
+        if (pc == null) return;
 
+        Revolver revolver = pc.GetCurrentWeapon();
+        if (revolver == null) return;
+
+        if (revolver.GetBoundSlot() == pressedSlot)
+        {
+            PlayerInventory inv = GetComponent<PlayerInventory>();
+            if (inv != null)
+            {
+                inv.UnequipRevolver(GetComponent<NetworkObject>());
+            }
+        }
+    }
     [ServerRpc]
     private void ServerStoreItem(int slot, NetworkObject itemNetObj)
     {
@@ -259,9 +325,13 @@ public class PickupController : NetworkBehaviour
         if (!IsOwner) return;
         if (heldObject != null)
         {
+            // Оружие не трогаем – оно само управляет своей позицией
+            if (heldObject.GetComponent<IWeapon>() != null)
+                return;
+
             heldObject.transform.position = holdPoint.position;
             heldObject.transform.rotation = holdPoint.rotation;
-            
+
             if (heldObject.transform.parent != holdPoint)
             {
                 heldObject.transform.SetParent(holdPoint);
@@ -273,6 +343,96 @@ public class PickupController : NetworkBehaviour
     public void SetHeldWeapon(GameObject weapon)
     {
         if (heldObject != null) return;
+        heldObject = weapon;
+        heldRb = weapon.GetComponent<Rigidbody>();
+        if (heldRb != null)
+        {
+            heldRb.isKinematic = true;
+            heldRb.useGravity = false;
+            heldRb.linearVelocity = Vector3.zero;
+            heldRb.angularVelocity = Vector3.zero;
+        }
+        var nt = weapon.GetComponent<NetworkTransform>();
+        if (nt != null) nt.enabled = false;
 
+        // Если это оружие (реализует IWeapon) – не меняем родителя (уже прикреплён через AttachClientRpc)
+        if (weapon.GetComponent<IWeapon>() != null)
+        {
+            Debug.Log($"SetHeldWeapon: {weapon.name} is weapon, skip reparenting");
+            return;
+        }
+
+        // Обычный предмет – прикрепляем к holdPoint
+        weapon.transform.SetParent(holdPoint, false);
+        weapon.transform.localPosition = Vector3.zero;
+        weapon.transform.localRotation = Quaternion.identity;
+        Debug.Log($"SetHeldWeapon: {weapon.name} attached to holdPoint");
+    }
+
+    public void ClearHeld()
+    {
+        heldObject = null;
+        heldRb = null;
+        Debug.Log("[PickupController] ClearHeld called");
+    }
+    [ServerRpc]
+    private void ServerProcessItemSlot(int slot, NetworkObject itemNetObj)
+    {
+        if (itemNetObj == null) return;
+        PlayerInventory inv = GetComponent<PlayerInventory>();
+        if (inv == null) return;
+
+        Revolver revolver = itemNetObj.GetComponent<Revolver>();
+        if (revolver != null)
+        {
+            int currentSlot = revolver.GetBoundSlot();
+            if (currentSlot == slot)
+            {
+                inv.UnequipRevolver(GetComponent<NetworkObject>());
+            }
+            else
+            {
+                inv.MoveBoundRevolverToSlot(revolver, slot);
+            }
+            return;
+        }
+
+        LightObject lightObj = itemNetObj.GetComponent<LightObject>();
+        if (lightObj == null) return;
+
+        if (inv.IsSlotEmpty(slot))
+        {
+            inv.StoreItemFromHand(slot, lightObj);
+            ClearHeldObjectClient();
+            return;
+        }
+
+        int targetPrefabId = inv.GetItemPrefabId(slot);
+        NetworkObject targetPrefab = NetworkManager.GetPrefab(targetPrefabId, true);
+        bool isTargetRevolver = targetPrefab != null && targetPrefab.GetComponent<RevolverPickup>() != null;
+
+        if (isTargetRevolver)
+        {
+            return;
+        }
+
+        byte[] oldState = inv.GetItemState(slot);
+        int oldPrefabId = targetPrefabId;
+        inv.ClearSlot(slot);
+        inv.StoreItemFromHand(slot, lightObj);
+        ClearHeldObjectClient();
+
+        NetworkObject oldPrefab = NetworkManager.GetPrefab(oldPrefabId, true);
+        if (oldPrefab != null)
+        {
+            NetworkObject spawned = Instantiate(oldPrefab, transform.position, Quaternion.identity);
+            NetworkManager.ServerManager.Spawn(spawned, Owner);
+            LightObject oldLightObj = spawned.GetComponent<LightObject>();
+            if (oldLightObj != null)
+            {
+                oldLightObj.DeserializeState(oldState);
+                oldLightObj.EquipToPlayer(GetComponent<NetworkObject>());
+            }
+        }
     }
 }

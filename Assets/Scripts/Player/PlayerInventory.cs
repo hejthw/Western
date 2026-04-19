@@ -72,6 +72,7 @@ public class PlayerInventory : NetworkBehaviour
         NetworkObject netObj = lightObj.NetworkObject;
         int prefabId = netObj.PrefabId;
         byte[] state = lightObj.SerializeState();
+        lightObj.HideVisualForObservers();
         netObj.Despawn();
         itemPrefabIds[slot] = prefabId;
         itemStates[slot] = state;
@@ -97,7 +98,7 @@ public class PlayerInventory : NetworkBehaviour
             if (playerController != null)
             {
                 if (playerController.IsArmed) return;
-                
+
                 int bullets = revolverPickupPrefab.revolverData.bullets;
                 if (state != null && state.Length >= 4)
                     bullets = System.BitConverter.ToInt32(state, 0);
@@ -110,6 +111,13 @@ public class PlayerInventory : NetworkBehaviour
                 NetworkManager.ServerManager.Spawn(weaponInstance, player.Owner);
 
                 Revolver revolver = weaponInstance.GetComponent<Revolver>();
+                if (revolver == null)
+                {
+                    weaponInstance.Despawn();
+                    ClearSlot(slot);
+                    return;
+                }
+
                 revolver.SetBullets(bullets);
                 revolver.AttachToPlayer(playerController, bullets);
                 revolver.BindInventorySlot(this, slot, prefabId);
@@ -131,47 +139,37 @@ public class PlayerInventory : NetworkBehaviour
         ClearSlot(slot);
     }
     
+    /// <summary>
+    /// Только запись пикапа в свободный слот (prefab id + состояние). Без спавна оружия.
+    /// </summary>
     [Server]
-    public bool TryStoreRevolverAndEquip(RevolverPickup pickup, NetworkObject player)
+    public int TryStoreRevolverPickupInSlot(RevolverPickup pickup, NetworkObject player)
     {
-        if (pickup == null || player == null) return false;
-        
+        if (pickup == null || player == null) return -1;
+
         PlayerController playerController = player.GetComponent<PlayerController>();
-        if (playerController == null) return false;
-        if (playerController.IsArmed) return false;
-        
+        if (playerController == null) return -1;
+        if (playerController.IsArmed) return -1;
+
         int slot = GetFirstEmptySlot();
-        if (slot == -1) return false;
-        
-        if (pickup.revolverWeaponPrefab == null) return false;
-        
+        if (slot == -1) return -1;
+        if (pickup.revolverWeaponPrefab == null) return -1;
+
         itemPrefabIds[slot] = pickup.NetworkObject.PrefabId;
         itemStates[slot] = pickup.SerializeState();
         OnSlotChanged?.Invoke(slot, true);
-        
-        int bullets = pickup.revolverData != null ? pickup.revolverData.bullets : 0;
-        if (itemStates[slot] != null && itemStates[slot].Length >= 4)
-            bullets = System.BitConverter.ToInt32(itemStates[slot], 0);
-        
-        NetworkObject weaponInstance = Instantiate(
-            pickup.revolverWeaponPrefab,
-            playerController.weaponHoldPoint.position,
-            playerController.weaponHoldPoint.rotation
-        );
-        NetworkManager.ServerManager.Spawn(weaponInstance, player.Owner);
-        
-        Revolver revolver = weaponInstance.GetComponent<Revolver>();
-        if (revolver == null)
-        {
-            weaponInstance.Despawn();
-            ClearSlot(slot);
-            return false;
-        }
-        
-        revolver.SetBullets(bullets);
-        revolver.AttachToPlayer(playerController, bullets);
-        revolver.BindInventorySlot(this, slot, pickup.NetworkObject.PrefabId);
-        playerController.EquipWeapon(revolver);
+        return slot;
+    }
+
+    /// <summary>
+    /// Подбор с поля: положить в инвентарь и сразу экипировать через <see cref="EquipFromSlot"/> (один код пути).
+    /// </summary>
+    [Server]
+    public bool TryStoreRevolverAndEquip(RevolverPickup pickup, NetworkObject player)
+    {
+        int slot = TryStoreRevolverPickupInSlot(pickup, player);
+        if (slot < 0) return false;
+        EquipFromSlot(slot, player);
         return true;
     }
     
@@ -181,6 +179,52 @@ public class PlayerInventory : NetworkBehaviour
         if (!IsValidSlot(slot)) return;
         if (itemPrefabIds[slot] == -1) return;
         itemStates[slot] = state;
+    }
+
+    /// <summary>
+    /// Переносит запись револьвера в инвентаре на другой слот без деспавна оружия (игрок держит револьвер в руках).
+    /// Если целевой слот занят — обменивает содержимое слотов.
+    /// </summary>
+    [Server]
+    public void MoveBoundRevolverToSlot(Revolver revolver, int toSlot)
+    {
+        if (revolver == null) return;
+        int fromSlot = revolver.GetBoundSlot();
+        if (!IsValidSlot(fromSlot) || !IsValidSlot(toSlot)) return;
+        if (fromSlot == toSlot) return;
+        if (itemPrefabIds[fromSlot] == -1) return;
+
+        int boundPickupId = revolver.GetBoundPickupPrefabId();
+        if (boundPickupId >= 0 && itemPrefabIds[fromSlot] != boundPickupId)
+            return;
+
+        revolver.SaveBulletsToInventorySlot();
+
+        int pid = itemPrefabIds[fromSlot];
+        byte[] st = itemStates[fromSlot];
+
+        if (itemPrefabIds[toSlot] == -1)
+        {
+            itemPrefabIds[toSlot] = pid;
+            itemStates[toSlot] = st;
+            itemPrefabIds[fromSlot] = -1;
+            itemStates[fromSlot] = null;
+            OnSlotChanged?.Invoke(toSlot, true);
+            OnSlotChanged?.Invoke(fromSlot, false);
+        }
+        else
+        {
+            int pid2 = itemPrefabIds[toSlot];
+            byte[] st2 = itemStates[toSlot];
+            itemPrefabIds[fromSlot] = pid2;
+            itemStates[fromSlot] = st2;
+            itemPrefabIds[toSlot] = pid;
+            itemStates[toSlot] = st;
+            OnSlotChanged?.Invoke(fromSlot, pid2 != -1);
+            OnSlotChanged?.Invoke(toSlot, true);
+        }
+
+        revolver.BindInventorySlot(this, toSlot, pid);
     }
     
     [Server]
@@ -202,5 +246,41 @@ public class PlayerInventory : NetworkBehaviour
             debug += $"Slot{i}:{(itemPrefabIds[i] == -1 ? "Empty" : itemPrefabIds[i].ToString())} ";
         }
         Debug.Log(debug);
+    }
+    [Server]
+    public void UnequipRevolver(NetworkObject player)
+    {
+        PlayerController pc = player.GetComponent<PlayerController>();
+        if (pc == null) return;
+        Revolver revolver = pc.GetCurrentWeapon();
+        if (revolver == null) return;
+        revolver.UnequipToInventory();
+    }
+    [Server]
+    public void DropAllItems(Vector3 dropPosition)
+    {
+        for (int i = 0; i < slotsCount; i++)
+        {
+            if (itemPrefabIds[i] == -1) continue;
+
+            int prefabId = itemPrefabIds[i];
+            byte[] state = itemStates[i];
+
+            NetworkObject prefab = NetworkManager.GetPrefab(prefabId, true);
+            if (prefab == null) continue;
+
+            NetworkObject dropped = Instantiate(prefab, dropPosition, Quaternion.identity);
+            NetworkManager.ServerManager.Spawn(dropped);
+
+           
+            LightObject lightObj = dropped.GetComponent<LightObject>();
+            if (lightObj != null)
+            {
+                lightObj.DeserializeState(state);
+                lightObj.SetVisibleForObservers(true);
+            }
+
+            ClearSlot(i);
+        }
     }
 }

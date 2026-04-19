@@ -91,6 +91,14 @@ public class LassoController : NetworkBehaviour
     private void HandleJumpOff()
     {
         if (!Keyboard.current[jumpOffKey].wasPressedThisFrame) return;
+
+        PlayerController pc = GetComponent<PlayerController>();
+        if (pc != null && pc.ActiveRopeClimb != null)
+        {
+            pc.RequestRopeJumpOff(pc.ActiveRopeClimb);
+            return;
+        }
+
         if (!lasso.IsPlayerPulling) return;
         lasso.ServerJumpOffPull();
     }
