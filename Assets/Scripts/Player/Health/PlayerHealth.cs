@@ -116,7 +116,7 @@ public class PlayerHealth : NetworkBehaviour
     [Server]
     private IEnumerator ReviveWindowCoroutine()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(5f);
 
         // Окно закрылось — воскрешаем
         if (_state.Value == PlayerHealthState.Knockout)
