@@ -10,9 +10,6 @@ public static class PlayerHealthEvents
     public static event Action<PlayerHealth, int> OnTeammateHealthChange;
     public static event Action<PlayerHealth, PlayerHealthState> OnTeammateStateChange;
 
-    public static event Action<int> OnFallDamage;
-    public static void RaiseFallDamage(int damage) => OnFallDamage?.Invoke(damage);
-
     public static void RaiseTeammateHealthChange(PlayerHealth player, int health) 
         => OnTeammateHealthChange?.Invoke(player, health);
 

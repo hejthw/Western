@@ -29,8 +29,9 @@ public class PlayerPhysics : NetworkBehaviour
     private Vector3 _remoteVelocity;
     private bool _hasRemoteState;
     
-    private bool   _isFalling;
-    private float  _fallStartY;
+    private bool _isFalling;
+    private float _fallStartY;
+    private PlayerHealth _playerHealth;
     
     [Header("Fall Damage")]
     [SerializeField] private float fallDamageCoef = 1f;
@@ -101,7 +102,7 @@ public class PlayerPhysics : NetworkBehaviour
                 float excess = height - characterHeight;
                 int damage = Mathf.RoundToInt(fallDamageCoef * excess * excess);
                 if (damage > 0)
-                    PlayerHealthEvents.RaiseFallDamage(damage);
+                    RequestFallDamageServerRpc(damage);
             }
         }
     }
@@ -253,6 +254,12 @@ public class PlayerPhysics : NetworkBehaviour
         }
 
         return _momentum;
+    }
+    
+    [ServerRpc]
+    private void RequestFallDamageServerRpc(int damage)
+    {
+        _playerHealth.TakeDamage(damage);
     }
 
     // public void AddExternalForce(Vector3 force, ForceMode mode = ForceMode.Impulse)
