@@ -2,17 +2,24 @@ using FishNet.Object;
 using UnityEngine;
 using FishNet.Object.Synchronizing;
 using System.Collections;
-using Steamworks;
+using FishNet.Connection;
 
 public class PlayerHealth : NetworkBehaviour
 {
     [SerializeField] private PlayerHealthData data;
-    
+
     private readonly SyncVar<int> _health = new SyncVar<int>();
     private readonly SyncVar<PlayerHealthState> _state = new SyncVar<PlayerHealthState>();
-    
+
+    // --- Revive state (server only) ---
+    private int _reviveGlassCount = 0;
+    private float _reviveWindowTimer = 0f;
+    private bool _reviveWindowOpen = false;
+    private Coroutine _knockoutCoroutine;
+
     public int GetHealth() => _health.Value;
-    
+    public bool IsKnockedOut => _state.Value == PlayerHealthState.Knockout;
+
     public override void OnStartNetwork()
     {
         base.OnStartNetwork();
@@ -52,7 +59,6 @@ public class PlayerHealth : NetworkBehaviour
         {
             PlayerHealthEvents.RaiseTeammateStateChange(this, next);
         }
-        
     }
 
     [Server]
@@ -83,6 +89,11 @@ public class PlayerHealth : NetworkBehaviour
         }
 
         StartCoroutine(KnockoutCoroutine());
+        _reviveGlassCount = 0;
+        _reviveWindowOpen = false;
+        _reviveWindowTimer = 0f;
+
+        _knockoutCoroutine = StartCoroutine(KnockoutCoroutine());
     }
 
     [Server]
@@ -92,22 +103,77 @@ public class PlayerHealth : NetworkBehaviour
         Death();
     }
 
+    // Вызывается из WhiskeyGlass при попадании в нокнутого
+    [Server]
+    public void RegisterReviveGlass()
+    {
+        Debug.Log("RegisterReviveGlass");
+        if (_state.Value != PlayerHealthState.Knockout) return;
+
+        if (!_reviveWindowOpen)
+        {
+            _reviveWindowOpen = true;
+            _reviveGlassCount = 1;
+            StartCoroutine(ReviveWindowCoroutine());
+        }
+        else
+        {
+            _reviveGlassCount++;
+        }
+    }
+
+    [Server]
+    private IEnumerator ReviveWindowCoroutine()
+    {
+        yield return new WaitForSeconds(data.wakeupWindow);
+
+        // Окно закрылось — воскрешаем
+        if (_state.Value == PlayerHealthState.Knockout)
+            Revive(_reviveGlassCount);
+
+        _reviveWindowOpen = false;
+        _reviveGlassCount = 0;
+        _reviveWindowTimer = 0f;
+    }
+
+    [Server]
+    private void Revive(int glassCount)
+    {
+        if (_knockoutCoroutine != null)
+        {
+            StopCoroutine(_knockoutCoroutine);
+            _knockoutCoroutine = null;
+        }
+
+        int hp = Mathf.Min(glassCount * data.hpToGain, 100);
+        _health.Value = hp;
+        _state.Value = PlayerHealthState.Alive;
+        
+        RpcRaiseWhiskeyOnOwner(Owner);
+    }
+    
+    [TargetRpc]
+    private void RpcRaiseWhiskeyOnOwner(NetworkConnection conn)
+    {
+        Debug.Log("HERE");
+        PlayerEffectsEvents.RaiseWhiskeyUse();
+    }
+
     [Server]
     private void Death()
     {
+        if (_state.Value != PlayerHealthState.Knockout) return;
         _state.Value = PlayerHealthState.Dead;
         _health.Value = -1;
-        
-        StartCoroutine(DeadCoroutine());
     }
     
-    [Server]
-    private IEnumerator DeadCoroutine()
-    {
-        yield return new WaitForSeconds(data.respawnDelay);
-        
-        _state.Value = PlayerHealthState.Alive;
-        _health.Value = data.maxHealth;
-        PlayerHealthEvents.RaiseRespawnEvent();
-    }
+    // [Server]
+    // private IEnumerator DeadCoroutine()
+    // {
+    //     yield return new WaitForSeconds(data.respawnDelay);
+    //
+    //     _state.Value = PlayerHealthState.Alive;
+    //     _health.Value = data.maxHealth;
+    //     PlayerHealthEvents.RaiseRespawnEvent();
+    // }
 }

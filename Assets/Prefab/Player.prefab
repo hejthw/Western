@@ -2777,7 +2777,9 @@ MonoBehaviour:
   rb: {fileID: 3110369444958837593}
   input: {fileID: 2479261188838793012}
   col: {fileID: 2364090612570148680}
-  networkTransform: {fileID: 0}
+  _playerHealth: {fileID: 9106320914675195185}
+  fallDamageCoef: 1
+  characterHeight: 2
   stateSendInterval: 0.05
   remotePositionLerp: 18
   remoteRotationLerp: 20

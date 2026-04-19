@@ -212,6 +212,9 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
                 if (rb != null) rb.linearVelocity = Vector3.zero;
                 ApplyWorldPhysics();
             }
+            
+            OnHitPlayer(playerHealth);
+            
             return;
         }
 
@@ -233,6 +236,9 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         if (ntWorld != null) ntWorld.enabled = true;
         ApplyWorldPhysics();
     }
+    
+    protected virtual void OnHitPlayer(PlayerHealth playerHealth) { }
+    
     [Server]
     public void ForceDrop()
     {
@@ -259,6 +265,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
+        OnLassoPull(lasso);
     }
 
     public void OnLassoPull(LassoNetwork lasso)

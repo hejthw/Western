@@ -1,3 +1,4 @@
+using System;
 using Unity.Behavior;
 using UnityEngine;
 using FishNet.Object;
@@ -16,7 +17,14 @@ public class NetworkNPC : NetworkBehaviour
         _behaviorAgent.enabled = true;
         _navMeshAgent.enabled = true;
     }
-    
+
+    public override void OnStartNetwork()
+    {
+        base.OnStartNetwork();
+        
+        _rigidbody.isKinematic = true;
+    }
+
     // server-authority
     public override void OnStartClient()
     {

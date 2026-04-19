@@ -2,7 +2,7 @@ public enum LassoInteractionType
 {
     PullObject,     // Light
     PullPlayer,     // UnMovable
-    PullCharacter,
+    PullCharacter,  // NPC
     Custom
 }
 
