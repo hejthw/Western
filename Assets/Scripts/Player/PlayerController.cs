@@ -208,6 +208,67 @@ public class PlayerController : NetworkBehaviour
     }
 
     /// <summary>
+    /// Телепорт с верёвки без <see cref="ServerSetForcedMoveNetworkMode"/> — иначе гонка NT и кик
+    /// «update without client authority». Владелец применяет позицию сам (законный client-auth апдейт).
+    /// </summary>
+    [Server]
+    public void ServerTeleportFromRope(Vector3 worldPosition, Quaternion worldRotation)
+    {
+        if (!IsSpawned || Owner == null || !Owner.IsActive)
+            return;
+
+        ServerApplyRopeTeleportPhysics(worldPosition, worldRotation);
+        TargetRopeTeleport(Owner, worldPosition, worldRotation);
+    }
+
+    private void ServerApplyRopeTeleportPhysics(Vector3 worldPosition, Quaternion worldRotation)
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        transform.SetPositionAndRotation(worldPosition, worldRotation);
+        if (rb != null)
+        {
+            rb.MovePosition(worldPosition);
+            rb.MoveRotation(worldRotation);
+        }
+
+        Physics.SyncTransforms();
+    }
+
+    [TargetRpc]
+    private void TargetRopeTeleport(NetworkConnection conn, Vector3 worldPosition, Quaternion worldRotation)
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        transform.SetPositionAndRotation(worldPosition, worldRotation);
+        if (rb != null)
+        {
+            rb.MovePosition(worldPosition);
+            rb.MoveRotation(worldRotation);
+        }
+
+        Physics.SyncTransforms();
+
+        NetworkTransform nt = GetComponent<NetworkTransform>();
+        if (nt != null)
+        {
+            nt.Teleport();
+            nt.ForceSend();
+        }
+
+        if (physics != null)
+            physics.ClearStaleMotionAfterNetworkSnap();
+    }
+
+    /// <summary>
     /// Принудительное движение с сервера (верёвка, лассо): временно переводим FishNet NetworkTransform
     /// в server-authoritative. Порядок критичен (иначе Kick ExploitAttempt):
     /// вход в режим — сначала владелец перестаёт слать ServerUpdateTransform, потом сервер и наблюдатели;

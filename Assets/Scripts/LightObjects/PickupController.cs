@@ -109,17 +109,17 @@ public class PickupController : NetworkBehaviour
         if (rope == null || !rope.IsRopeActive)
             return false;
 
-        ServerTryBeginRopeClimb(rope.NetworkObject);
+        ServerTryRopeTeleport(rope.NetworkObject);
         return true;
     }
 
     [ServerRpc]
-    private void ServerTryBeginRopeClimb(NetworkObject ropeNetObj)
+    private void ServerTryRopeTeleport(NetworkObject ropeNetObj)
     {
         if (ropeNetObj == null) return;
         ClimbRopeNetwork rope = ropeNetObj.GetComponent<ClimbRopeNetwork>();
         if (rope == null) return;
-        rope.ServerTryBeginClimb(GetComponent<NetworkObject>());
+        rope.ServerTryTeleportToTop(GetComponent<NetworkObject>());
     }
     private bool TryCashIn()
     {
