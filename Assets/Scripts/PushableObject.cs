@@ -3,11 +3,14 @@ using FishNet.Object;
 
 public class PushableObject : NetworkBehaviour
 {
-    private Rigidbody rb;
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private float pushForceMultiplier = 3f;
+    [SerializeField] private float minPushForce = 1f;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
+        if (rb == null)
+            rb = GetComponent<Rigidbody>();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -17,7 +20,9 @@ public class PushableObject : NetworkBehaviour
         if (collision.gameObject.TryGetComponent<PlayerPhysics>(out var player))
         {
             Vector3 pushDirection = collision.contacts[0].normal;
-            float pushForce = player.GetComponent<Rigidbody>().linearVelocity.magnitude * 3f;
+            float playerSpeed = player.GetComponent<Rigidbody>().linearVelocity.magnitude;
+            float pushForce = playerSpeed * pushForceMultiplier;
+            if (pushForce < minPushForce) pushForce = minPushForce;
 
             rb.AddForce(pushDirection * pushForce, ForceMode.Impulse);
         }

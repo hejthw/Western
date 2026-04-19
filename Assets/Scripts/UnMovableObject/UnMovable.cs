@@ -7,9 +7,29 @@ public class UnMovable : NetworkBehaviour, ILassoInteractable
     [SerializeField] private Collider attachZone;
     [SerializeField] private float zoneTolerance = 0.15f;
 
-    [Header("Climb Target")]
+    [Header("Climb Target (legacy / unused for lasso attach)")]
     [SerializeField] private Transform climbAnchor;
     [SerializeField] private Vector3 hitPointOffset = new Vector3(0f, -1.25f, 0f);
+
+    [Header("Rope")]
+    [Tooltip("Компонент на том же NetworkObject (или задайте вручную). Активируется лассо в зоне.")]
+    [SerializeField] private ClimbRopeNetwork climbRope;
+
+    private void Awake()
+    {
+        if (climbRope == null)
+            climbRope = GetComponent<ClimbRopeNetwork>();
+    }
+
+    /// <summary>Сервер: включить верёвку после попадания лассо в зоне.</summary>
+    [Server]
+    public bool TryActivateRopeFromLassoHit()
+    {
+        if (climbRope == null)
+            return false;
+        climbRope.ServerActivateRope();
+        return true;
+    }
 
     [Server]
     public bool CanAttach(NetworkObject player)

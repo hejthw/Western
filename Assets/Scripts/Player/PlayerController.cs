@@ -1,4 +1,6 @@
 using System.Collections;
+using FishNet.Component.Transforming;
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using Steamworks;
@@ -16,11 +18,22 @@ public class PlayerController : NetworkBehaviour
     private Coroutine stunRoutine;
     [SerializeField] public Transform weaponHoldPoint;
     public bool IsLassoPulling { get; set; }
+
+    /// <summary>Активная верёвка для прыжка Space (не только владелец лассо).</summary>
+    public ClimbRopeNetwork ActiveRopeClimb { get; private set; }
+
+    /// <summary>Совпадает с последним применённым <see cref="ServerSetForcedMoveNetworkMode"/> (NT server vs client auth).</summary>
+    private bool _forcedMoveNetworkModeActive;
+
+    [Header("Debug")]
+    [Tooltip("Периодические логи владельца во время лазания по верёвке (позиция, скорость, kinematic, NT client-auth).")]
+    [SerializeField] private bool debugRopeClimbTelemetry;
+    [SerializeField] private int ropeDebugEveryNFrames = 12;
     // вынести отсюда
     private Rigidbody rb;
     private PlayerRotate playerRotate;
     [SerializeField] private float kinematicDelay = 4f;
-    
+    public Revolver GetCurrentWeapon() => _currentWeapon;
     private bool _isDied;
     private bool movementDisabled = false;
     
@@ -44,6 +57,25 @@ public class PlayerController : NetworkBehaviour
     {
         _currentWeapon = null;
         IsArmed = false;
+    }
+
+    /// <summary>
+    /// Стрельба с револьвера: ServerRpc на игроке (клиент всегда владеет префабом игрока), валидация на сервере.
+    /// </summary>
+    public void RequestRevolverShoot(NetworkObject revolverNetObj, Vector3 origin, Vector3 direction)
+    {
+        ServerRevolverShoot(revolverNetObj, origin, direction);
+    }
+
+    [ServerRpc]
+    private void ServerRevolverShoot(NetworkObject revolverNetObj, Vector3 origin, Vector3 direction)
+    {
+        if (revolverNetObj == null) return;
+        Revolver rev = revolverNetObj.GetComponent<Revolver>();
+        if (rev == null) return;
+        if (_currentWeapon != rev) return;
+
+        rev.ServerApplyShot(origin, direction);
     }
 
     void Awake()
@@ -130,6 +162,123 @@ public class PlayerController : NetworkBehaviour
             physics.enabled = true;
     }
 
+    /// <summary>
+    /// Локально на этом экземпляре (владелец): сброс целей NT после выхода из принудительного движения.
+    /// Для чужих копий игрока вызывайте <see cref="ServerBroadcastPostForcedMoveResync"/> с сервера.
+    /// </summary>
+    public void NotifyNetworkTransformHardSync()
+    {
+        ApplyNetworkTransformResyncLocal();
+    }
+
+    private void ApplyNetworkTransformResyncLocal()
+    {
+        if (!IsSpawned)
+            return;
+        NetworkTransform nt = GetComponent<NetworkTransform>();
+        if (nt == null || !nt.enabled) return;
+        try
+        {
+            nt.Teleport();
+            nt.ForceSend();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[PlayerController] ApplyNetworkTransformResyncLocal: {ex.Message}");
+        }
+
+        if (physics != null)
+            physics.ClearStaleMotionAfterNetworkSnap();
+    }
+
+    /// <summary>
+    /// С сервера: сбрасывает интерполяцию/очередь целей NT у всех наблюдателей этого игрока (и на сервере RunLocally).
+    /// Устраняет «скольжение» чужого персонажа после верёвки/лассо.
+    /// </summary>
+    [Server]
+    public void ServerBroadcastPostForcedMoveResync()
+    {
+        ObserversPostForcedMoveResync();
+    }
+
+    [ObserversRpc(RunLocally = true)]
+    private void ObserversPostForcedMoveResync()
+    {
+        ApplyNetworkTransformResyncLocal();
+    }
+
+    /// <summary>
+    /// Принудительное движение с сервера (верёвка, лассо): временно переводим FishNet NetworkTransform
+    /// в server-authoritative. Порядок критичен (иначе Kick ExploitAttempt):
+    /// вход в режим — сначала владелец перестаёт слать ServerUpdateTransform, потом сервер и наблюдатели;
+    /// выход — сначала сервер и наблюдатели принимают client-auth, потом владелец снова шлёт апдейты.
+    /// </summary>
+    [Server]
+    public void ServerSetForcedMoveNetworkMode(bool forcedMoveActive)
+    {
+        if (!IsSpawned)
+            return;
+        if (Owner == null || !Owner.IsActive)
+            return;
+
+        if (forcedMoveActive)
+        {
+            TargetApplyForcedMoveNetworkMode(Owner, true);
+        }
+        else
+        {
+            ApplyForcedMoveNetworkTransformMode(false);
+            ObserversApplyForcedMoveToNonOwners(false);
+            TargetApplyForcedMoveNetworkMode(Owner, false);
+        }
+    }
+
+    [TargetRpc]
+    private void TargetApplyForcedMoveNetworkMode(NetworkConnection conn, bool forcedMoveActive)
+    {
+        ApplyForcedMoveNetworkTransformMode(forcedMoveActive);
+        if (forcedMoveActive)
+            ServerNotifyForcedMoveNetworkApplied(forcedMoveActive);
+    }
+
+    [ServerRpc(RequireOwnership = true)]
+    private void ServerNotifyForcedMoveNetworkApplied(bool forcedMoveActive)
+    {
+        ApplyForcedMoveNetworkTransformMode(forcedMoveActive);
+        ObserversApplyForcedMoveToNonOwners(forcedMoveActive);
+    }
+
+    [ObserversRpc(ExcludeOwner = true)]
+    private void ObserversApplyForcedMoveToNonOwners(bool forcedMoveActive)
+    {
+        ApplyForcedMoveNetworkTransformMode(forcedMoveActive);
+    }
+
+    private void ApplyForcedMoveNetworkTransformMode(bool forcedMoveActive)
+    {
+        if (!IsSpawned)
+            return;
+        if (_forcedMoveNetworkModeActive == forcedMoveActive)
+            return;
+
+        NetworkTransform nt = GetComponent<NetworkTransform>();
+        if (nt == null || !nt.isActiveAndEnabled)
+            return;
+
+        bool clientAuthoritative = !forcedMoveActive;
+        if (!NetworkTransformAuthorityUtil.SetClientAuthoritative(nt, clientAuthoritative))
+            return;
+
+        _forcedMoveNetworkModeActive = forcedMoveActive;
+
+        if (debugRopeClimbTelemetry)
+        {
+            bool ca = NetworkTransformAuthorityUtil.GetClientAuthoritative(nt);
+            string role = IsServerInitialized ? (IsClientInitialized ? "HOST" : "SERVER") : "CLIENT";
+            Debug.Log($"[RopeDbg NT] {role} ApplyForcedMove forced={forcedMoveActive} ntClientAuth={ca} pos={transform.position}");
+        }
+    }
+
     [ServerRpc]
     private void TakeDamageTest(int damage)
     {
@@ -148,8 +297,82 @@ public class PlayerController : NetworkBehaviour
 
       
 
-        string who = IsServer ? "SERVER (host)" : "CLIENT";
-        Debug.Log($"[{who}] Lasso state: {state} | Physics enabled: {!state}");
+        if (debugRopeClimbTelemetry)
+        {
+            string who = IsServer ? "SERVER (host)" : "CLIENT";
+            Debug.Log($"[RopeDbg] [{who}] Lasso state: {state} | Physics enabled: {!state}");
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (!debugRopeClimbTelemetry || !IsOwner || rb == null)
+            return;
+        if (ActiveRopeClimb == null)
+            return;
+        if (ropeDebugEveryNFrames > 1 && Time.frameCount % ropeDebugEveryNFrames != 0)
+            return;
+
+        NetworkTransform nt = GetComponent<NetworkTransform>();
+        bool ntCa = nt != null && NetworkTransformAuthorityUtil.GetClientAuthoritative(nt);
+        string role = IsServerInitialized ? "HOST" : "CLIENT";
+        Debug.Log(
+            $"[RopeDbg tick] {role} pos={rb.position} vel={rb.linearVelocity} mag={rb.linearVelocity.magnitude:F3} " +
+            $"kin={rb.isKinematic} physOn={physics != null && physics.enabled} ntClientAuth={ntCa} forcedMode={_forcedMoveNetworkModeActive}");
+    }
+
+    [TargetRpc]
+    public void TargetBeginRopeClimb(NetworkConnection conn, NetworkObject ropeNetObj)
+    {
+        ActiveRopeClimb = ropeNetObj != null ? ropeNetObj.GetComponent<ClimbRopeNetwork>() : null;
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
+        DisableMovement();
+        SetLassoState(true);
+
+        if (debugRopeClimbTelemetry)
+        {
+            string role = IsServerInitialized ? "HOST" : "CLIENT";
+            Debug.Log($"[RopeDbg] TargetBeginRopeClimb {role} rope={(ropeNetObj != null)}");
+        }
+    }
+
+    [TargetRpc]
+    public void TargetEndRopeClimb(NetworkConnection conn, bool fromJump)
+    {
+        ActiveRopeClimb = null;
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            if (!fromJump)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+        }
+        EnableMovement();
+        if (physics != null)
+            physics.ResetOwnerMovementPredictionAfterForcedMove();
+        SetLassoState(false);
+    }
+
+    public void RequestRopeJumpOff(ClimbRopeNetwork rope)
+    {
+        if (rope == null) return;
+        ServerRequestRopeJumpOff(rope.NetworkObject);
+    }
+
+    [ServerRpc]
+    private void ServerRequestRopeJumpOff(NetworkObject ropeNetObj)
+    {
+        if (ropeNetObj == null) return;
+        ClimbRopeNetwork rope = ropeNetObj.GetComponent<ClimbRopeNetwork>();
+        if (rope == null) return;
+        rope.ServerPerformJumpOff(NetworkObject);
     }
     
 
@@ -172,5 +395,21 @@ public class PlayerController : NetworkBehaviour
         SetLassoState(false);
 
         stunRoutine = null;
+    }
+    [Server]
+    public void ForceDropWeapon()
+    {
+        if (_currentWeapon != null)
+        {
+            _currentWeapon.DropToGround();
+        }
+        else
+        {
+            PickupController pickup = GetComponent<PickupController>();
+            if (pickup != null && pickup.GetHeldObject() != null)
+            {
+                pickup.Throw();
+            }
+        }
     }
 }

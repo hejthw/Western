@@ -78,6 +78,17 @@ public class PlayerHealth : NetworkBehaviour
         _health.Value = 0;
         _state.Value = PlayerHealthState.Knockout;
 
+        PlayerController pc = GetComponent<PlayerController>();
+        if (pc != null)
+            pc.ForceDropWeapon();
+        PlayerInventory inventory = GetComponent<PlayerInventory>();
+        if (inventory != null)
+        {
+            Vector3 dropPos = transform.position + Vector3.up * 0.5f;
+            inventory.DropAllItems(dropPos);
+        }
+
+        StartCoroutine(KnockoutCoroutine());
         _reviveGlassCount = 0;
         _reviveWindowOpen = false;
         _reviveWindowTimer = 0f;
