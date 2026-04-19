@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: PlayerHealthData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthData
   maxHealth: 9999
-  knockoutDelay: 10
+  knockoutDelay: 20
   respawnDelay: 20
+  wakeupWindow: 5
+  hpToGain: 30

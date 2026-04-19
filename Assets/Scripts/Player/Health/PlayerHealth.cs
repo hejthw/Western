@@ -101,14 +101,12 @@ public class PlayerHealth : NetworkBehaviour
 
         if (!_reviveWindowOpen)
         {
-            // Первая рюмка — открываем окно и запускаем таймер
             _reviveWindowOpen = true;
             _reviveGlassCount = 1;
             StartCoroutine(ReviveWindowCoroutine());
         }
         else
         {
-            // Последующие рюмки в окне 1.5 сек
             _reviveGlassCount++;
         }
     }
@@ -116,7 +114,7 @@ public class PlayerHealth : NetworkBehaviour
     [Server]
     private IEnumerator ReviveWindowCoroutine()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(data.wakeupWindow);
 
         // Окно закрылось — воскрешаем
         if (_state.Value == PlayerHealthState.Knockout)
@@ -137,7 +135,7 @@ public class PlayerHealth : NetworkBehaviour
             _knockoutCoroutine = null;
         }
 
-        int hp = Mathf.Min(glassCount * 30, 100);
+        int hp = Mathf.Min(glassCount * data.hpToGain, 100);
         _health.Value = hp;
         _state.Value = PlayerHealthState.Alive;
 
@@ -149,6 +147,7 @@ public class PlayerHealth : NetworkBehaviour
     [TargetRpc]
     private void RpcRaiseWhiskeyOnOwner(NetworkConnection conn = null)
     {
+        Debug.Log("HERE");
         PlayerEffectsEvents.RaiseWhiskeyUse();
     }
 
@@ -159,14 +158,14 @@ public class PlayerHealth : NetworkBehaviour
         _health.Value = -1;
         
     }
-
-    [Server]
-    private IEnumerator DeadCoroutine()
-    {
-        yield return new WaitForSeconds(data.respawnDelay);
-
-        _state.Value = PlayerHealthState.Alive;
-        _health.Value = data.maxHealth;
-        PlayerHealthEvents.RaiseRespawnEvent();
-    }
+    
+    // [Server]
+    // private IEnumerator DeadCoroutine()
+    // {
+    //     yield return new WaitForSeconds(data.respawnDelay);
+    //
+    //     _state.Value = PlayerHealthState.Alive;
+    //     _health.Value = data.maxHealth;
+    //     PlayerHealthEvents.RaiseRespawnEvent();
+    // }
 }
