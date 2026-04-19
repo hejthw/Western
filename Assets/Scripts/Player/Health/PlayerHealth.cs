@@ -19,6 +19,7 @@ public class PlayerHealth : NetworkBehaviour
 
         _health.OnChange += OnHealthChanged;
         _state.OnChange += OnStateChanged;
+        PlayerHealthEvents.OnFallDamage += TakeDamage;
 
         if (IsServerInitialized)
         {
@@ -52,7 +53,6 @@ public class PlayerHealth : NetworkBehaviour
         {
             PlayerHealthEvents.RaiseTeammateStateChange(this, next);
         }
-        
     }
 
     [Server]

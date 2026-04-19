@@ -252,6 +252,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
+        OnLassoPull(lasso);
     }
 
     public void OnLassoPull(LassoNetwork lasso)

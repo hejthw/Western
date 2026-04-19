@@ -29,6 +29,13 @@ public class PlayerPhysics : NetworkBehaviour
     private Vector3 _remoteVelocity;
     private bool _hasRemoteState;
     
+    private bool   _isFalling;
+    private float  _fallStartY;
+    
+    [Header("Fall Damage")]
+    [SerializeField] private float fallDamageCoef = 1f;
+    [SerializeField] private float characterHeight = 2f; 
+    
     public bool IsGrounded { get; private set; }
     public PlayerState CurrentState { get; private set; }
     
@@ -75,6 +82,28 @@ public class PlayerPhysics : NetworkBehaviour
             IsGrounded,
             input.SprintHeld,
             rb.linearVelocity.y);
+        
+        // Начало падения
+        if (CurrentState == PlayerState.STATE_FALL && !_isFalling)
+        {
+            _isFalling  = true;
+            _fallStartY = transform.position.y;
+        }
+
+        // Приземление
+        if (_isFalling && IsGrounded)
+        {
+            _isFalling = false;
+            float height = _fallStartY - transform.position.y;
+
+            if (height > characterHeight)
+            {
+                float excess = height - characterHeight;
+                int damage = Mathf.RoundToInt(fallDamageCoef * excess * excess);
+                if (damage > 0)
+                    PlayerHealthEvents.RaiseFallDamage(damage);
+            }
+        }
     }
 
     void FixedUpdate()
