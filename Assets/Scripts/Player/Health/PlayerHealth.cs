@@ -96,6 +96,7 @@ public class PlayerHealth : NetworkBehaviour
     [Server]
     public void RegisterReviveGlass()
     {
+        Debug.Log("RegisterReviveGlass");
         if (_state.Value != PlayerHealthState.Knockout) return;
 
         if (!_reviveWindowOpen)
@@ -156,8 +157,7 @@ public class PlayerHealth : NetworkBehaviour
     {
         _state.Value = PlayerHealthState.Dead;
         _health.Value = -1;
-
-        StartCoroutine(DeadCoroutine());
+        
     }
 
     [Server]
