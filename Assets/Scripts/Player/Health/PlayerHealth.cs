@@ -128,7 +128,6 @@ public class PlayerHealth : NetworkBehaviour
     [Server]
     private void Revive(int glassCount)
     {
-        // Отменяем таймер смерти
         if (_knockoutCoroutine != null)
         {
             StopCoroutine(_knockoutCoroutine);
@@ -138,12 +137,10 @@ public class PlayerHealth : NetworkBehaviour
         int hp = Mathf.Min(glassCount * data.hpToGain, 100);
         _health.Value = hp;
         _state.Value = PlayerHealthState.Alive;
-
-        // +1 стак опьянения воскрешённому
+        
         RpcRaiseWhiskeyOnOwner(Owner);
     }
-
-    // Вызываем событие опьянения на клиенте владельца
+    
     [TargetRpc]
     private void RpcRaiseWhiskeyOnOwner(NetworkConnection conn)
     {
@@ -154,9 +151,9 @@ public class PlayerHealth : NetworkBehaviour
     [Server]
     private void Death()
     {
+        if (_state.Value != PlayerHealthState.Knockout) return;
         _state.Value = PlayerHealthState.Dead;
         _health.Value = -1;
-        
     }
     
     // [Server]

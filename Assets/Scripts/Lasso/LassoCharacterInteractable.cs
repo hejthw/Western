@@ -139,11 +139,11 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
     private void OnCollisionEnter(Collision collision)
     {
         if (!IsServer) return;
-        if (!isKnockedDown) return; // только во время нокдауна
+        if (!isKnockedDown) return;
 
         // Проверяем что врезались в персонажа с таким же компонентом
         if (!collision.collider.TryGetComponent(out LassoCharacterInteractable other)) return;
-        if (other.isKnockedDown) return; // уже в нокдауне — не трогаем
+        if (other.isKnockedDown) return;
 
         // Направление: скорость нашего rigidbody в момент удара
         Vector3 hitDir = rb.linearVelocity.normalized;
@@ -152,8 +152,7 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
 
         other.ApplyChainKnockdown(hitDir, yankForce * 0.6f);
     }
-
-// Публичный метод — вызывается цепочкой от другого NPC
+    
     public void ApplyChainKnockdown(Vector3 direction, float force)
     {
         if (!IsServer) return;
