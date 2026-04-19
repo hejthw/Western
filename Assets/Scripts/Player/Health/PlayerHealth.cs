@@ -140,12 +140,12 @@ public class PlayerHealth : NetworkBehaviour
         _state.Value = PlayerHealthState.Alive;
 
         // +1 стак опьянения воскрешённому
-        RpcRaiseWhiskeyOnOwner();
+        RpcRaiseWhiskeyOnOwner(Owner);
     }
 
     // Вызываем событие опьянения на клиенте владельца
     [TargetRpc]
-    private void RpcRaiseWhiskeyOnOwner(NetworkConnection conn = null)
+    private void RpcRaiseWhiskeyOnOwner(NetworkConnection conn)
     {
         Debug.Log("HERE");
         PlayerEffectsEvents.RaiseWhiskeyUse();
