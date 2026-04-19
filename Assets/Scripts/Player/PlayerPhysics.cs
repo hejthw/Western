@@ -31,7 +31,7 @@ public class PlayerPhysics : NetworkBehaviour
     
     private bool _isFalling;
     private float _fallStartY;
-    private PlayerHealth _playerHealth;
+    public PlayerHealth _playerHealth;
     
     [Header("Fall Damage")]
     [SerializeField] private float fallDamageCoef = 1f;
