@@ -18,8 +18,10 @@ public class NetworkNPC : NetworkBehaviour
         _navMeshAgent.enabled = true;
     }
 
-    private void OnEnable()
+    public override void OnStartNetwork()
     {
+        base.OnStartNetwork();
+        
         _rigidbody.isKinematic = true;
     }
 

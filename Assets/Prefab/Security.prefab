@@ -342,8 +342,8 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!136 &2560488150713310024
@@ -572,7 +572,7 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 577405625571252360}
   _networkObjectCache: {fileID: 577405625571252360}
-  _componentConfiguration: 2
+  _componentConfiguration: 1
   _synchronizeParent: 0
   _packing:
     Position: 1
