@@ -135,4 +135,42 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
         if (enabled) npc.EnableAI();
         else npc.DisableAI();
     }
+    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!IsServer) return;
+        if (!isKnockedDown) return;
+
+        // Проверяем что врезались в персонажа с таким же компонентом
+        if (!collision.collider.TryGetComponent(out LassoCharacterInteractable other)) return;
+        if (other.isKnockedDown) return;
+
+        // Направление: скорость нашего rigidbody в момент удара
+        Vector3 hitDir = rb.linearVelocity.normalized;
+        if (hitDir == Vector3.zero)
+            hitDir = (collision.transform.position - transform.position).normalized;
+
+        other.ApplyChainKnockdown(hitDir, yankForce * 0.6f);
+    }
+    
+    public void ApplyChainKnockdown(Vector3 direction, float force)
+    {
+        if (!IsServer) return;
+        if (isKnockedDown) return;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.isKinematic = false;
+            rb.useGravity = true;
+            rb.AddForce(direction * force, ForceMode.Impulse);
+        }
+
+        RpcSetNPCAI(false);
+
+        if (knockdownCoroutine != null)
+            StopCoroutine(knockdownCoroutine);
+
+        knockdownCoroutine = StartCoroutine(KnockdownRoutine());
+    }
 }

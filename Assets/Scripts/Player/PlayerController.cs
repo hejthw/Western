@@ -115,8 +115,9 @@ public class PlayerController : NetworkBehaviour
     private void Test()
     {
         if (!IsOwner) return;
-        TakeDamageTest(10);
+        TakeDamageTest(1000);
     }
+    
     public void DisableMovement()
     {
         if (physics != null)
