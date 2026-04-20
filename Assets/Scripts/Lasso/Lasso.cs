@@ -261,6 +261,7 @@ public class LassoNetwork : NetworkBehaviour
             case LassoInteractionType.PullCharacter:
                 interactable.OnLassoPull(this);
                 interactable.OnLassoDetach(this);
+                ReturnToPlayer();
                 break;
         }
     }
@@ -447,7 +448,7 @@ public class LassoNetwork : NetworkBehaviour
         isReturning = true;
     }
 
-    private void ReturnToPlayer()
+    public void ReturnToPlayer()
     {
         if (serverPullCoroutine != null)
         {

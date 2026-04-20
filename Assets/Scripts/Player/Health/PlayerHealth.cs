@@ -10,14 +10,14 @@ public class PlayerHealth : NetworkBehaviour
 
     private readonly SyncVar<int> _health = new SyncVar<int>();
     private readonly SyncVar<PlayerHealthState> _state = new SyncVar<PlayerHealthState>();
-
-    // --- Revive state (server only) ---
+    
     private int _reviveGlassCount = 0;
     private float _reviveWindowTimer = 0f;
     private bool _reviveWindowOpen = false;
     private Coroutine _knockoutCoroutine;
 
     public int GetHealth() => _health.Value;
+    
     public bool IsKnockedOut => _state.Value == PlayerHealthState.Knockout;
 
     public override void OnStartNetwork()

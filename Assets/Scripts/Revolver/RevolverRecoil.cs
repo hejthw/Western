@@ -47,8 +47,6 @@ public class RevolverRecoil : MonoBehaviour
             upKick = recoilUp * multi;
             sideKick = Random.Range(-_data.sprayRandomness, _data.sprayRandomness) * multi;
         }
-        
-        Debug.Log(recoilUp + " " + recoilSideMax);
 
         _targetPitch -= upKick;
         _targetYaw += sideKick;

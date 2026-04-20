@@ -13518,6 +13518,47 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779320770}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1785936167 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7698102620842058367, guid: 7d3c65cfd6b321d4996ef31120fbe87b, type: 3}
+  m_PrefabInstance: {fileID: 6729124929323828738}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1785936174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785936167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 756c28cd3141c4140ae776188ee26729, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Managing.Statistic.StatisticsManager
+  _runInRelease: 0
+  _networkTraffic:
+    _enableMode: 1
+    _updateClient: 0
+    _updateServer: 1
+--- !u!114 &1785936175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1785936167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bc8f0363ddc75946a958043c5e49a83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Utility.BandwidthDisplay
+  _runInRelease: 0
+  _secondsAveraged: 1
+  _updateInterval: 1
+  _color: {r: 1, g: 1, b: 1, a: 1}
+  _placement: 2
+  _showOutgoing: 1
+  _showIncoming: 1
 --- !u!1 &1809915515
 GameObject:
   m_ObjectHideFlags: 0
@@ -17225,7 +17266,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7698102620842058367, guid: 7d3c65cfd6b321d4996ef31120fbe87b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1785936174}
+    - targetCorrespondingSourceObject: {fileID: 7698102620842058367, guid: 7d3c65cfd6b321d4996ef31120fbe87b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1785936175}
   m_SourcePrefab: {fileID: 100100000, guid: 7d3c65cfd6b321d4996ef31120fbe87b, type: 3}
 --- !u!1001 &7230151055060800142
 PrefabInstance:

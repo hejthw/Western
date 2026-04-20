@@ -75,6 +75,7 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
     public void OnLassoDetach(LassoNetwork lasso)
     {
         if (!IsServer) return;
+        
 
         if (holdCoroutine != null)
         {
