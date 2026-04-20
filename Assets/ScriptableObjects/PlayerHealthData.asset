@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18398e54592b413d9b2c74a53cfb66ee, type: 3}
   m_Name: PlayerHealthData
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealthData
-  maxHealth: 9999
+  maxHealth: 100
   knockoutDelay: 20
   respawnDelay: 20
   wakeupWindow: 5
