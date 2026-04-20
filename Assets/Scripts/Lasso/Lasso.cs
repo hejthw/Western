@@ -136,7 +136,7 @@ public class LassoNetwork : NetworkBehaviour
     {
         float dist = throwSpeed * Time.deltaTime;
 
-        if (Physics.Raycast(transform.position, moveDir, out RaycastHit hit, dist))
+        if (Physics.Raycast(transform.position, moveDir, out RaycastHit hit,dist,Physics.AllLayers,QueryTriggerInteraction.Ignore))
         {
             transform.position = hit.point;
             HandleHit(hit);
