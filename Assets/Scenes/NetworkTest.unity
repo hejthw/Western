@@ -6295,6 +6295,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LigthObject_Pan (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7103095680108300308, guid: aa334f3bd8250564886450a0821916b6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8336350349785666147, guid: aa334f3bd8250564886450a0821916b6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.384
@@ -7674,7 +7678,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1071975396}
-  - component: {fileID: 1071975395}
+  - component: {fileID: 1071975397}
   m_Layer: 0
   m_Name: SteamLobbyManager
   m_TagString: Untagged
@@ -7682,18 +7686,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1071975395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1071975394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34910c72046820f4d8767f080952d7cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SteamLobbyManager
 --- !u!4 &1071975396
 Transform:
   m_ObjectHideFlags: 0
@@ -7709,6 +7701,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1071975397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071975394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34910c72046820f4d8767f080952d7cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SteamLobbyManager
 --- !u!1 &1079568983
 GameObject:
   m_ObjectHideFlags: 0
@@ -7836,6 +7840,10 @@ PrefabInstance:
     - target: {fileID: 5203518631291581065, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5203518631291581065, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5459691189218685076, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: SceneId
@@ -8743,7 +8751,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1071975395}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SteamLobbyManager, Assembly-CSharp
         m_MethodName: HostGame
         m_Mode: 1
@@ -11321,6 +11329,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7103095680108300308, guid: aa334f3bd8250564886450a0821916b6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8336350349785666147, guid: aa334f3bd8250564886450a0821916b6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 11.349
@@ -13138,7 +13150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d1cee216d7982d43861a1babceb1c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  lobbyManager: {fileID: 1071975395}
+  lobbyManager: {fileID: 0}
   inputField: {fileID: 2034106651}
 --- !u!114 &1730401594
 MonoBehaviour:
@@ -13184,7 +13196,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1071975395}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SteamLobbyManager, Assembly-CSharp
         m_MethodName: JoinGame
         m_Mode: 5
@@ -14937,6 +14949,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5203518631291581065, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5459691189218685076, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: SceneId
       value: 970763103
@@ -15334,7 +15350,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1071975395}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SteamLobbyManager, Assembly-CSharp
         m_MethodName: InviteFriend
         m_Mode: 1
@@ -17257,6 +17273,10 @@ PrefabInstance:
     - target: {fileID: 7103095680108300308, guid: aa334f3bd8250564886450a0821916b6, type: 3}
       propertyPath: m_Name
       value: LigthObject_Pan
+      objectReference: {fileID: 0}
+    - target: {fileID: 7103095680108300308, guid: aa334f3bd8250564886450a0821916b6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8336350349785666147, guid: aa334f3bd8250564886450a0821916b6, type: 3}
       propertyPath: m_LocalPosition.x

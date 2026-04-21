@@ -74,6 +74,12 @@ public class SteamMainMenuController : MonoBehaviour
             steamManagerGo.AddComponent<SteamManager>();
         }
 
+        if (FindFirstObjectByType<MusicDirector>() == null)
+        {
+            GameObject musicDirectorGo = new GameObject("MusicDirector");
+            musicDirectorGo.AddComponent<MusicDirector>();
+        }
+
         _lobbyManager = FindFirstObjectByType<SteamLobbyManager>();
         if (_lobbyManager == null)
         {
@@ -134,7 +140,11 @@ public class SteamMainMenuController : MonoBehaviour
             quitButton.onClick.AddListener(Application.Quit);
             leaveLobbyButton.onClick.AddListener(() => _lobbyManager.LeaveLobby());
             inviteFriendsButton.onClick.AddListener(() => _lobbyManager.InviteFriend());
-            startButton.onClick.AddListener(() => _lobbyManager.StartGameForLobby("NetworkTest"));
+            startButton.onClick.AddListener(() =>
+            {
+                MusicDirector.StopGlobal();
+                _lobbyManager.StartGameForLobby("NetworkTest");
+            });
             _startButton.interactable = false;
 
             if (string.IsNullOrEmpty(_statusText.text))
@@ -167,7 +177,17 @@ public class SteamMainMenuController : MonoBehaviour
 
         CreateButton(_lobbyPanel.transform, "Выйти в меню", new Vector2(-220f, -220f), () => _lobbyManager.LeaveLobby(), new Vector2(220f, 62f), 22);
         CreateButton(_lobbyPanel.transform, "Пригласить друзей", new Vector2(0f, -220f), () => _lobbyManager.InviteFriend(), new Vector2(220f, 62f), 22);
-        _startButton = CreateButton(_lobbyPanel.transform, "Запуск", new Vector2(220f, -220f), () => _lobbyManager.StartGameForLobby("NetworkTest"), new Vector2(220f, 62f), 22);
+        _startButton = CreateButton(
+            _lobbyPanel.transform,
+            "Запуск",
+            new Vector2(220f, -220f),
+            () =>
+            {
+                MusicDirector.StopGlobal();
+                _lobbyManager.StartGameForLobby("NetworkTest");
+            },
+            new Vector2(220f, 62f),
+            22);
         _startButton.interactable = false;
     }
 
@@ -258,11 +278,13 @@ public class SteamMainMenuController : MonoBehaviour
         SwitchToLobbyPanel();
         HandleMembersChanged(_lobbyManager.GetLobbyMemberNames());
         UpdateLobbyButtons();
+        MusicDirector.PlayGlobal(MusicCue.Lobby);
     }
 
     private void HandleLobbyLeft()
     {
         SwitchToMainPanel();
+        MusicDirector.StopGlobal();
     }
 
     private void HandleStatusChanged(string status)

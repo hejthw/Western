@@ -1,11 +1,8 @@
 using Steamworks;
 using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using FishNet;
-using FishNet.Managing.Scened;
-using FishySteamworks;
+using UnityEngine.SceneManagement;
 
 public class SteamLobbyManager : MonoBehaviour
 {
@@ -74,24 +71,18 @@ public class SteamLobbyManager : MonoBehaviour
             StatusChangedEvent?.Invoke("Only lobby host can start");
             return;
         }
-        if (InstanceFinder.NetworkManager == null)
-        {
-            StatusChangedEvent?.Invoke("NetworkManager is missing in MainMenu");
-            return;
-        }
 
         _isGameStartRequested = true;
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameSceneKey, sceneName);
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey, "1");
-
-        if (!InstanceFinder.ServerManager.Started)
-            InstanceFinder.ServerManager.StartConnection();
-        if (!InstanceFinder.ClientManager.Started)
-            InstanceFinder.ClientManager.StartConnection();
-
         StatusChangedEvent?.Invoke("Starting match...");
-        StartCoroutine(LoadGameplayWhenReady(sceneName));
+        SteamGameStartBootstrap.SetPendingStart(
+            shouldHost: true,
+            hostAddress: SteamUser.GetSteamID().ToString(),
+            targetScene: sceneName);
+        PrepareForGameplaySceneLoad();
+        SceneManager.LoadScene(sceneName);
     }
 
     private void OnLobbyCreated(LobbyCreated_t result)
@@ -164,8 +155,14 @@ public class SteamLobbyManager : MonoBehaviour
         }
         else
         {
-            TryStartClientConnectionFromLobby();
             StatusChangedEvent?.Invoke("Host started the game. Connecting...");
+            string hostSteamIdString = SteamMatchmaking.GetLobbyData(m_currentLobbyID, HostAddressKey);
+            SteamGameStartBootstrap.SetPendingStart(
+                shouldHost: false,
+                hostAddress: hostSteamIdString,
+                targetScene: sceneName);
+            PrepareForGameplaySceneLoad();
+            SceneManager.LoadScene(sceneName);
         }
     }
 
@@ -236,51 +233,18 @@ public class SteamLobbyManager : MonoBehaviour
         return names;
     }
 
-    private void TryStartClientConnectionFromLobby()
+    private void PrepareForGameplaySceneLoad()
     {
-        if (InstanceFinder.NetworkManager == null || InstanceFinder.ClientManager.Started)
+        var networkManager = FindFirstObjectByType<FishNet.Managing.NetworkManager>();
+        if (networkManager == null)
             return;
 
-        string hostSteamIdString = SteamMatchmaking.GetLobbyData(m_currentLobbyID, HostAddressKey);
-        if (!ulong.TryParse(hostSteamIdString, out ulong hostSteamId))
+        var networkManagerObject = networkManager.gameObject;
+        if (networkManagerObject == null)
             return;
 
-        var transport = InstanceFinder.NetworkManager.TransportManager.GetTransport<FishySteamworks.FishySteamworks>();
-        if (transport == null)
-            return;
-
-        transport.SetClientAddress(hostSteamId.ToString());
-        InstanceFinder.ClientManager.StartConnection();
+        Debug.Log($"[Lobby] Destroying existing NetworkManager '{networkManagerObject.name}' before gameplay scene load.");
+        Destroy(networkManagerObject);
     }
 
-    private IEnumerator LoadGameplayWhenReady(string sceneName)
-    {
-        int expectedClients = Mathf.Max(SteamMatchmaking.GetNumLobbyMembers(m_currentLobbyID) - 1, 0);
-        float timeoutAt = Time.time + 8f;
-
-        while (Time.time < timeoutAt)
-        {
-            if (InstanceFinder.ServerManager != null &&
-                InstanceFinder.ServerManager.Started &&
-                InstanceFinder.ServerManager.Clients.Count >= expectedClients)
-            {
-                break;
-            }
-
-            yield return null;
-        }
-
-        if (InstanceFinder.SceneManager == null)
-        {
-            StatusChangedEvent?.Invoke("SceneManager not found");
-            yield break;
-        }
-
-        SceneLoadData loadData = new SceneLoadData(sceneName)
-        {
-            ReplaceScenes = ReplaceOption.All
-        };
-        loadData.PreferredActiveScene = new PreferredScene(new SceneLookupData(sceneName));
-        InstanceFinder.SceneManager.LoadGlobalScenes(loadData);
-    }
 }
