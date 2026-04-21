@@ -1,6 +1,6 @@
 using System;
 
-public static  class PlayerEvents
+public static class PlayerEvents
 {
     public static event Action NextTargetEvent;
     public static event Action PrevTargetEvent;

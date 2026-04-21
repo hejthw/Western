@@ -140,6 +140,7 @@ public class LassoNetwork : NetworkBehaviour
         {
             transform.position = hit.point;
             HandleHit(hit);
+            UIEvents.RaiseOnLassoStateChanged(LassoHUDState.Captured);
             return;
         }
 
@@ -191,6 +192,7 @@ public class LassoNetwork : NetworkBehaviour
                 }
 
                 SoundBus.Play(SoundID.LightObjectCaptured);
+
                 StartReturn();
                 return;
             }
@@ -450,6 +452,7 @@ public class LassoNetwork : NetworkBehaviour
 
     public void ReturnToPlayer()
     {
+        UIEvents.RaiseOnLassoStateChanged(LassoHUDState.Flying);
         if (serverPullCoroutine != null)
         {
             StopCoroutine(serverPullCoroutine);
@@ -490,6 +493,7 @@ public class LassoNetwork : NetworkBehaviour
 
         RpcReturn();
         controller.OnLassoReturnedServer();
+        UIEvents.RaiseOnLassoStateChanged(LassoHUDState.Idle);
     }
 
     [ObserversRpc]
