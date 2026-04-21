@@ -7,6 +7,4 @@
         if (playerHealth.IsKnockedOut)
             playerHealth.RegisterReviveGlass();
     }
-    
-    
 }

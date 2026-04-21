@@ -136,7 +136,7 @@ public class LassoNetwork : NetworkBehaviour
     {
         float dist = throwSpeed * Time.deltaTime;
 
-        if (Physics.Raycast(transform.position, moveDir, out RaycastHit hit, dist))
+        if (Physics.Raycast(transform.position, moveDir, out RaycastHit hit,dist,Physics.AllLayers,QueryTriggerInteraction.Ignore))
         {
             transform.position = hit.point;
             HandleHit(hit);
@@ -261,6 +261,7 @@ public class LassoNetwork : NetworkBehaviour
             case LassoInteractionType.PullCharacter:
                 interactable.OnLassoPull(this);
                 interactable.OnLassoDetach(this);
+                ReturnToPlayer();
                 break;
         }
     }
@@ -447,7 +448,7 @@ public class LassoNetwork : NetworkBehaviour
         isReturning = true;
     }
 
-    private void ReturnToPlayer()
+    public void ReturnToPlayer()
     {
         if (serverPullCoroutine != null)
         {
