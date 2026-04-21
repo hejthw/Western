@@ -11,7 +11,14 @@ public class LassoHUD : NetworkBehaviour
     [SerializeField] private Sprite capturedIcon;
     
     [SerializeField] private Image image;
-
+    
+    public override void OnStartClient()
+    {
+        if (!IsOwner)
+            gameObject.SetActive(false);
+    }
+    
+    
     private void OnEnable()
     {
         UIEvents.OnLassoStateChanged += SetState;
