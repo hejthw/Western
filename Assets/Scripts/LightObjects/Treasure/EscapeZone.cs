@@ -1,18 +1,47 @@
 ﻿using UnityEngine;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using System.Collections.Generic;
 
 public class EscapeZone : NetworkBehaviour
 {
+    public static EscapeZone Instance { get; private set; }
+
     private List<GameObject> playersInZone = new List<GameObject>();
     private float holdTimer = 0f;
-    private float requiredHoldTime = 3f;
+    [SerializeField] private float requiredHoldTime = 3f;
+
+    private readonly SyncVar<int> playersInZoneCount = new SyncVar<int>();
+    private readonly SyncVar<int> playersTotalCount = new SyncVar<int>();
+    private readonly SyncVar<bool> enoughCashCollected = new SyncVar<bool>();
+    private readonly SyncVar<bool> canFinishNow = new SyncVar<bool>();
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Update()
     {
         if (!IsServer) return;
 
-        if (playersInZone.Count == 0)
+        int totalPlayers = GetAlivePlayerCount();
+        playersTotalCount.Value = totalPlayers;
+        playersInZoneCount.Value = playersInZone.Count;
+
+        int requiredCash = 0;
+        if (HeistManager.Instance != null)
+            requiredCash = HeistManager.Instance.GetRequired();
+
+        int collectedCash = CashManager.Instance != null ? CashManager.Instance.GetCash() : 0;
+        bool hasEnoughCash = collectedCash >= requiredCash && requiredCash > 0;
+        enoughCashCollected.Value = hasEnoughCash;
+
+        bool allPlayersInZone = totalPlayers > 0 && playersInZone.Count == totalPlayers;
+        bool canTryFinish = hasEnoughCash && allPlayersInZone;
+        canFinishNow.Value = canTryFinish;
+
+        if (!canTryFinish)
         {
             holdTimer = 0;
             return;
@@ -51,7 +80,8 @@ public class EscapeZone : NetworkBehaviour
 
         if (other.CompareTag("Player"))
         {
-            playersInZone.Add(other.gameObject);
+            if (!playersInZone.Contains(other.gameObject))
+                playersInZone.Add(other.gameObject);
         }
     }
 
@@ -64,5 +94,20 @@ public class EscapeZone : NetworkBehaviour
             playersInZone.Remove(other.gameObject);
             holdTimer = 0;
         }
+    }
+
+    public bool IsFinishAvailable() => canFinishNow.Value;
+
+    private int GetAlivePlayerCount()
+    {
+        int count = 0;
+        var allPlayers = PlayerRegistry.All;
+        for (int i = 0; i < allPlayers.Count; i++)
+        {
+            if (allPlayers[i] != null && allPlayers[i].IsSpawned)
+                count++;
+        }
+
+        return count;
     }
 }

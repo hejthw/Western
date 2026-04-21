@@ -7796,7 +7796,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1079568984}
   _networkObjectCache: {fileID: 0}
-  ui: {fileID: 0}
+  ui: {fileID: 1913962759}
 --- !u!4 &1079568986
 Transform:
   m_ObjectHideFlags: 0
@@ -9995,7 +9995,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1334938813}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.5130685, y: 0.36620414, z: 0.2564189, w: 0.7327377}
+  m_LocalRotation: {x: -0.24685334, y: 0.07512911, z: 0.01919971, w: 0.96594536}
   m_LocalPosition: {x: -0.21768, y: 1.763, z: -10.574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -14810,6 +14810,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1912517587}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1913962759 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8190721567302021505, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
+  m_PrefabInstance: {fileID: 1662108754}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 443b20cf7b858c74fb7a22c1fdbd36ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeistUI
 --- !u!1 &1922297400
 GameObject:
   m_ObjectHideFlags: 0
@@ -17166,10 +17177,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5940302563835360443, guid: 7d3c65cfd6b321d4996ef31120fbe87b, type: 3}
-      propertyPath: _playerPrefab
-      value: 
-      objectReference: {fileID: 4737990210302664583, guid: 6033c3333cf258dd68f3304cc8cead69, type: 3}
     - target: {fileID: 5940302563835360443, guid: 7d3c65cfd6b321d4996ef31120fbe87b, type: 3}
       propertyPath: 'Spawns.Array.data[0]'
       value: 

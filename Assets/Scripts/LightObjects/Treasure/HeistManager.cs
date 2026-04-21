@@ -1,13 +1,16 @@
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HeistManager : NetworkBehaviour
 {
     public static HeistManager Instance;
 
-    private int totalValue;
-    private int collectedValue;
-    private int requiredValue;
+    private readonly SyncVar<int> totalValue = new SyncVar<int>();
+    private readonly SyncVar<int> collectedValue = new SyncVar<int>();
+    private readonly SyncVar<int> requiredValue = new SyncVar<int>();
     [SerializeField] private HeistUI ui;
     private bool ended = false;
 
@@ -26,10 +29,10 @@ public class HeistManager : NetworkBehaviour
     [Server]
     public void SetTotalValue(int value)
     {
-        totalValue = value;
-        requiredValue = Mathf.RoundToInt(value * 0.7f);
+        totalValue.Value = value;
+        requiredValue.Value = Mathf.RoundToInt(value * 0.7f);
 
-        RpcSyncValues(totalValue, collectedValue, requiredValue);
+        RpcSyncValues(totalValue.Value, collectedValue.Value, requiredValue.Value);
     }
 
     [Server]
@@ -37,11 +40,11 @@ public class HeistManager : NetworkBehaviour
     {
         if (ended) return;
 
-        collectedValue += value;
+        collectedValue.Value += value;
 
-        RpcSyncValues(totalValue, collectedValue, requiredValue);
+        RpcSyncValues(totalValue.Value, collectedValue.Value, requiredValue.Value);
 
-        if (collectedValue >= totalValue)
+        if (collectedValue.Value >= totalValue.Value)
             EndHeist();
     }
 
@@ -52,7 +55,7 @@ public class HeistManager : NetworkBehaviour
 
         ended = true;
 
-        bool win = collectedValue >= requiredValue;
+        bool win = collectedValue.Value >= requiredValue.Value;
 
         RpcShowResult(win);
     }
@@ -60,9 +63,9 @@ public class HeistManager : NetworkBehaviour
     [ObserversRpc]
     private void RpcSyncValues(int total, int collected, int required)
     {
-        totalValue = total;
-        collectedValue = collected;
-        requiredValue = required;
+        totalValue.Value = total;
+        collectedValue.Value = collected;
+        requiredValue.Value = required;
 
         Debug.Log($"UI: {required}");
     }
@@ -71,7 +74,8 @@ public class HeistManager : NetworkBehaviour
     private void RpcShowResult(bool win)
     {
 
-        Debug.Log(win ? "ÏÎÁÅÄÀ" : "ÏÎÐÀÆÅÍÈÅ");
+        Debug.Log(win ? "" : "");
+        StartCoroutine(ReloadSceneAfterDelay(1.5f));
     }
     [ServerRpc]
     public void RequestEndHeist()
@@ -79,6 +83,16 @@ public class HeistManager : NetworkBehaviour
         EndHeist();
     }
     
-    public int GetCollected() => collectedValue;
-    public int GetRequired() => requiredValue;
+    public int GetCollected() => collectedValue.Value;
+    public int GetRequired() => requiredValue.Value;
+
+    private IEnumerator ReloadSceneAfterDelay(float delaySeconds)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+        UnityEngine.SceneManagement.Scene activeScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        if (activeScene.IsValid())
+            UnityEngine.SceneManagement.SceneManager.LoadScene(activeScene.name);
+        else
+            Application.Quit();
+    }
 }
