@@ -368,6 +368,7 @@ public class LightObject : NetworkBehaviour, ILassoInteractable
         Vector3 dir = (playerObj.transform.position - transform.position).normalized;
         rb.linearVelocity = Vector3.zero;
         rb.AddForce(dir * 20f, ForceMode.Impulse);
+        lasso.ReturnToPlayer();
     }
 
     public void OnLassoDetach(LassoNetwork lasso)
