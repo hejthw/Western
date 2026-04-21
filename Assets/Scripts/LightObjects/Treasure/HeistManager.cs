@@ -74,7 +74,7 @@ public class HeistManager : NetworkBehaviour
     private void RpcShowResult(bool win)
     {
 
-        Debug.Log(win ? "" : "");
+        Debug.Log(win ? "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" : "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
         StartCoroutine(ReloadSceneAfterDelay(1.5f));
     }
     [ServerRpc]
