@@ -60,7 +60,7 @@ public class PlayerHUD : NetworkBehaviour
         if (health == null) return;
 
         var entry = Instantiate(teamEntryPrefab, teamHUDContainer);
-        entry.Track(health, identity, name);
+        entry.Track(health, identity, name, IsOwner);
         _teamEntries[identity] = entry;
     }
 

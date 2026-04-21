@@ -1,4 +1,5 @@
 using System.Collections;
+using FishNet.Object;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,30 +27,33 @@ public class TeamHUDEntry : MonoBehaviour
 
     private PlayerHealth _trackedHealth;
     private PlayerName _trackedIdentity;
+    
+    private bool _isOwner;
 
     public bool IsTracking(PlayerHealth player) => _trackedHealth == player;
 
-    public void Track(PlayerHealth health, PlayerName identity, string playerName)
+    public void Track(PlayerHealth health, PlayerName identity, string playerName, bool isOwner)
     {
-        _trackedHealth    = health;
-        _trackedIdentity  = identity;
+        _trackedHealth = health;
+        _trackedIdentity = identity;
         _knockdownDuration = data.knockoutDelay;
+        _isOwner = isOwner;
 
         nameText.text = string.IsNullOrEmpty(playerName) ? "..." : playerName;
         RefreshState(health.GetHealth());
 
         PlayerHealthEvents.OnTeammateHealthChange += OnHealthChanged;
-        PlayerHealthEvents.OnTeammateStateChange  += OnStateChanged;
-        PlayerEvents.OnPlayerNameChanged          += OnNameChanged;
+        PlayerHealthEvents.OnTeammateStateChange += OnStateChanged;
+        PlayerEvents.OnPlayerNameChanged += OnNameChanged;
     }
 
     public void Untrack()
     {
         PlayerHealthEvents.OnTeammateHealthChange -= OnHealthChanged;
-        PlayerHealthEvents.OnTeammateStateChange  -= OnStateChanged;
-        PlayerEvents.OnPlayerNameChanged          -= OnNameChanged;
+        PlayerHealthEvents.OnTeammateStateChange -= OnStateChanged;
+        PlayerEvents.OnPlayerNameChanged -= OnNameChanged;
 
-        _trackedHealth   = null;
+        _trackedHealth = null;
         _trackedIdentity = null;
     }
 
@@ -73,8 +77,8 @@ public class TeamHUDEntry : MonoBehaviour
         int hp = state switch
         {
             PlayerHealthState.Knockout => 0,
-            PlayerHealthState.Dead     => -1,
-            _                          => _trackedHealth.GetHealth()
+            PlayerHealthState.Dead  => -1,
+            _ => _trackedHealth.GetHealth()
         };
 
         RefreshState(hp);
@@ -98,13 +102,15 @@ public class TeamHUDEntry : MonoBehaviour
     private void SetState(PlayerState state)
     {
         normalIcon.enabled = state == PlayerState.Normal;
-        knockIcon.enabled  = state == PlayerState.Knock;
-        deadIcon.enabled   = state == PlayerState.Dead;
+        knockIcon.enabled = state == PlayerState.Knock;
+        deadIcon.enabled = state == PlayerState.Dead;
 
         if (_knockTimerCoroutine != null) { StopCoroutine(_knockTimerCoroutine); _knockTimerCoroutine = null; }
         if (_healthLerpCoroutine != null) { StopCoroutine(_healthLerpCoroutine); _healthLerpCoroutine = null; }
 
         _isKnocked = state == PlayerState.Knock;
+        
+        if (!_isOwner) return;
 
         if (_isKnocked)
             _knockTimerCoroutine = StartCoroutine(KnockdownTimer());
@@ -131,6 +137,7 @@ public class TeamHUDEntry : MonoBehaviour
     private void SetHealthBarWidth(float targetWidth)
     {
         if (_isKnocked) return;
+        if (!_isOwner) return;
 
         if (_healthLerpCoroutine != null)
             StopCoroutine(_healthLerpCoroutine);
