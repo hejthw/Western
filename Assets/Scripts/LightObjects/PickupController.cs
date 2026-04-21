@@ -6,6 +6,7 @@ using System.Collections;
 public class PickupController : NetworkBehaviour
 {
     [SerializeField] private Transform holdPoint;
+    [SerializeField] private LootDatabase lootDatabase;
     public float throwForce = 12f;
     public float pickupDistance = 5f;
     public LayerMask pickupLayer;
@@ -14,6 +15,8 @@ public class PickupController : NetworkBehaviour
     private Rigidbody heldRb;
     private Transform cam;
     private PlayerInput input;
+    private bool _isInsideCashZone;
+    private bool _lastLoggedCashZoneState;
   
 
     private void Awake()
@@ -318,11 +321,37 @@ public class PickupController : NetworkBehaviour
     }
 
     public GameObject GetHeldObject() => heldObject;
+    public bool IsInsideCashZone() => _isInsideCashZone;
+
+    public string GetInteractBindingLabel()
+    {
+        return input != null ? input.GetPickupBindingDisplay() : "E";
+    }
+
+    public bool TryGetHeldLootValue(out int value)
+    {
+        value = 0;
+        if (heldObject == null)
+            return false;
+
+        Treasure treasure = heldObject.GetComponent<Treasure>();
+        if (treasure == null)
+            return false;
+
+        value = ResolveLootValue(treasure, heldObject.name);
+        return value > 0;
+    }
 
 
     private void LateUpdate()
     {
         if (!IsOwner) return;
+        _isInsideCashZone = CheckCashZoneNearby();
+        if (_isInsideCashZone != _lastLoggedCashZoneState)
+        {
+            Debug.Log($"[PickupController] Local cash zone changed: {_isInsideCashZone}, player={name}");
+            _lastLoggedCashZoneState = _isInsideCashZone;
+        }
         if (heldObject != null)
         {
             // Оружие не трогаем – оно само управляет своей позицией
@@ -434,5 +463,51 @@ public class PickupController : NetworkBehaviour
                 oldLightObj.EquipToPlayer(GetComponent<NetworkObject>());
             }
         }
+    }
+
+    private bool CheckCashZoneNearby()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, 2f);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].GetComponent<CashZone>() != null ||
+                hits[i].GetComponentInParent<CashZone>() != null ||
+                hits[i].GetComponentInChildren<CashZone>() != null)
+                return true;
+        }
+
+        return false;
+    }
+
+    private int ResolveLootValue(Treasure treasure, string heldName)
+    {
+        if (lootDatabase != null && lootDatabase.items != null)
+        {
+            string normalizedName = NormalizeObjectName(heldName);
+            for (int i = 0; i < lootDatabase.items.Length; i++)
+            {
+                TreasureData data = lootDatabase.items[i];
+                if (data == null || data.prefab == null)
+                    continue;
+
+                if (NormalizeObjectName(data.prefab.name) == normalizedName)
+                    return data.value;
+            }
+        }
+
+        return treasure.GetValue();
+    }
+
+    private string NormalizeObjectName(string sourceName)
+    {
+        if (string.IsNullOrEmpty(sourceName))
+            return string.Empty;
+
+        const string cloneSuffix = "(Clone)";
+        string trimmed = sourceName.Trim();
+        if (trimmed.EndsWith(cloneSuffix))
+            return trimmed.Substring(0, trimmed.Length - cloneSuffix.Length).Trim();
+
+        return trimmed;
     }
 }

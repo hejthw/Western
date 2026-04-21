@@ -308,4 +308,29 @@ public class PlayerInput : MonoBehaviour
     {
         IsHoldingFinish = false;
     }
+
+    public string GetPickupBindingDisplay()
+    {
+        InputAction action = _pickup != null ? _pickup : _interact;
+        if (action == null)
+            return "E";
+
+        string display = action.GetBindingDisplayString();
+        if (string.IsNullOrWhiteSpace(display))
+            return "E";
+
+        return display.ToUpperInvariant();
+    }
+
+    public string GetFinishBindingDisplay()
+    {
+        if (_finish == null)
+            return "Z";
+
+        string display = _finish.GetBindingDisplayString();
+        if (string.IsNullOrWhiteSpace(display))
+            return "Z";
+
+        return display.ToUpperInvariant();
+    }
 }
