@@ -1,8 +1,9 @@
 ﻿using System;
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LassoHUD : MonoBehaviour
+public class LassoHUD : NetworkBehaviour
 {
     [Header("Icons")]
     [SerializeField] private Sprite idleIcon;
