@@ -126,8 +126,7 @@ public class PlayerHealth : NetworkBehaviour
     private IEnumerator ReviveWindowCoroutine()
     {
         yield return new WaitForSeconds(data.wakeupWindow);
-
-        // Окно закрылось — воскрешаем
+        
         if (_state.Value == PlayerHealthState.Knockout)
             Revive(_reviveGlassCount);
 
