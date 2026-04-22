@@ -178,6 +178,7 @@ public class SteamMainMenuController : MonoBehaviour
                 {
                     _slotInstances[i] = Instantiate(lobbyItemPrefab, slotRoots[i]);
                     ResetRectTransform(_slotInstances[i]);
+                    _slotInstances[i].SetActive(true);
                 }
 
                 _slotInstances[i].SetActive(true);

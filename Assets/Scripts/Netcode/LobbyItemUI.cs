@@ -38,7 +38,6 @@ public class LobbyItemUI : MonoBehaviour
         if (readyButton != null)
         {
             bool isLocal = steamId == SteamUser.GetSteamID();
-            readyButton.gameObject.SetActive(isLocal);
 
             if (isLocal && !_initialized)
             {
