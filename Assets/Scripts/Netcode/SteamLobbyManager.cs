@@ -7,32 +7,30 @@ using UnityEngine.SceneManagement;
 
 public class SteamLobbyManager : MonoBehaviour
 {
-    private Callback<LobbyCreated_t>          lobbyCreated;
-    private Callback<LobbyEnter_t>            lobbyEntered;
+    private Callback<LobbyCreated_t> lobbyCreated;
+    private Callback<LobbyEnter_t> lobbyEntered;
     private Callback<GameLobbyJoinRequested_t> gameLobbyJoinRequested;
-    private Callback<LobbyChatUpdate_t>        lobbyChatUpdate;
-    private Callback<LobbyDataUpdate_t>        lobbyDataUpdate;
+    private Callback<LobbyChatUpdate_t> lobbyChatUpdate;
+    private Callback<LobbyDataUpdate_t> lobbyDataUpdate;
 
     private CSteamID m_currentLobbyID;
-    private bool     _isGameStartRequested;
+    private bool _isGameStartRequested;
 
     private const string HostAddressKey = "HostAddress";
-    private const string HostNameKey    = "HostName";
+    private const string HostNameKey = "HostName";
     private const string GameStartedKey = "GameStarted";
-    private const string GameSceneKey   = "GameScene";
-    private const string ReadyKey       = "Ready";
+    private const string GameSceneKey = "GameScene";
+    private const string ReadyKey = "Ready";
 
-    public event Action<CSteamID>              LobbyEnteredEvent;
-    public event Action                        LobbyLeftEvent;
-    public event Action<string>                StatusChangedEvent;
+    public event Action<CSteamID> LobbyEnteredEvent;
+    public event Action LobbyLeftEvent;
+    public event Action<string> StatusChangedEvent;
     public event Action<IReadOnlyList<string>> LobbyMembersChangedEvent;
-    public event Action                        LobbyReadyChangedEvent;
+    public event Action LobbyReadyChangedEvent;
 
-    public bool     IsInLobby    => m_currentLobbyID.IsValid();
-    public bool     IsLobbyHost  => IsInLobby && SteamMatchmaking.GetLobbyOwner(m_currentLobbyID) == SteamUser.GetSteamID();
+    public bool IsInLobby => m_currentLobbyID.IsValid();
+    public bool IsLobbyHost => IsInLobby && SteamMatchmaking.GetLobbyOwner(m_currentLobbyID) == SteamUser.GetSteamID();
     public CSteamID CurrentLobbyId => m_currentLobbyID;
-
-    // ── Unity ────────────────────────────────────────────────────────────────
 
     private void Start()
     {
@@ -42,16 +40,15 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
 
-        lobbyCreated           = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
-        lobbyEntered           = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
+        lobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
+        lobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
         gameLobbyJoinRequested = Callback<GameLobbyJoinRequested_t>.Create(OnGameLobbyJoinRequested);
-        lobbyChatUpdate        = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
-        lobbyDataUpdate        = Callback<LobbyDataUpdate_t>.Create(OnLobbyDataUpdate);
+        lobbyChatUpdate = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
+        lobbyDataUpdate = Callback<LobbyDataUpdate_t>.Create(OnLobbyDataUpdate);
 
         StatusChangedEvent?.Invoke("Steam connected");
     }
-
-    // ── Public API ───────────────────────────────────────────────────────────
+    
 
     public void HostGame()
     {
@@ -62,8 +59,9 @@ public class SteamLobbyManager : MonoBehaviour
 
     public void StartGameForLobby(string sceneName)
     {
-        if (!m_currentLobbyID.IsValid())  { StatusChangedEvent?.Invoke("Create or join a lobby first"); return; }
-        if (!IsLobbyHost)                 { StatusChangedEvent?.Invoke("Only lobby host can start");     return; }
+        if (!m_currentLobbyID.IsValid()) { StatusChangedEvent?.Invoke("Create or join a lobby first"); return; }
+        if (!IsLobbyHost)
+        { StatusChangedEvent?.Invoke("Only lobby host can start");     return; }
 
         _isGameStartRequested = true;
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
@@ -102,20 +100,17 @@ public class SteamLobbyManager : MonoBehaviour
         if (m_currentLobbyID.IsValid())
             SteamMatchmaking.LeaveLobby(m_currentLobbyID);
 
-        m_currentLobbyID      = CSteamID.Nil;
+        m_currentLobbyID = CSteamID.Nil;
         _isGameStartRequested = false;
         StatusChangedEvent?.Invoke("You left the lobby");
         LobbyLeftEvent?.Invoke();
         LobbyMembersChangedEvent?.Invoke(Array.Empty<string>());
     }
 
-    // ── Ready system ─────────────────────────────────────────────────────────
-
     public void SetLocalPlayerReady(bool ready)
     {
         if (!m_currentLobbyID.IsValid()) return;
         SteamMatchmaking.SetLobbyMemberData(m_currentLobbyID, ReadyKey, ready ? "1" : "0");
-        // Локальное изменение не приходит через callback — уведомляем сразу
         LobbyReadyChangedEvent?.Invoke();
     }
 
@@ -137,8 +132,7 @@ public class SteamLobbyManager : MonoBehaviour
         }
         return true;
     }
-
-    // ── Member list ──────────────────────────────────────────────────────────
+    
 
     public List<string> GetLobbyMemberNames()
     {
@@ -159,8 +153,7 @@ public class SteamLobbyManager : MonoBehaviour
             ids.Add(SteamMatchmaking.GetLobbyMemberByIndex(m_currentLobbyID, i));
         return ids;
     }
-
-    // ── Steam callbacks ──────────────────────────────────────────────────────
+    
 
     private void OnLobbyCreated(LobbyCreated_t result)
     {
@@ -170,12 +163,12 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
 
-        m_currentLobbyID      = new CSteamID(result.m_ulSteamIDLobby);
+        m_currentLobbyID = new CSteamID(result.m_ulSteamIDLobby);
         _isGameStartRequested = false;
 
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostNameKey,    SteamFriends.GetPersonaName());
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey, "0");
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey,SteamUser.GetSteamID().ToString());
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostNameKey,SteamFriends.GetPersonaName());
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey,"0");
 
         StatusChangedEvent?.Invoke("Lobby ready. Invite your friends.");
         NotifyMembersChanged();
@@ -183,18 +176,16 @@ public class SteamLobbyManager : MonoBehaviour
 
     private void OnLobbyEntered(LobbyEnter_t result)
     {
-        m_currentLobbyID      = new CSteamID(result.m_ulSteamIDLobby);
+        m_currentLobbyID = new CSteamID(result.m_ulSteamIDLobby);
         _isGameStartRequested = false;
         StatusChangedEvent?.Invoke("Joined lobby");
-
-        // Steam не успевает заполнить кэш участников синхронно —
-        // делаем один кадр задержки, потом уведомляем UI
+        
         StartCoroutine(NotifyLobbyEnteredNextFrame());
     }
 
     private IEnumerator NotifyLobbyEnteredNextFrame()
     {
-        yield return null; // ждём один кадр
+        yield return null;
         LobbyEnteredEvent?.Invoke(m_currentLobbyID);
         NotifyMembersChanged();
     }
@@ -217,17 +208,14 @@ public class SteamLobbyManager : MonoBehaviour
         if (!m_currentLobbyID.IsValid()) return;
         if (data.m_ulSteamIDLobby != m_currentLobbyID.m_SteamID) return;
         if (data.m_bSuccess == 0) return;
-
-        // Изменились данные участника (готовность) — m_ulSteamIDMember == игрок
-        // Изменились данные лобби (старт и т.п.) — m_ulSteamIDMember == лобби
+        
         bool isMemberData = data.m_ulSteamIDMember != data.m_ulSteamIDLobby;
         if (isMemberData)
         {
             LobbyReadyChangedEvent?.Invoke();
             return;
         }
-
-        // Проверяем старт игры
+        
         if (SteamMatchmaking.GetLobbyData(m_currentLobbyID, GameStartedKey) != "1") return;
 
         string sceneName = SteamMatchmaking.GetLobbyData(m_currentLobbyID, GameSceneKey);
@@ -246,8 +234,6 @@ public class SteamLobbyManager : MonoBehaviour
             SceneManager.LoadScene(sceneName);
         }
     }
-
-    // ── Helpers ──────────────────────────────────────────────────────────────
 
     private void NotifyMembersChanged()
     {

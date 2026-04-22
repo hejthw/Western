@@ -3,28 +3,22 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Вешается на префаб LobbyItem.
-/// Подвяжи в инспекторе: PlayerImage, PlayerName, ReadyText, ReadyIndicator, ReadyButton.
-/// </summary>
 public class LobbyItemUI : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private RawImage playerImage;
     [SerializeField] private TMP_Text playerName;
     [SerializeField] private TMP_Text readyText;
-    [SerializeField] private Image    readyIndicator;
-    [SerializeField] private Button   readyButton;
+    [SerializeField] private Image readyIndicator;
+    [SerializeField] private Button readyButton;
 
     [Header("Colors")]
-    [SerializeField] private Color readyColor    = new Color(0.2f, 0.8f, 0.3f);
+    [SerializeField] private Color readyColor  = new Color(0.2f, 0.8f, 0.3f);
     [SerializeField] private Color notReadyColor = new Color(0.85f, 0.2f, 0.2f);
 
-    private CSteamID         _steamId;
+    private CSteamID _steamId;
     private SteamLobbyManager _lobbyManager;
-    private bool             _initialized;
-
-    // ── Public ───────────────────────────────────────────────────────────────
+    private bool _initialized;
 
     public void Init(CSteamID steamId, SteamLobbyManager lobbyManager)
     {
@@ -33,8 +27,7 @@ public class LobbyItemUI : MonoBehaviour
 
         playerName.text = SteamFriends.GetFriendPersonaName(steamId);
         LoadAvatar(steamId);
-
-        // Кнопка Ready — только у локального игрока, и только один раз
+        
         if (readyButton != null)
         {
             bool isLocal = steamId == SteamUser.GetSteamID();
@@ -49,8 +42,7 @@ public class LobbyItemUI : MonoBehaviour
         _initialized = true;
         Refresh();
     }
-
-    /// <summary>Вызывается контроллером при изменении готовности любого игрока.</summary>
+    
     public void Refresh()
     {
         if (_lobbyManager == null) return;
@@ -63,8 +55,7 @@ public class LobbyItemUI : MonoBehaviour
         if (readyIndicator != null)
             readyIndicator.color = isReady ? readyColor : notReadyColor;
     }
-
-    // ── Private ──────────────────────────────────────────────────────────────
+    
 
     private void OnReadyClicked()
     {
