@@ -180,6 +180,7 @@ public class SteamMainMenuController : MonoBehaviour
                     ResetRectTransform(_slotInstances[i]);
                 }
 
+                _slotInstances[i].SetActive(true);
                 // Всегда заново инициализировать — игрок мог смениться
                 _slotInstances[i].GetComponent<LobbyItemUI>().Init(id, _lobbyManager);
             }
@@ -197,6 +198,7 @@ public class SteamMainMenuController : MonoBehaviour
                 {
                     _slotInstances[i] = Instantiate(lobbyItemEmptyPrefab, slotRoots[i]);
                     ResetRectTransform(_slotInstances[i]);
+                    _slotInstances[i].SetActive(true);
                 }
             }
         }
@@ -223,8 +225,7 @@ public class SteamMainMenuController : MonoBehaviour
         rt.localScale      = Vector3.one;
         rt.anchoredPosition = Vector2.zero;
     }
-
-    // ── UI helpers ───────────────────────────────────────────────────────────
+    
 
     private void SwitchToMainPanel()
     {
