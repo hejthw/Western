@@ -14,27 +14,27 @@ public class SteamMainMenuController : MonoBehaviour
 
     [Header("Main Panel")]
     [SerializeField] private TMP_Text statusText;
-    [SerializeField] private Button createLobbyButton;
-    [SerializeField] private Button joinLobbyButton;
-    [SerializeField] private Button quitButton;
+    [SerializeField] private Button   createLobbyButton;
+    [SerializeField] private Button   joinLobbyButton;
+    [SerializeField] private Button   quitButton;
 
     [Header("Lobby Panel — Slots")]
     [Tooltip("Ровно 4 Transform-а — контейнеры слотов в нужном порядке")]
     [SerializeField] private Transform[] slotRoots = new Transform[4];
-
-    [Tooltip("Префаб с компонентом LobbyItemUI")]
-    [SerializeField] private GameObject lobbyItemPrefab;
-
-    [Tooltip("Префаб с компонентом LobbySlotEmpty")]
-    [SerializeField] private GameObject lobbyItemEmptyPrefab;
+    [SerializeField] private GameObject  lobbyItemPrefab;
+    [SerializeField] private GameObject  lobbyItemEmptyPrefab;
 
     [Header("Lobby Panel — Buttons")]
-    [SerializeField] private Button leaveLobbyButton;
-    [SerializeField] private Button inviteFriendsButton;
-    [SerializeField] private Button startButton;
+    [SerializeField] private Button   leaveLobbyButton;
+    [SerializeField] private Button   inviteFriendsButton;
+    [SerializeField] private Button   startButton;
 
     private SteamLobbyManager _lobbyManager;
+
+    // Текущий тип каждого слота: true = LobbyItemUI, false = Empty, null = не заспавнен
     private readonly GameObject[] _slotInstances = new GameObject[4];
+
+    // ── Unity ────────────────────────────────────────────────────────────────
 
     private void Awake()
     {
@@ -45,20 +45,20 @@ public class SteamMainMenuController : MonoBehaviour
         SwitchToMainPanel();
 
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        Cursor.visible   = true;
     }
 
     private void OnDestroy()
     {
         if (_lobbyManager == null) return;
-
-        _lobbyManager.StatusChangedEvent -= HandleStatusChanged;
-        _lobbyManager.LobbyEnteredEvent -= HandleLobbyEntered;
-        _lobbyManager.LobbyLeftEvent -= HandleLobbyLeft;
+        _lobbyManager.StatusChangedEvent       -= HandleStatusChanged;
+        _lobbyManager.LobbyEnteredEvent        -= HandleLobbyEntered;
+        _lobbyManager.LobbyLeftEvent           -= HandleLobbyLeft;
         _lobbyManager.LobbyMembersChangedEvent -= HandleMembersChanged;
-        _lobbyManager.LobbyReadyChangedEvent -= HandleReadyChanged;
+        _lobbyManager.LobbyReadyChangedEvent   -= HandleReadyChanged;
     }
-    
+
+    // ── Init ─────────────────────────────────────────────────────────────────
 
     private void EnsureSteamObjects()
     {
@@ -76,7 +76,6 @@ public class SteamMainMenuController : MonoBehaviour
     private static void EnsureEventSystem()
     {
         if (FindFirstObjectByType<EventSystem>() != null) return;
-
         GameObject es = new GameObject("EventSystem");
         es.AddComponent<EventSystem>();
         es.AddComponent<InputSystemUIInputModule>();
@@ -110,19 +109,19 @@ public class SteamMainMenuController : MonoBehaviour
 
     private void WireLobbyEvents()
     {
-        _lobbyManager.StatusChangedEvent += HandleStatusChanged;
-        _lobbyManager.LobbyEnteredEvent += HandleLobbyEntered;
-        _lobbyManager.LobbyLeftEvent += HandleLobbyLeft;
+        _lobbyManager.StatusChangedEvent       += HandleStatusChanged;
+        _lobbyManager.LobbyEnteredEvent        += HandleLobbyEntered;
+        _lobbyManager.LobbyLeftEvent           += HandleLobbyLeft;
         _lobbyManager.LobbyMembersChangedEvent += HandleMembersChanged;
-        _lobbyManager.LobbyReadyChangedEvent += HandleReadyChanged;
+        _lobbyManager.LobbyReadyChangedEvent   += HandleReadyChanged;
     }
-    
+
+    // ── Event handlers ───────────────────────────────────────────────────────
 
     private void HandleLobbyEntered(CSteamID _)
     {
         SwitchToLobbyPanel();
-        RefreshAllSlots();
-        UpdateStartButton();
+        // HandleMembersChanged придёт следом от NotifyMembersChanged в менеджере
         MusicDirector.PlayGlobal(MusicCue.Lobby);
     }
 
@@ -135,10 +134,10 @@ public class SteamMainMenuController : MonoBehaviour
 
     private void HandleStatusChanged(string status)
     {
-        if (statusText != null)
-            statusText.text = status;
+        if (statusText != null) statusText.text = status;
     }
 
+    // Вызывается и при входе, и при смене состава лобби
     private void HandleMembersChanged(IReadOnlyList<string> _)
     {
         RefreshAllSlots();
@@ -148,48 +147,56 @@ public class SteamMainMenuController : MonoBehaviour
     private void HandleReadyChanged()
     {
         for (int i = 0; i < _slotInstances.Length; i++)
-        {
-            if (_slotInstances[i] == null) continue;
-            _slotInstances[i].GetComponent<LobbyItemUI>()?.Refresh();
-        }
+            _slotInstances[i]?.GetComponent<LobbyItemUI>()?.Refresh();
+
         UpdateStartButton();
     }
-    
+
+    // ── Slots ─────────────────────────────────────────────────────────────────
 
     private void RefreshAllSlots()
     {
-        IReadOnlyList<CSteamID> members = _lobbyManager.GetLobbyMemberIDs();
+        List<CSteamID> members = _lobbyManager.GetLobbyMemberIDs();
 
         for (int i = 0; i < slotRoots.Length; i++)
         {
             bool hasPlayer = members != null && i < members.Count;
-            CSteamID id = hasPlayer ? members[i] : default;
-            
-            if (_slotInstances[i] != null)
+
+            if (hasPlayer)
             {
-                bool wasPlayer = _slotInstances[i].GetComponent<LobbyItemUI>() != null;
-                if (wasPlayer != hasPlayer)
+                CSteamID id = members[i];
+
+                // Если на этом слоте стоит заглушка — уничтожить её
+                if (_slotInstances[i] != null && _slotInstances[i].GetComponent<LobbyItemUI>() == null)
                 {
                     Destroy(_slotInstances[i]);
                     _slotInstances[i] = null;
                 }
-            }
 
-            if (hasPlayer)
-            {
+                // Создать LobbyItem если нет
                 if (_slotInstances[i] == null)
                 {
                     _slotInstances[i] = Instantiate(lobbyItemPrefab, slotRoots[i]);
-                    _slotInstances[i].transform.localPosition = Vector3.zero;
+                    ResetRectTransform(_slotInstances[i]);
                 }
+
+                // Всегда заново инициализировать — игрок мог смениться
                 _slotInstances[i].GetComponent<LobbyItemUI>().Init(id, _lobbyManager);
             }
             else
             {
+                // Если на этом слоте стоит LobbyItem — уничтожить его
+                if (_slotInstances[i] != null && _slotInstances[i].GetComponent<LobbyItemUI>() != null)
+                {
+                    Destroy(_slotInstances[i]);
+                    _slotInstances[i] = null;
+                }
+
+                // Создать заглушку если нет
                 if (_slotInstances[i] == null)
                 {
                     _slotInstances[i] = Instantiate(lobbyItemEmptyPrefab, slotRoots[i]);
-                    _slotInstances[i].transform.localPosition = Vector3.zero;
+                    ResetRectTransform(_slotInstances[i]);
                 }
             }
         }
@@ -199,12 +206,25 @@ public class SteamMainMenuController : MonoBehaviour
     {
         for (int i = 0; i < _slotInstances.Length; i++)
         {
-            if (_slotInstances[i] == null) continue;
-            Destroy(_slotInstances[i]);
-            _slotInstances[i] = null;
+            if (_slotInstances[i] != null)
+            {
+                Destroy(_slotInstances[i]);
+                _slotInstances[i] = null;
+            }
         }
     }
-    
+
+    private static void ResetRectTransform(GameObject go)
+    {
+        RectTransform rt = go.GetComponent<RectTransform>();
+        if (rt == null) return;
+        rt.localPosition   = Vector3.zero;
+        rt.localRotation   = Quaternion.identity;
+        rt.localScale      = Vector3.one;
+        rt.anchoredPosition = Vector2.zero;
+    }
+
+    // ── UI helpers ───────────────────────────────────────────────────────────
 
     private void SwitchToMainPanel()
     {
@@ -228,7 +248,10 @@ public class SteamMainMenuController : MonoBehaviour
         startButton.interactable = isHost && allReady;
 
         TMP_Text label = startButton.GetComponentInChildren<TMP_Text>();
-        if (label != null)
-            label.text = isHost ? (allReady ? "Запуск" : "Ожидание готовности") : "Ожидание хоста";
+        if (label == null) return;
+
+        if (!isHost)          label.text = "Ожидание хоста";
+        else if (!allReady)   label.text = "Ожидание готовности";
+        else                  label.text = "Запуск";
     }
 }

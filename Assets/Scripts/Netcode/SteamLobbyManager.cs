@@ -1,36 +1,38 @@
 using Steamworks;
 using UnityEngine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
 public class SteamLobbyManager : MonoBehaviour
 {
-    private Callback<LobbyCreated_t> lobbyCreated;
-    private Callback<LobbyEnter_t> lobbyEntered;
+    private Callback<LobbyCreated_t>          lobbyCreated;
+    private Callback<LobbyEnter_t>            lobbyEntered;
     private Callback<GameLobbyJoinRequested_t> gameLobbyJoinRequested;
-    private Callback<LobbyChatUpdate_t> lobbyChatUpdate;
-    private Callback<LobbyDataUpdate_t> lobbyDataUpdate;
+    private Callback<LobbyChatUpdate_t>        lobbyChatUpdate;
+    private Callback<LobbyDataUpdate_t>        lobbyDataUpdate;
 
     private CSteamID m_currentLobbyID;
-    private bool _isGameStartRequested;
+    private bool     _isGameStartRequested;
 
     private const string HostAddressKey = "HostAddress";
-    private const string HostNameKey = "HostName";
+    private const string HostNameKey    = "HostName";
     private const string GameStartedKey = "GameStarted";
-    private const string GameSceneKey = "GameScene";
-    private const string ReadyKey = "Ready";
+    private const string GameSceneKey   = "GameScene";
+    private const string ReadyKey       = "Ready";
 
-    public event Action<CSteamID> LobbyEnteredEvent;
-    public event Action LobbyLeftEvent;
-    public event Action<string> StatusChangedEvent;
+    public event Action<CSteamID>              LobbyEnteredEvent;
+    public event Action                        LobbyLeftEvent;
+    public event Action<string>                StatusChangedEvent;
     public event Action<IReadOnlyList<string>> LobbyMembersChangedEvent;
-    public event Action LobbyReadyChangedEvent;
+    public event Action                        LobbyReadyChangedEvent;
 
-    public bool IsInLobby => m_currentLobbyID.IsValid();
-    public bool IsLobbyHost => IsInLobby && SteamMatchmaking.GetLobbyOwner(m_currentLobbyID) == SteamUser.GetSteamID();
+    public bool     IsInLobby    => m_currentLobbyID.IsValid();
+    public bool     IsLobbyHost  => IsInLobby && SteamMatchmaking.GetLobbyOwner(m_currentLobbyID) == SteamUser.GetSteamID();
     public CSteamID CurrentLobbyId => m_currentLobbyID;
-    
+
+    // ── Unity ────────────────────────────────────────────────────────────────
 
     private void Start()
     {
@@ -40,50 +42,35 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
 
-        lobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
-        lobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
+        lobbyCreated           = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
+        lobbyEntered           = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
         gameLobbyJoinRequested = Callback<GameLobbyJoinRequested_t>.Create(OnGameLobbyJoinRequested);
-        lobbyChatUpdate = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
-        lobbyDataUpdate = Callback<LobbyDataUpdate_t>.Create(OnLobbyDataUpdate);
+        lobbyChatUpdate        = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
+        lobbyDataUpdate        = Callback<LobbyDataUpdate_t>.Create(OnLobbyDataUpdate);
 
-        Debug.Log("SteamLobbyManager initialized, callbacks registered");
         StatusChangedEvent?.Invoke("Steam connected");
     }
 
+    // ── Public API ───────────────────────────────────────────────────────────
+
     public void HostGame()
     {
-        if (!SteamManager.Initialized)
-        {
-            StatusChangedEvent?.Invoke("Steam is not initialized");
-            return;
-        }
-
+        if (!SteamManager.Initialized) { StatusChangedEvent?.Invoke("Steam is not initialized"); return; }
         SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, 4);
         StatusChangedEvent?.Invoke("Creating lobby...");
     }
 
     public void StartGameForLobby(string sceneName)
     {
-        if (!m_currentLobbyID.IsValid())
-        {
-            StatusChangedEvent?.Invoke("Create or join a lobby first");
-            return;
-        }
-        if (!IsLobbyHost)
-        {
-            StatusChangedEvent?.Invoke("Only lobby host can start");
-            return;
-        }
+        if (!m_currentLobbyID.IsValid())  { StatusChangedEvent?.Invoke("Create or join a lobby first"); return; }
+        if (!IsLobbyHost)                 { StatusChangedEvent?.Invoke("Only lobby host can start");     return; }
 
         _isGameStartRequested = true;
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey,SteamUser.GetSteamID().ToString());
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameSceneKey,sceneName);
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey,"1");
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameSceneKey,   sceneName);
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey, "1");
         StatusChangedEvent?.Invoke("Starting match...");
-        SteamGameStartBootstrap.SetPendingStart(
-            shouldHost: true,
-            hostAddress: SteamUser.GetSteamID().ToString(),
-            targetScene: sceneName);
+        SteamGameStartBootstrap.SetPendingStart(true, SteamUser.GetSteamID().ToString(), sceneName);
         PrepareForGameplaySceneLoad();
         SceneManager.LoadScene(sceneName);
     }
@@ -99,26 +86,15 @@ public class SteamLobbyManager : MonoBehaviour
     public void InviteFriend()
     {
         if (m_currentLobbyID.IsValid())
-        {
             SteamFriends.ActivateGameOverlayInviteDialog(m_currentLobbyID);
-        }
         else
-        {
-            Debug.LogError("No active lobby to invite friends");
             StatusChangedEvent?.Invoke("No active lobby");
-        }
     }
 
     public void OpenFriendsOverlay()
     {
-        if (!SteamManager.Initialized)
-        {
-            StatusChangedEvent?.Invoke("Steam is not initialized");
-            return;
-        }
-
+        if (!SteamManager.Initialized) { StatusChangedEvent?.Invoke("Steam is not initialized"); return; }
         SteamFriends.ActivateGameOverlay("friends");
-        StatusChangedEvent?.Invoke("Steam friends overlay opened");
     }
 
     public void LeaveLobby()
@@ -132,77 +108,73 @@ public class SteamLobbyManager : MonoBehaviour
         LobbyLeftEvent?.Invoke();
         LobbyMembersChangedEvent?.Invoke(Array.Empty<string>());
     }
-    
+
+    // ── Ready system ─────────────────────────────────────────────────────────
+
     public void SetLocalPlayerReady(bool ready)
     {
         if (!m_currentLobbyID.IsValid()) return;
-        
         SteamMatchmaking.SetLobbyMemberData(m_currentLobbyID, ReadyKey, ready ? "1" : "0");
+        // Локальное изменение не приходит через callback — уведомляем сразу
+        LobbyReadyChangedEvent?.Invoke();
     }
-    
+
     public bool IsPlayerReady(CSteamID playerId)
     {
         if (!m_currentLobbyID.IsValid()) return false;
         return SteamMatchmaking.GetLobbyMemberData(m_currentLobbyID, playerId, ReadyKey) == "1";
     }
-    
+
     public bool AreAllPlayersReady()
     {
         if (!m_currentLobbyID.IsValid()) return false;
-
         int count = SteamMatchmaking.GetNumLobbyMembers(m_currentLobbyID);
         if (count == 0) return false;
-
         for (int i = 0; i < count; i++)
         {
             CSteamID member = SteamMatchmaking.GetLobbyMemberByIndex(m_currentLobbyID, i);
-            if (!IsPlayerReady(member))
-                return false;
+            if (!IsPlayerReady(member)) return false;
         }
         return true;
     }
 
+    // ── Member list ──────────────────────────────────────────────────────────
+
     public List<string> GetLobbyMemberNames()
     {
-        List<string> names = new List<string>();
+        var names = new List<string>();
         if (!m_currentLobbyID.IsValid()) return names;
-
-        int members = SteamMatchmaking.GetNumLobbyMembers(m_currentLobbyID);
-        for (int i = 0; i < members; i++)
-        {
-            CSteamID memberId = SteamMatchmaking.GetLobbyMemberByIndex(m_currentLobbyID, i);
-            names.Add(SteamFriends.GetFriendPersonaName(memberId));
-        }
+        int count = SteamMatchmaking.GetNumLobbyMembers(m_currentLobbyID);
+        for (int i = 0; i < count; i++)
+            names.Add(SteamFriends.GetFriendPersonaName(SteamMatchmaking.GetLobbyMemberByIndex(m_currentLobbyID, i)));
         return names;
     }
 
     public List<CSteamID> GetLobbyMemberIDs()
     {
-        List<CSteamID> ids = new List<CSteamID>();
+        var ids = new List<CSteamID>();
         if (!m_currentLobbyID.IsValid()) return ids;
-
         int count = SteamMatchmaking.GetNumLobbyMembers(m_currentLobbyID);
         for (int i = 0; i < count; i++)
             ids.Add(SteamMatchmaking.GetLobbyMemberByIndex(m_currentLobbyID, i));
-
         return ids;
     }
-    
+
+    // ── Steam callbacks ──────────────────────────────────────────────────────
 
     private void OnLobbyCreated(LobbyCreated_t result)
     {
         if (result.m_eResult != EResult.k_EResultOK)
         {
-            Debug.LogError("Failed to create lobby: " + result.m_eResult);
             StatusChangedEvent?.Invoke($"Failed to create lobby: {result.m_eResult}");
             return;
         }
 
-        m_currentLobbyID = new CSteamID(result.m_ulSteamIDLobby);
+        m_currentLobbyID      = new CSteamID(result.m_ulSteamIDLobby);
         _isGameStartRequested = false;
 
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostNameKey, SteamFriends.GetPersonaName());
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostNameKey,    SteamFriends.GetPersonaName());
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey, "0");
 
         StatusChangedEvent?.Invoke("Lobby ready. Invite your friends.");
@@ -211,10 +183,18 @@ public class SteamLobbyManager : MonoBehaviour
 
     private void OnLobbyEntered(LobbyEnter_t result)
     {
-        m_currentLobbyID = new CSteamID(result.m_ulSteamIDLobby);
+        m_currentLobbyID      = new CSteamID(result.m_ulSteamIDLobby);
         _isGameStartRequested = false;
-
         StatusChangedEvent?.Invoke("Joined lobby");
+
+        // Steam не успевает заполнить кэш участников синхронно —
+        // делаем один кадр задержки, потом уведомляем UI
+        StartCoroutine(NotifyLobbyEnteredNextFrame());
+    }
+
+    private IEnumerator NotifyLobbyEnteredNextFrame()
+    {
+        yield return null; // ждём один кадр
         LobbyEnteredEvent?.Invoke(m_currentLobbyID);
         NotifyMembersChanged();
     }
@@ -225,9 +205,10 @@ public class SteamLobbyManager : MonoBehaviour
         SteamMatchmaking.JoinLobby(param.m_steamIDLobby);
     }
 
-    private void OnLobbyChatUpdate(LobbyChatUpdate_t _)
+    private void OnLobbyChatUpdate(LobbyChatUpdate_t data)
     {
         if (!m_currentLobbyID.IsValid()) return;
+        if (data.m_ulSteamIDLobby != m_currentLobbyID.m_SteamID) return;
         NotifyMembersChanged();
     }
 
@@ -235,37 +216,38 @@ public class SteamLobbyManager : MonoBehaviour
     {
         if (!m_currentLobbyID.IsValid()) return;
         if (data.m_ulSteamIDLobby != m_currentLobbyID.m_SteamID) return;
-        
-        if (data.m_ulSteamIDMember != data.m_ulSteamIDLobby)
+        if (data.m_bSuccess == 0) return;
+
+        // Изменились данные участника (готовность) — m_ulSteamIDMember == игрок
+        // Изменились данные лобби (старт и т.п.) — m_ulSteamIDMember == лобби
+        bool isMemberData = data.m_ulSteamIDMember != data.m_ulSteamIDLobby;
+        if (isMemberData)
         {
             LobbyReadyChangedEvent?.Invoke();
             return;
         }
-        
-        if (SteamMatchmaking.GetLobbyData(m_currentLobbyID, GameStartedKey) != "1")
-            return;
+
+        // Проверяем старт игры
+        if (SteamMatchmaking.GetLobbyData(m_currentLobbyID, GameStartedKey) != "1") return;
 
         string sceneName = SteamMatchmaking.GetLobbyData(m_currentLobbyID, GameSceneKey);
-        if (string.IsNullOrWhiteSpace(sceneName))
-            sceneName = "NetworkTest";
+        if (string.IsNullOrWhiteSpace(sceneName)) sceneName = "NetworkTest";
 
         if (IsLobbyHost)
         {
-            if (!_isGameStartRequested)
-                StartGameForLobby(sceneName);
+            if (!_isGameStartRequested) StartGameForLobby(sceneName);
         }
         else
         {
             StatusChangedEvent?.Invoke("Host started the game. Connecting...");
-            string hostSteamIdString = SteamMatchmaking.GetLobbyData(m_currentLobbyID, HostAddressKey);
-            SteamGameStartBootstrap.SetPendingStart(
-                shouldHost:  false,
-                hostAddress: hostSteamIdString,
-                targetScene: sceneName);
+            string hostId = SteamMatchmaking.GetLobbyData(m_currentLobbyID, HostAddressKey);
+            SteamGameStartBootstrap.SetPendingStart(false, hostId, sceneName);
             PrepareForGameplaySceneLoad();
             SceneManager.LoadScene(sceneName);
         }
     }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
 
     private void NotifyMembersChanged()
     {
@@ -274,10 +256,7 @@ public class SteamLobbyManager : MonoBehaviour
 
     private void PrepareForGameplaySceneLoad()
     {
-        var networkManager = FindFirstObjectByType<FishNet.Managing.NetworkManager>();
-        if (networkManager == null) return;
-
-        Debug.Log($"[Lobby] Destroying existing NetworkManager '{networkManager.gameObject.name}' before gameplay scene load.");
-        Destroy(networkManager.gameObject);
+        var nm = FindFirstObjectByType<FishNet.Managing.NetworkManager>();
+        if (nm != null) Destroy(nm.gameObject);
     }
 }
