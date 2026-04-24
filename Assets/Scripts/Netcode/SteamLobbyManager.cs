@@ -9,45 +9,33 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// Pure Steam lobby logic. No UI, no panels, no slots.
-/// Subscribe to the events to react to lobby state changes.
-/// </summary>
 public class SteamLobbyManager : MonoBehaviour
 {
-    // ── Steam callbacks ──────────────────────────────────────────────────────
-    private Callback<LobbyCreated_t>          lobbyCreated;
-    private Callback<LobbyEnter_t>            lobbyEntered;
+    private Callback<LobbyCreated_t> lobbyCreated;
+    private Callback<LobbyEnter_t> lobbyEntered;
     private Callback<GameLobbyJoinRequested_t> gameLobbyJoinRequested;
-    private Callback<LobbyChatUpdate_t>        lobbyChatUpdate;
-    private Callback<LobbyDataUpdate_t>        lobbyDataUpdate;
-
-    // ── State ────────────────────────────────────────────────────────────────
+    private Callback<LobbyChatUpdate_t> lobbyChatUpdate;
+    private Callback<LobbyDataUpdate_t> lobbyDataUpdate;
+    
     private CSteamID m_currentLobbyID;
-    private bool     _isGameStartRequested;
-
-    // ── Lobby data keys ──────────────────────────────────────────────────────
+    private bool _isGameStartRequested;
+    
     private const string HostAddressKey = "HostAddress";
-    private const string HostNameKey    = "HostName";
+    private const string HostNameKey = "HostName";
     private const string GameStartedKey = "GameStarted";
-    private const string GameSceneKey   = "GameScene";
-    private const string ReadyKey       = "Ready";
-
-    // ── Public events ────────────────────────────────────────────────────────
-    public event Action<CSteamID>              LobbyEnteredEvent;
-    public event Action                        LobbyLeftEvent;
-    public event Action<string>                StatusChangedEvent;
+    private const string GameSceneKey = "GameScene";
+    private const string ReadyKey  = "Ready";
+    
+    public event Action<CSteamID> LobbyEnteredEvent;
+    public event Action LobbyLeftEvent;
+    public event Action<string> StatusChangedEvent;
     public event Action<IReadOnlyList<string>> LobbyMembersChangedEvent;
-    public event Action                        LobbyReadyChangedEvent;
-
-    // ── Public state queries ─────────────────────────────────────────────────
-    public bool     IsInLobby    => m_currentLobbyID.IsValid();
-    public bool     IsLobbyHost  => IsInLobby && SteamMatchmaking.GetLobbyOwner(m_currentLobbyID) == SteamUser.GetSteamID();
+    public event Action LobbyReadyChangedEvent;
+    
+    public bool IsInLobby => m_currentLobbyID.IsValid();
+    public bool IsLobbyHost => IsInLobby && SteamMatchmaking.GetLobbyOwner(m_currentLobbyID) == SteamUser.GetSteamID();
     public CSteamID CurrentLobbyId => m_currentLobbyID;
-
-    // ────────────────────────────────────────────────────────────────────────
-    #region Unity lifecycle
-
+    
     private void Start()
     {
         EnsureSteamManager();
@@ -61,19 +49,14 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
 
-        lobbyCreated           = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
-        lobbyEntered           = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
+        lobbyCreated  = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
+        lobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
         gameLobbyJoinRequested = Callback<GameLobbyJoinRequested_t>.Create(OnGameLobbyJoinRequested);
-        lobbyChatUpdate        = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
-        lobbyDataUpdate        = Callback<LobbyDataUpdate_t>.Create(OnLobbyDataUpdate);
+        lobbyChatUpdate = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
+        lobbyDataUpdate = Callback<LobbyDataUpdate_t>.Create(OnLobbyDataUpdate);
 
         StatusChangedEvent?.Invoke("Steam connected");
     }
-
-    #endregion
-
-    // ────────────────────────────────────────────────────────────────────────
-    #region Public API
 
     public void HostGame()
     {
@@ -109,7 +92,7 @@ public class SteamLobbyManager : MonoBehaviour
         if (m_currentLobbyID.IsValid())
             SteamMatchmaking.LeaveLobby(m_currentLobbyID);
 
-        m_currentLobbyID      = CSteamID.Nil;
+        m_currentLobbyID = CSteamID.Nil;
         _isGameStartRequested = false;
 
         StatusChangedEvent?.Invoke("You left the lobby");
@@ -120,7 +103,7 @@ public class SteamLobbyManager : MonoBehaviour
     public void StartGameForLobby(string sceneName)
     {
         if (!m_currentLobbyID.IsValid()) { StatusChangedEvent?.Invoke("Create or join a lobby first"); return; }
-        if (!IsLobbyHost)                { StatusChangedEvent?.Invoke("Only lobby host can start");     return; }
+        if (!IsLobbyHost) { StatusChangedEvent?.Invoke("Only lobby host can start");     return; }
 
         _isGameStartRequested = true;
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
@@ -131,8 +114,7 @@ public class SteamLobbyManager : MonoBehaviour
         PrepareForGameplaySceneLoad();
         SceneManager.LoadScene(sceneName);
     }
-
-    // ── Ready system ─────────────────────────────────────────────────────────
+    
 
     public void SetLocalPlayerReady(bool ready)
     {
@@ -160,8 +142,6 @@ public class SteamLobbyManager : MonoBehaviour
         return true;
     }
 
-    // ── Member queries ───────────────────────────────────────────────────────
-
     public List<string> GetLobbyMemberNames()
     {
         var names = new List<string>();
@@ -181,11 +161,7 @@ public class SteamLobbyManager : MonoBehaviour
             ids.Add(SteamMatchmaking.GetLobbyMemberByIndex(m_currentLobbyID, i));
         return ids;
     }
-
-    #endregion
-
-    // ────────────────────────────────────────────────────────────────────────
-    #region Steam callbacks
+    
 
     private void OnLobbyCreated(LobbyCreated_t result)
     {
@@ -195,11 +171,11 @@ public class SteamLobbyManager : MonoBehaviour
             return;
         }
 
-        m_currentLobbyID      = new CSteamID(result.m_ulSteamIDLobby);
+        m_currentLobbyID = new CSteamID(result.m_ulSteamIDLobby);
         _isGameStartRequested = false;
 
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostNameKey,    SteamFriends.GetPersonaName());
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostNameKey,SteamFriends.GetPersonaName());
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey, "0");
 
         StatusChangedEvent?.Invoke("Lobby ready. Invite your friends.");
@@ -208,7 +184,7 @@ public class SteamLobbyManager : MonoBehaviour
 
     private void OnLobbyEntered(LobbyEnter_t result)
     {
-        m_currentLobbyID      = new CSteamID(result.m_ulSteamIDLobby);
+        m_currentLobbyID = new CSteamID(result.m_ulSteamIDLobby);
         _isGameStartRequested = false;
         StatusChangedEvent?.Invoke("Joined lobby");
         StartCoroutine(NotifyLobbyEnteredNextFrame());
@@ -265,22 +241,12 @@ public class SteamLobbyManager : MonoBehaviour
             SceneManager.LoadScene(sceneName);
         }
     }
-
-    #endregion
-
-    // ────────────────────────────────────────────────────────────────────────
-    #region Private helpers
-
     private static void EnsureSteamManager()
     {
         if (FindFirstObjectByType<SteamManager>() == null)
             new GameObject("SteamManager").AddComponent<SteamManager>();
     }
-
-    /// <summary>
-    /// Editor / direct-launch fallback: binds HostGame to any Button labelled "host"
-    /// so the scene can be tested without going through the main menu.
-    /// </summary>
+    
     private void TryBindHostButtonInGameplayScene()
     {
         foreach (Button button in FindObjectsByType<Button>(FindObjectsSortMode.None))
@@ -305,6 +271,4 @@ public class SteamLobbyManager : MonoBehaviour
         var nm = FindFirstObjectByType<FishNet.Managing.NetworkManager>();
         if (nm != null) Destroy(nm.gameObject);
     }
-
-    #endregion
 }

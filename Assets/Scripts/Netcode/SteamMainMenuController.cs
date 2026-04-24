@@ -31,14 +31,14 @@ public class SteamMainMenuController : MonoBehaviour
         SwitchToMain();
 
         Cursor.lockState = CursorLockMode.None;
-        Cursor.visible   = true;
+        Cursor.visible = true;
     }
 
     private void OnDestroy()
     {
         if (_lobbyManager == null) return;
         _lobbyManager.LobbyEnteredEvent -= OnLobbyEntered;
-        _lobbyManager.LobbyLeftEvent    -= OnLobbyLeft;
+        _lobbyManager.LobbyLeftEvent -= OnLobbyLeft;
     }
     
 

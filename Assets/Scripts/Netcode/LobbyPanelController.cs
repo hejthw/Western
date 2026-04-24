@@ -4,21 +4,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Manages all lobby panel UI: player slots, invite / leave / start buttons,
-/// status text, and the ready-state indicator.
-/// Attach this MonoBehaviour to the lobby panel root (or any persistent object).
-/// It listens to <see cref="SteamLobbyManager"/> events and never touches Steam directly.
-/// </summary>
 public class LobbyPanelController : MonoBehaviour
 {
     [Header("Status")]
     [SerializeField] private TMP_Text statusText;
 
     [Header("Player Slots (4 roots)")]
-    [SerializeField] private Transform[]  slotRoots        = new Transform[4];
-    [SerializeField] private GameObject   lobbyItemPrefab;
-    [SerializeField] private GameObject   lobbyItemEmptyPrefab;
+    [SerializeField] private Transform[] slotRoots = new Transform[4];
+    [SerializeField] private GameObject lobbyItemPrefab;
+    [SerializeField] private GameObject lobbyItemEmptyPrefab;
 
     [Header("Buttons")]
     [SerializeField] private Button leaveLobbyButton;
@@ -28,8 +22,6 @@ public class LobbyPanelController : MonoBehaviour
     private SteamLobbyManager _lobbyManager;
     private readonly GameObject[] _slotInstances = new GameObject[4];
 
-    // ────────────────────────────────────────────────────────────────────────
-    #region Unity lifecycle
 
     private void Awake()
     {
@@ -47,43 +39,33 @@ public class LobbyPanelController : MonoBehaviour
     private void OnDestroy()
     {
         if (_lobbyManager == null) return;
-        _lobbyManager.StatusChangedEvent      -= HandleStatusChanged;
-        _lobbyManager.LobbyLeftEvent          -= HandleLobbyLeft;
+        _lobbyManager.StatusChangedEvent -= HandleStatusChanged;
+        _lobbyManager.LobbyLeftEvent -= HandleLobbyLeft;
         _lobbyManager.LobbyMembersChangedEvent -= HandleMembersChanged;
-        _lobbyManager.LobbyReadyChangedEvent  -= HandleReadyChanged;
+        _lobbyManager.LobbyReadyChangedEvent -= HandleReadyChanged;
     }
-
-    #endregion
-
-    // ────────────────────────────────────────────────────────────────────────
-    #region Setup
 
     private void BindButtons()
     {
-        leaveLobbyButton  .onClick.RemoveAllListeners();
+        leaveLobbyButton.onClick.RemoveAllListeners();
         inviteFriendsButton.onClick.RemoveAllListeners();
-        startButton        .onClick.RemoveAllListeners();
+        startButton.onClick.RemoveAllListeners();
 
-        leaveLobbyButton  .onClick.AddListener(() => _lobbyManager.LeaveLobby());
+        leaveLobbyButton.onClick.AddListener(() => _lobbyManager.LeaveLobby());
         inviteFriendsButton.onClick.AddListener(() => _lobbyManager.InviteFriend());
-        startButton        .onClick.AddListener(OnStartClicked);
+        startButton.onClick.AddListener(OnStartClicked);
 
         startButton.interactable = false;
     }
 
     private void WireLobbyEvents()
     {
-        _lobbyManager.StatusChangedEvent       += HandleStatusChanged;
-        _lobbyManager.LobbyLeftEvent           += HandleLobbyLeft;
+        _lobbyManager.StatusChangedEvent += HandleStatusChanged;
+        _lobbyManager.LobbyLeftEvent += HandleLobbyLeft;
         _lobbyManager.LobbyMembersChangedEvent += HandleMembersChanged;
-        _lobbyManager.LobbyReadyChangedEvent   += HandleReadyChanged;
+        _lobbyManager.LobbyReadyChangedEvent += HandleReadyChanged;
     }
-
-    #endregion
-
-    // ────────────────────────────────────────────────────────────────────────
-    #region Event handlers
-
+    
     private void HandleStatusChanged(string status)
     {
         if (statusText != null) statusText.text = status;
@@ -113,11 +95,6 @@ public class LobbyPanelController : MonoBehaviour
         MusicDirector.StopGlobal();
         _lobbyManager.StartGameForLobby("NetworkTest");
     }
-
-    #endregion
-
-    // ────────────────────────────────────────────────────────────────────────
-    #region Slot management
 
     private void RefreshAllSlots()
     {
@@ -183,22 +160,17 @@ public class LobbyPanelController : MonoBehaviour
     {
         RectTransform rt = go.GetComponent<RectTransform>();
         if (rt == null) return;
-        rt.localPosition    = Vector3.zero;
-        rt.localRotation    = Quaternion.identity;
-        rt.localScale       = Vector3.one;
+        rt.localPosition = Vector3.zero;
+        rt.localRotation = Quaternion.identity;
+        rt.localScale = Vector3.one;
         rt.anchoredPosition = Vector2.zero;
     }
-
-    #endregion
-
-    // ────────────────────────────────────────────────────────────────────────
-    #region Start button
-
+    
     private void UpdateStartButton()
     {
         if (startButton == null || _lobbyManager == null) return;
 
-        bool isHost   = _lobbyManager.IsLobbyHost;
+        bool isHost= _lobbyManager.IsLobbyHost;
         bool allReady = _lobbyManager.AreAllPlayersReady();
 
         startButton.interactable = isHost && allReady;
@@ -206,10 +178,12 @@ public class LobbyPanelController : MonoBehaviour
         TMP_Text label = startButton.GetComponentInChildren<TMP_Text>();
         if (label == null) return;
 
-        if      (!isHost)   label.text = "Ожидание хоста";
-        else if (!allReady) label.text = "Ожидание готовности";
-        else                label.text = "Запуск";
+        if (!isHost)
+            label.text = "Ожидание хоста";
+        else if (!allReady)
+            label.text = "Ожидание готовности";
+        else
+            label.text = "Запуск";
     }
-
-    #endregion
+    
 }
