@@ -102,6 +102,3 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
-
-# Fonts
-/Assets/TextMesh Pro/Fonts/Consuela SDF.asset
