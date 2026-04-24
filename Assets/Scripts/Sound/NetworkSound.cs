@@ -1,3 +1,4 @@
+using System;
 using FishNet.Object;
 using UnityEngine;
 
@@ -9,7 +10,12 @@ public class NetworkSoundManager : NetworkBehaviour
 
     private void OnEnable()  => SoundBus.OnPlay += HandlePlay;
     private void OnDisable() => SoundBus.OnPlay -= HandlePlay;
-    
+
+    public void Awake()
+    {
+        audioSource.volume = PlayerPrefs.GetFloat("SoundVolume", 0.5f);
+    }
+
     public override void OnStartClient()
     {
         base.OnStartClient();
