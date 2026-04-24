@@ -3,18 +3,16 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
 
-public class SettingsUI : MonoBehaviour
+public class GraphicsSettings : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private Toggle fullscreenToggle;
     [SerializeField] private TMP_Dropdown resolutionDropdown;
-    [SerializeField] private Button changeModeButton;
 
-    private Resolution[] resolutions;
+    private Resolution[] resolutions; //
     
     private void Start()
     {
-        Debug.Log("Menu Start");
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
         var options = new List<string>();
