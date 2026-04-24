@@ -4,6 +4,7 @@
     "com.devbookofarray.fishy-multiplayer-service-handler": "https://github.com/youngwoocho02/FishyMultiplayerServiceHandler.git",
     "com.firstgeargames.fishysteamworks": "https://github.com/FirstGearGames/FishySteamworks.git",
     "com.rlabrecque.steamworks.net": "https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks.net",
+    "com.starasgames.tmpro-dynamic-data-cleaner": "https://github.com/STARasGAMES/tmpro-dynamic-data-cleaner.git#upm",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.10",
     "com.unity.behavior": "1.0.15",
