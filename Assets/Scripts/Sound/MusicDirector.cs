@@ -54,7 +54,8 @@ public class MusicDirector : MonoBehaviour
 
         if (!restartIfSame && musicSource.clip == entry.clip && musicSource.isPlaying)
             return;
-
+        
+        musicSource.volume = PlayerPrefs.GetFloat("MusicVolume", 0.5f);
         musicSource.clip = entry.clip;
         musicSource.volume = entry.volume;
         musicSource.loop = entry.loop;
