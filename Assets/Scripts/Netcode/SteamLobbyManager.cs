@@ -16,75 +16,46 @@ public class SteamLobbyManager : MonoBehaviour
     private Callback<GameLobbyJoinRequested_t> gameLobbyJoinRequested;
     private Callback<LobbyChatUpdate_t> lobbyChatUpdate;
     private Callback<LobbyDataUpdate_t> lobbyDataUpdate;
-
+    
     private CSteamID m_currentLobbyID;
     private bool _isGameStartRequested;
-
+    
     private const string HostAddressKey = "HostAddress";
     private const string HostNameKey = "HostName";
     private const string GameStartedKey = "GameStarted";
     private const string GameSceneKey = "GameScene";
-    private const string ReadyKey = "Ready";
-
+    private const string ReadyKey  = "Ready";
+    
     public event Action<CSteamID> LobbyEnteredEvent;
     public event Action LobbyLeftEvent;
     public event Action<string> StatusChangedEvent;
     public event Action<IReadOnlyList<string>> LobbyMembersChangedEvent;
     public event Action LobbyReadyChangedEvent;
-
+    
     public bool IsInLobby => m_currentLobbyID.IsValid();
     public bool IsLobbyHost => IsInLobby && SteamMatchmaking.GetLobbyOwner(m_currentLobbyID) == SteamUser.GetSteamID();
     public CSteamID CurrentLobbyId => m_currentLobbyID;
-
+    
     private void Start()
     {
-        if (FindFirstObjectByType<SteamManager>() == null)
-        {
-            GameObject steamManagerGo = new GameObject("SteamManager");
-            steamManagerGo.AddComponent<SteamManager>();
-        }
+        EnsureSteamManager();
 
         if (SceneManager.GetActiveScene().name != "MainMenu")
             TryBindHostButtonInGameplayScene();
 
         if (!SteamManager.Initialized)
         {
-            Debug.LogError("SteamManager not initialized!");
+            Debug.LogError("[SteamLobby] SteamManager not initialized!");
             return;
         }
 
-        lobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
+        lobbyCreated  = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
         lobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
         gameLobbyJoinRequested = Callback<GameLobbyJoinRequested_t>.Create(OnGameLobbyJoinRequested);
         lobbyChatUpdate = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
         lobbyDataUpdate = Callback<LobbyDataUpdate_t>.Create(OnLobbyDataUpdate);
 
         StatusChangedEvent?.Invoke("Steam connected");
-    }
-    
-
-    private void TryBindHostButtonInGameplayScene()
-    {
-        Button[] buttons = FindObjectsByType<Button>(FindObjectsSortMode.None);
-        for (int i = 0; i < buttons.Length; i++)
-        {
-            Button button = buttons[i];
-            if (button == null)
-                continue;
-
-            TMP_Text label = button.GetComponentInChildren<TMP_Text>();
-            if (label == null || string.IsNullOrWhiteSpace(label.text))
-                continue;
-
-            string normalized = label.text.Trim().ToLowerInvariant();
-            if (normalized != "host")
-                continue;
-
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(HostGame);
-            Debug.Log("[SteamLobby] Bound Host button for direct editor launch.");
-            return;
-        }
     }
 
     public void HostGame()
@@ -94,71 +65,12 @@ public class SteamLobbyManager : MonoBehaviour
         StatusChangedEvent?.Invoke("Creating lobby...");
     }
 
-    private void StartHostInCurrentScene()
-    {
-        if (!SteamManager.Initialized)
-        {
-            StatusChangedEvent?.Invoke("Steam is not initialized");
-            return;
-        }
-
-        if (InstanceFinder.NetworkManager == null)
-        {
-            StatusChangedEvent?.Invoke("NetworkManager not found in current scene");
-            Debug.LogError("[SteamLobby] NetworkManager not found in current scene.");
-            return;
-        }
-
-        FishySteamworks.FishySteamworks transport =
-            InstanceFinder.NetworkManager.TransportManager.GetTransport<FishySteamworks.FishySteamworks>();
-        if (transport == null)
-        {
-            StatusChangedEvent?.Invoke("FishySteamworks transport is missing");
-            Debug.LogError("[SteamLobby] FishySteamworks transport missing.");
-            return;
-        }
-
-        string selfSteamId = SteamUser.GetSteamID().ToString();
-        if (!ulong.TryParse(selfSteamId, out _))
-        {
-            StatusChangedEvent?.Invoke("Invalid local SteamId");
-            Debug.LogError($"[SteamLobby] Invalid local SteamId '{selfSteamId}'.");
-            return;
-        }
-
-        transport.SetClientAddress(selfSteamId);
-
-        if (!InstanceFinder.ServerManager.Started)
-            InstanceFinder.ServerManager.StartConnection();
-        if (!InstanceFinder.ClientManager.Started)
-            InstanceFinder.ClientManager.StartConnection();
-
-        StatusChangedEvent?.Invoke("Host started in current scene");
-        Debug.Log("[SteamLobby] Host started in current scene (editor/direct launch).");
-    }
-
-    public void StartGameForLobby(string sceneName)
-    {
-        if (!m_currentLobbyID.IsValid()) { StatusChangedEvent?.Invoke("Create or join a lobby first"); return; }
-        if (!IsLobbyHost)
-        { StatusChangedEvent?.Invoke("Only lobby host can start");     return; }
-
-        _isGameStartRequested = true;
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameSceneKey,   sceneName);
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey, "1");
-        StatusChangedEvent?.Invoke("Starting match...");
-        SteamGameStartBootstrap.SetPendingStart(true, SteamUser.GetSteamID().ToString(), sceneName);
-        PrepareForGameplaySceneLoad();
-        SceneManager.LoadScene(sceneName);
-    }
-
     public void JoinGame(string lobbyIdString)
     {
         if (ulong.TryParse(lobbyIdString, out ulong id))
             SteamMatchmaking.JoinLobby(new CSteamID(id));
         else
-            Debug.LogError("Invalid lobby ID.");
+            Debug.LogError("[SteamLobby] Invalid lobby ID.");
     }
 
     public void InviteFriend()
@@ -182,10 +94,27 @@ public class SteamLobbyManager : MonoBehaviour
 
         m_currentLobbyID = CSteamID.Nil;
         _isGameStartRequested = false;
+
         StatusChangedEvent?.Invoke("You left the lobby");
         LobbyLeftEvent?.Invoke();
         LobbyMembersChangedEvent?.Invoke(Array.Empty<string>());
     }
+
+    public void StartGameForLobby(string sceneName)
+    {
+        if (!m_currentLobbyID.IsValid()) { StatusChangedEvent?.Invoke("Create or join a lobby first"); return; }
+        if (!IsLobbyHost) { StatusChangedEvent?.Invoke("Only lobby host can start");     return; }
+
+        _isGameStartRequested = true;
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameSceneKey,   sceneName);
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey, "1");
+        StatusChangedEvent?.Invoke("Starting match...");
+        SteamGameStartBootstrap.SetPendingStart(true, SteamUser.GetSteamID().ToString(), sceneName);
+        PrepareForGameplaySceneLoad();
+        SceneManager.LoadScene(sceneName);
+    }
+    
 
     public void SetLocalPlayerReady(bool ready)
     {
@@ -212,7 +141,6 @@ public class SteamLobbyManager : MonoBehaviour
         }
         return true;
     }
-    
 
     public List<string> GetLobbyMemberNames()
     {
@@ -246,9 +174,9 @@ public class SteamLobbyManager : MonoBehaviour
         m_currentLobbyID = new CSteamID(result.m_ulSteamIDLobby);
         _isGameStartRequested = false;
 
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey,SteamUser.GetSteamID().ToString());
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostAddressKey, SteamUser.GetSteamID().ToString());
         SteamMatchmaking.SetLobbyData(m_currentLobbyID, HostNameKey,SteamFriends.GetPersonaName());
-        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey,"0");
+        SteamMatchmaking.SetLobbyData(m_currentLobbyID, GameStartedKey, "0");
 
         StatusChangedEvent?.Invoke("Lobby ready. Invite your friends.");
         NotifyMembersChanged();
@@ -259,7 +187,6 @@ public class SteamLobbyManager : MonoBehaviour
         m_currentLobbyID = new CSteamID(result.m_ulSteamIDLobby);
         _isGameStartRequested = false;
         StatusChangedEvent?.Invoke("Joined lobby");
-        
         StartCoroutine(NotifyLobbyEnteredNextFrame());
     }
 
@@ -288,14 +215,14 @@ public class SteamLobbyManager : MonoBehaviour
         if (!m_currentLobbyID.IsValid()) return;
         if (data.m_ulSteamIDLobby != m_currentLobbyID.m_SteamID) return;
         if (data.m_bSuccess == 0) return;
-        
+
         bool isMemberData = data.m_ulSteamIDMember != data.m_ulSteamIDLobby;
         if (isMemberData)
         {
             LobbyReadyChangedEvent?.Invoke();
             return;
         }
-        
+
         if (SteamMatchmaking.GetLobbyData(m_currentLobbyID, GameStartedKey) != "1") return;
 
         string sceneName = SteamMatchmaking.GetLobbyData(m_currentLobbyID, GameSceneKey);
@@ -314,13 +241,32 @@ public class SteamLobbyManager : MonoBehaviour
             SceneManager.LoadScene(sceneName);
         }
     }
-
-    private void NotifyMembersChanged()
+    private static void EnsureSteamManager()
     {
-        LobbyMembersChangedEvent?.Invoke(GetLobbyMemberNames());
+        if (FindFirstObjectByType<SteamManager>() == null)
+            new GameObject("SteamManager").AddComponent<SteamManager>();
+    }
+    
+    private void TryBindHostButtonInGameplayScene()
+    {
+        foreach (Button button in FindObjectsByType<Button>(FindObjectsSortMode.None))
+        {
+            if (button == null) continue;
+            TMP_Text label = button.GetComponentInChildren<TMP_Text>();
+            if (label == null || string.IsNullOrWhiteSpace(label.text)) continue;
+            if (label.text.Trim().ToLowerInvariant() != "host") continue;
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(HostGame);
+            Debug.Log("[SteamLobby] Bound Host button for direct editor launch.");
+            return;
+        }
     }
 
-    private void PrepareForGameplaySceneLoad()
+    private void NotifyMembersChanged() =>
+        LobbyMembersChangedEvent?.Invoke(GetLobbyMemberNames());
+
+    private static void PrepareForGameplaySceneLoad()
     {
         var nm = FindFirstObjectByType<FishNet.Managing.NetworkManager>();
         if (nm != null) Destroy(nm.gameObject);

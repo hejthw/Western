@@ -326,6 +326,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 300745829150570369}
   _behaviorAgent: {fileID: 5687827164112810396}
   _navMeshAgent: {fileID: 6090642510061842057}
+  _rigidbody: {fileID: 0}
 --- !u!114 &4822277112505486637
 MonoBehaviour:
   m_ObjectHideFlags: 0

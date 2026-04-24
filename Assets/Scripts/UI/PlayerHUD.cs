@@ -19,7 +19,7 @@ public class PlayerHUD : NetworkBehaviour
     
     [Header("Health Bar")]
     [SerializeField] private Image healthBarImage;
-    private const float MaxHealthBarWidth = 112f;
+    private const float MaxHealthBarWidth = 123f;
     private const float HealthBarLerpSpeed = 5f;
     private float KnockdownDuration;
 

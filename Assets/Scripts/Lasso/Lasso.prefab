@@ -191,6 +191,12 @@ MonoBehaviour:
   returnSpeed: 10
   maxDistance: 30
   playerPullSpeed: 5
+  pullAcceleration: 45
+  pullStopDistance: 1.4
+  finishBackoffDistance: 0.35
+  finishSettleTime: 0.08
+  jumpOffForce: 7
+  jumpOffForwardFactor: 0.55
 --- !u!114 &5569764543513671404
 MonoBehaviour:
   m_ObjectHideFlags: 0
