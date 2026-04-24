@@ -556,6 +556,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 1378355014704506300}
   _networkObjectCache: {fileID: 0}
+  requiredHoldTime: 3
 --- !u!1 &4489304969419155238
 GameObject:
   m_ObjectHideFlags: 0

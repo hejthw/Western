@@ -161,6 +161,8 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 5371529590579357906}
   fragile: 0
   pullSpeed: 15
+  semiFragile: 0
+  thirdPersonVisualPrefab: {fileID: 0}
 --- !u!114 &5371529590579357906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,6 +283,8 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   fragile: 0
   pullSpeed: 15
+  semiFragile: 0
+  thirdPersonVisualPrefab: {fileID: 0}
   explosionDelay: 3
   explosionRadius: 5
   explosionForce: 500

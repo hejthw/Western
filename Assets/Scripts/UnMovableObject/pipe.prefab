@@ -132,10 +132,11 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 7326195793590958448}
   _networkObjectCache: {fileID: 7326195793590958448}
-  climbSpeed: 5
-  jumpOffForce: 10
-  climbTarget: {fileID: 6187463604892039204}
-  zoneTrigger: {fileID: 0}
+  attachZone: {fileID: 0}
+  zoneTolerance: 0.15
+  climbAnchor: {fileID: 0}
+  hitPointOffset: {x: 0, y: -1.25, z: 0}
+  climbRope: {fileID: 0}
 --- !u!114 &7326195793590958448
 MonoBehaviour:
   m_ObjectHideFlags: 0
