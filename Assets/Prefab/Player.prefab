@@ -920,8 +920,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2469619, y: 0.73663175, z: -0.34575492, w: 0.526153}
-  m_LocalPosition: {x: -0.80377126, y: 1.1601713, z: 0.4600973}
+  m_LocalRotation: {x: 0.274336, y: 0.6584839, z: -0.28146434, w: 0.64180726}
+  m_LocalPosition: {x: -0.9181696, y: 1.0960534, z: 0.20460796}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1004,7 +1004,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 117.2572
+    Value: 99.80081
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1014,7 +1014,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 25.288168
+    Value: 21.287828
     Center: 17.5
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -1048,7 +1048,7 @@ MonoBehaviour:
   ReferenceFrame: 2
   RecenterTarget: 2
   PanAxis:
-    Value: 108.92594
+    Value: 91.4696
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1058,7 +1058,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 50.288162
+    Value: 46.28789
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -1352,7 +1352,7 @@ MonoBehaviour:
   knockIcon: {fileID: 1028907919878495754}
   deadIcon: {fileID: 4279141524165189177}
   healthBarImage: {fileID: 6542005274088827047}
-  teamHUDContainer: {fileID: 2912680482956648894}
+  teamHUDContainer: {fileID: 2702392610181775238}
   teamEntryPrefab: {fileID: 1844037279763963224, guid: ccd60425bfc788f788b54604a6912ead, type: 3}
 --- !u!114 &944556017894977673
 MonoBehaviour:
@@ -1898,7 +1898,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.009715242, y: 0.8441888, z: 0.5357393, w: 0.01530875}
+  m_LocalRotation: {x: -0.16331723, y: -0.78758544, z: -0.54535013, w: 0.23585999}
   m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1976,7 +1976,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: 177.9222
+    Value: -146.657
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1986,7 +1986,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -64.80008
+    Value: -69.40001
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
