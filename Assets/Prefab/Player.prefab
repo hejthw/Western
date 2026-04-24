@@ -3047,7 +3047,6 @@ GameObject:
   - component: {fileID: 9106320914675195185}
   - component: {fileID: 2102189724618178019}
   - component: {fileID: 2447267575867540026}
-  - component: {fileID: 4879439181552079342}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -3432,7 +3431,7 @@ MonoBehaviour:
   _componentIndexCache: 2
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
-  throwKey: 20
+  throwKey: 1
   pullKey: 21
   jumpOffKey: 1
   launchPoint: {fileID: 7610812819007157487}
@@ -3541,26 +3540,6 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 0}
---- !u!114 &4879439181552079342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7179411760756142996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0348b7123ab44686a8f46ec9bedef64d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LassoCharacterInteractable
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 4737990210302664583}
-  _networkObjectCache: {fileID: 0}
-  holdDuration: 20
-  maxHoldDistance: 25
-  yankForce: 10
-  knockdownDuration: 3
-  rb: {fileID: 3110369444958837593}
 --- !u!1 &7766854876694965244
 GameObject:
   m_ObjectHideFlags: 0
@@ -3901,6 +3880,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3998414238054622849}
     m_Modifications:
+    - target: {fileID: -7196255493245536799, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
+      propertyPath: maxDistance
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: WasActiveDuringEdit
       value: 1
