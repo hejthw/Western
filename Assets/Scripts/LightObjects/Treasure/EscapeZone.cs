@@ -37,8 +37,8 @@ public class EscapeZone : NetworkBehaviour
         bool hasEnoughCash = collectedCash >= requiredCash && requiredCash > 0;
         enoughCashCollected.Value = hasEnoughCash;
 
-        bool allPlayersInZone = totalPlayers > 0 && playersInZone.Count == totalPlayers;
-        bool canTryFinish = hasEnoughCash && allPlayersInZone;
+        bool hasPlayerInZone = playersInZone.Count > 0;
+        bool canTryFinish = hasEnoughCash && hasPlayerInZone;
         canFinishNow.Value = canTryFinish;
 
         if (!canTryFinish)
@@ -47,25 +47,24 @@ public class EscapeZone : NetworkBehaviour
             return;
         }
 
-        bool allHolding = true;
-
+        bool anyHolding = false;
         foreach (var player in playersInZone)
         {
             var input = player.GetComponent<PlayerInput>();
-            if (input == null || !input.IsHoldingFinish)
+            if (input != null && input.IsHoldingFinish)
             {
-                allHolding = false;
+                anyHolding = true;
                 break;
             }
         }
 
-        if (allHolding)
+        if (anyHolding)
         {
             holdTimer += Time.deltaTime;
 
             if (holdTimer >= requiredHoldTime)
             {
-                HeistManager.Instance.EndHeist();
+                HeistManager.Instance.EndHeist(true);
             }
         }
         else
