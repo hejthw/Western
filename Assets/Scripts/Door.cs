@@ -1,15 +1,10 @@
 using UnityEngine;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
-using FishNet.Connection;
-using System;
 
-public class HeistDoor : NetworkBehaviour
+public class Door : NetworkBehaviour
 {
-    public static event Action OpenedByLocalPlayer;
-
     [SerializeField] private Transform doorVisual;
-    [SerializeField] private bool useHeistDoorLogic = true;
     [SerializeField] private float openAngle = 90f;
     [SerializeField] private float openSpeed = 2f;
 
@@ -48,25 +43,8 @@ public class HeistDoor : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    public void ServerToggleDoor(NetworkConnection caller = null)
+    public void ServerToggleDoor()
     {
-        if (!useHeistDoorLogic)
-        {
-            isOpen.Value = !isOpen.Value;
-            return;
-        }
-
-        if (isOpen.Value)
-            return;
-
-        isOpen.Value = true;
-        if (caller != null)
-            TargetNotifyDoorOpened(caller);
-    }
-
-    [TargetRpc]
-    private void TargetNotifyDoorOpened(NetworkConnection conn)
-    {
-        OpenedByLocalPlayer?.Invoke();
+        isOpen.Value = !isOpen.Value;
     }
 }
