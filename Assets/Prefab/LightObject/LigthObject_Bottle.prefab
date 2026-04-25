@@ -134,9 +134,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8efdbc02521a70348bb910dda921e463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LightObject
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 5459691189218685076}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5459691189218685076}
   fragile: 1
   pullSpeed: 15
   semiFragile: 0
@@ -159,7 +159,9 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 3431020220971677751}
+  - {fileID: 6115989247753419166}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -170,7 +172,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584244982702005526
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -186,15 +188,15 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 48
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 17501435604614078177
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: 9.248236, y: 0.603, z: 1.458}
+    Rotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+    Scale: {x: 300, y: 300, z: 300}
+    IsValid: 1
 --- !u!65 &8654108043942640926
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -228,9 +230,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b328335d90303224a87f186e49ddea90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PushableObject
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 5459691189218685076}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5459691189218685076}
   rb: {fileID: 0}
   pushForceMultiplier: 3
   minPushForce: 1

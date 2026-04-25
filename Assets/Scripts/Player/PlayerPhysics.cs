@@ -17,9 +17,6 @@ public class PlayerPhysics : NetworkBehaviour
     [SerializeField] private PlayerInput input;
     [SerializeField] private Collider col;
 
-    [Tooltip("Если задан (обычно на том же объекте), удалённые копии двигаются только через NetworkTransform — без второго слоя lerp из BroadcastStateObserversRpc.")]
-    [SerializeField] private NetworkTransform networkTransform;
-   
     private float _currentSpeed;
     private float _speedBuff;
     private float _walkDebuff;
@@ -27,12 +24,6 @@ public class PlayerPhysics : NetworkBehaviour
     
     private Player _player;
     private bool _isJumping;
-    private float _sendStateTimer;
-    private Vector3 _remoteTargetPos;
-    private Quaternion _remoteTargetRot;
-    private Vector3 _remoteVelocity;
-    private bool _hasRemoteState;
-    
     private bool _isFalling;
     private float _fallStartY;
     public PlayerHealth _playerHealth;
@@ -44,17 +35,9 @@ public class PlayerPhysics : NetworkBehaviour
     public bool IsGrounded { get; private set; }
     public PlayerState CurrentState { get; private set; }
     
-    [Header("Net Sync")]
-    [SerializeField] private float stateSendInterval = 0.05f;
-    [SerializeField] private float remotePositionLerp = 18f;
-    [SerializeField] private float remoteRotationLerp = 20f;
-    [SerializeField] private float snapDistance = 3f;
-
     private void Awake()
     {
         _player = new Player();
-        if (networkTransform == null)
-            networkTransform = GetComponent<NetworkTransform>();
     }
 
     private void OnEnable()
@@ -75,11 +58,7 @@ public class PlayerPhysics : NetworkBehaviour
     {
         if (!IsOwner)
         {
-            // Два независимых предиктора позиции (NT + этот lerp) дают дёрганье и «скольжение» при остановке.
-            if (networkTransform != null && networkTransform.enabled)
-                return;
-
-            ApplyRemoteSmoothing();
+            // Удалённые копии полностью синхронизируются через NetworkTransform.
             return;
         }
         
@@ -124,21 +103,10 @@ public class PlayerPhysics : NetworkBehaviour
     {
         if (!IsOwner) return;
         ApplyMovement();
-        
-        if (IsServerInitialized)
-            return;
-        
-        _sendStateTimer -= Time.fixedDeltaTime;
-        if (_sendStateTimer <= 0f)
-        {
-            _sendStateTimer = stateSendInterval;
-            SendStateServerRpc(rb.position, transform.rotation, rb.linearVelocity);
-        }
     }
     
     /// <summary>
-    /// После Teleport/жёсткого сброса NT: гасим RB velocity и устаревшие цели BroadcastState на наблюдателях
-    /// (во время верёвки владелец не шлёт SendState — остаётся старая скорость → у хоста «скольжение» удалённого игрока).
+    /// После Teleport/жёсткого сброса NT: гасим RB velocity, чтобы не тянуть инерцию после снапа.
     /// </summary>
     public void ClearStaleMotionAfterNetworkSnap()
     {
@@ -146,14 +114,6 @@ public class PlayerPhysics : NetworkBehaviour
         {
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-        }
-
-        if (!IsOwner)
-        {
-            _hasRemoteState = false;
-            _remoteVelocity = Vector3.zero;
-            _remoteTargetPos = transform.position;
-            _remoteTargetRot = transform.rotation;
         }
     }
 
@@ -189,51 +149,6 @@ public class PlayerPhysics : NetworkBehaviour
             if ((mask & (1 << i)) != 0)
                 Physics.IgnoreLayerCollision(playerLayer, i, ignore);
         }
-    }
-
-    private void ApplyRemoteSmoothing()
-    {
-        if (!_hasRemoteState) return;
-        
-        float distance = Vector3.Distance(transform.position, _remoteTargetPos);
-        if (distance > snapDistance)
-        {
-            rb.position = _remoteTargetPos;
-            transform.rotation = _remoteTargetRot;
-            rb.linearVelocity = _remoteVelocity;
-            return;
-        }
-        
-        Vector3 nextPos = Vector3.Lerp(
-            transform.position,
-            _remoteTargetPos,
-            remotePositionLerp * Time.deltaTime
-        );
-        
-        Quaternion nextRot = Quaternion.Slerp(
-            transform.rotation,
-            _remoteTargetRot,
-            remoteRotationLerp * Time.deltaTime
-        );
-        
-        rb.position = nextPos;
-        transform.rotation = nextRot;
-        rb.linearVelocity = _remoteVelocity;
-    }
-    
-    [ServerRpc]
-    private void SendStateServerRpc(Vector3 position, Quaternion rotation, Vector3 velocity)
-    {
-        BroadcastStateObserversRpc(position, rotation, velocity);
-    }
-    
-    [ObserversRpc(ExcludeOwner = true)]
-    private void BroadcastStateObserversRpc(Vector3 position, Quaternion rotation, Vector3 velocity)
-    {
-        _remoteTargetPos = position;
-        _remoteTargetRot = rotation;
-        _remoteVelocity = velocity;
-        _hasRemoteState = true;
     }
 
     private void ApplyMovement()

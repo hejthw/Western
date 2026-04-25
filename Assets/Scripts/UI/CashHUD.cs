@@ -2,6 +2,8 @@
 using FishNet.Object;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CashHUD : MonoBehaviour
 {
@@ -12,11 +14,17 @@ public class CashHUD : MonoBehaviour
     [SerializeField] private TMP_Text finishHeistHintText;
     [SerializeField] private TMP_Text heistTimerText;
     [SerializeField] private GameObject timerFinishedElement;
+    [Header("Result UI")]
+    [SerializeField] private GameObject winCanvas;
+    [SerializeField] private GameObject defeatCanvas;
+    [SerializeField] private Button winBackToMenuButton;
+    [SerializeField] private Button defeatBackToMenuButton;
     [SerializeField] private float heistTimerSeconds = 40f;
     [SerializeField] private float timerFinishedElementSeconds = 3f;
     
     private PickupController _pickupController;
     private PlayerController _playerController;
+    private HeistDoor _heistDoor;
     private bool _cashProgressUnlocked;
     private Coroutine _timerRoutine;
     private bool _lastInCashZone;
@@ -35,20 +43,30 @@ public class CashHUD : MonoBehaviour
             heistTimerText.gameObject.SetActive(false);
         if (timerFinishedElement != null)
             timerFinishedElement.SetActive(false);
+        if (winCanvas != null)
+            winCanvas.SetActive(false);
+        if (defeatCanvas != null)
+            defeatCanvas.SetActive(false);
     }
 
     private void OnEnable()
     {
         HeistDoor.OpenedByLocalPlayer += OnHeistDoorOpenedByLocalPlayer;
+        HeistManager.HeistResultReceived += OnHeistResultReceived;
+        BindResultButtons();
     }
 
     private void OnDisable()
     {
         HeistDoor.OpenedByLocalPlayer -= OnHeistDoorOpenedByLocalPlayer;
+        HeistManager.HeistResultReceived -= OnHeistResultReceived;
     }
     
-        private void Update()
+    private void Update()
     {
+        if (_playerController == null)
+            _playerController = GetComponentInParent<PlayerController>();
+
         bool isOwner = _playerController != null && _playerController.IsOwner;
         if (!isOwner)
         {
@@ -58,7 +76,10 @@ public class CashHUD : MonoBehaviour
                 _loggedWaitingForOwner = true;
             }
             SetCashProgressVisible(false);
-            SetZoneUiVisible(false);
+            if (cashDropHintText != null)
+                cashDropHintText.gameObject.SetActive(false);
+            if (finishHeistHintText != null)
+                finishHeistHintText.gameObject.SetActive(false);
             return;
         }
 
@@ -79,6 +100,14 @@ public class CashHUD : MonoBehaviour
         if (cashProgressText == null || cashDropHintText == null)
             EnsureCashUiReferences();
 
+        if (!_cashProgressUnlocked)
+        {
+            if (_heistDoor == null)
+                _heistDoor = FindFirstObjectByType<HeistDoor>();
+            if (_heistDoor != null && _heistDoor.IsOpened())
+                _cashProgressUnlocked = true;
+        }
+
         bool showCashProgress = _cashProgressUnlocked;
         SetCashProgressVisible(showCashProgress);
         if (showCashProgress)
@@ -98,7 +127,10 @@ public class CashHUD : MonoBehaviour
                 Debug.Log($"[HUD] Hide cash UI (left cash zone). player={name}");
                 _lastCashUiVisible = false;
             }
-            SetZoneUiVisible(false);
+            if (cashDropHintText != null)
+                cashDropHintText.gameObject.SetActive(false);
+            if (finishHeistHintText != null)
+                finishHeistHintText.gameObject.SetActive(false);
             return;
         }
 
@@ -117,8 +149,6 @@ public class CashHUD : MonoBehaviour
             Debug.Log($"[HUD] Show cash UI (entered cash zone). player={name}");
             _lastCashUiVisible = true;
         }
-
-        SetZoneUiVisible(true);
 
         if (_pickupController.TryGetHeldLootValue(out int lootValue))
         {
@@ -190,14 +220,6 @@ public class CashHUD : MonoBehaviour
             cashProgressText.gameObject.SetActive(visible);
     }
 
-    private void SetZoneUiVisible(bool visible)
-    {
-        if (cashDropHintText != null)
-            cashDropHintText.gameObject.SetActive(visible);
-        if (finishHeistHintText != null)
-            finishHeistHintText.gameObject.SetActive(visible);
-    }
-
     private void UpdateCashProgressText()
     {
         if (cashProgressText == null)
@@ -224,6 +246,53 @@ public class CashHUD : MonoBehaviour
         if (_timerRoutine != null)
             StopCoroutine(_timerRoutine);
         _timerRoutine = StartCoroutine(HeistTimerRoutine());
+    }
+
+    private void OnHeistResultReceived(bool win)
+    {
+        if (_playerController == null)
+            _playerController = GetComponentInParent<PlayerController>();
+        if (_playerController == null || !_playerController.IsOwner)
+            return;
+
+        if (_timerRoutine != null)
+        {
+            StopCoroutine(_timerRoutine);
+            _timerRoutine = null;
+        }
+
+        if (heistTimerText != null)
+            heistTimerText.gameObject.SetActive(false);
+        if (timerFinishedElement != null)
+            timerFinishedElement.SetActive(false);
+
+        if (winCanvas != null)
+            winCanvas.SetActive(win);
+        if (defeatCanvas != null)
+            defeatCanvas.SetActive(!win);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    private void BindResultButtons()
+    {
+        if (winBackToMenuButton != null)
+        {
+            winBackToMenuButton.onClick.RemoveListener(ReturnToMainMenu);
+            winBackToMenuButton.onClick.AddListener(ReturnToMainMenu);
+        }
+
+        if (defeatBackToMenuButton != null)
+        {
+            defeatBackToMenuButton.onClick.RemoveListener(ReturnToMainMenu);
+            defeatBackToMenuButton.onClick.AddListener(ReturnToMainMenu);
+        }
+    }
+
+    private void ReturnToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 
     private IEnumerator HeistTimerRoutine()

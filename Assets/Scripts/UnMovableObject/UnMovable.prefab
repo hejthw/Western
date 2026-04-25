@@ -189,7 +189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 7051801441653174710}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 7051801441653174710}
 --- !u!114 &7051801441653174710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +208,9 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 8505110637416980450}
+  - {fileID: 1925029906393399603}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -219,7 +221,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584244982702005526
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -235,15 +237,15 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 38
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 15760276618130571766
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: -14.57, y: 2.22, z: 13.36}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!1 &8581208583537325061
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,7 +401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::UnMovable
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 7051801441653174710}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 7051801441653174710}
   attachZone: {fileID: 0}
   zoneTolerance: 0.15
   climbAnchor: {fileID: 0}

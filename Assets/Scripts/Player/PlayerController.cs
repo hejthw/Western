@@ -139,8 +139,16 @@ public class PlayerController : NetworkBehaviour
 
     private void DisableLocalComponents()
     {
-        GetComponent<PlayerInput>().enabled  = false;
+        GetComponent<PlayerInput>().enabled = false;
         GetComponent<PlayerRotate>().enabled = false;
+        if (physics != null)
+            physics.enabled = false;
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+        }
         enabled = false;
     }
 
