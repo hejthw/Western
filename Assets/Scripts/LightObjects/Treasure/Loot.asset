@@ -13,16 +13,6 @@ MonoBehaviour:
   m_Name: Loot
   m_EditorClassIdentifier: Assembly-CSharp::LootDatabase
   items:
-  - id: 0
-    prefab: {fileID: 2414790610261753525, guid: 941d36c02a72d524d82d96f376a63d55, type: 3}
-    value: 100
-    fragile: 0
-    semiFragile: 0
-  - id: 1
-    prefab: {fileID: 5824073563970624743, guid: ce07a32f517ead94a881142c52687d19, type: 3}
-    value: 200
-    fragile: 0
-    semiFragile: 1
   - id: 2
     prefab: {fileID: 8028171942952735907, guid: 149be82b1ae0f4b4fac6e832354d9f09, type: 3}
     value: 200

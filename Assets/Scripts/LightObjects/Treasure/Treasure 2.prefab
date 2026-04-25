@@ -46,7 +46,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5824073563970624743}
-  m_Mesh: {fileID: 2488140121366947119, guid: 752da6273f10ad14da6a198c30f86e36, type: 3}
+  m_Mesh: {fileID: 4300000, guid: bd8e50ce56412f148b075036e2a583c5, type: 3}
 --- !u!23 &3438926980725577229
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -174,7 +174,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584244982702005526
+  _initializedTimestamp: -8584244868944684621
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -190,7 +190,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 34
+  <PrefabId>k__BackingField: 41
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 13668868447545318149
   SceneId: 0

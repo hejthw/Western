@@ -174,7 +174,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584244982702005526
+  _initializedTimestamp: -8584244863083026479
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -190,14 +190,14 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 34
+  <PrefabId>k__BackingField: 15
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 6453355421733420513
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: 3.22, y: 0.6, z: -21.18}
+    Position: {x: -0.13925286, y: -2.4662437, z: -3.3461542}
     Rotation: {x: -0.7071069, y: 0, z: 0, w: 0.7071067}
-    Scale: {x: 300, y: 300, z: 300}
+    Scale: {x: 145, y: 145, z: 145}
     IsValid: 1
 --- !u!65 &6359649431023711766
 BoxCollider:
@@ -285,4 +285,4 @@ MonoBehaviour:
   pullSpeed: 15
   semiFragile: 0
   thirdPersonVisualPrefab: {fileID: 7103095680108300308, guid: 8881b14c5a6333d46b1fd7ebf427542c, type: 3}
-  value: 135
+  value: 200
