@@ -14,6 +14,7 @@ public class PlayerInventoryUI : NetworkBehaviour
     [SerializeField] private Sprite fallbackTypeRevolverIcon;
     [SerializeField] private Sprite fallbackTypeLootIcon;
     [SerializeField] private Sprite[] slotNumberIcons;
+    [SerializeField] private Vector2 slotNumberIconSize = new Vector2(126f, 72f);
 
     [Header("Selected Slot Scale")]
     [SerializeField] private float selectedSlotScale = 1.12f;
@@ -141,6 +142,10 @@ public class PlayerInventoryUI : NetworkBehaviour
             iconImage.preserveAspect = true;
             iconImage.raycastTarget = false;
         }
+
+        RectTransform iconRt = iconImage.GetComponent<RectTransform>();
+        if (iconRt != null)
+            iconRt.sizeDelta = slotNumberIconSize;
 
         if (slotNumberIcons != null && slotIndex >= 0 && slotIndex < slotNumberIcons.Length)
             iconImage.sprite = slotNumberIcons[slotIndex];

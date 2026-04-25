@@ -1464,8 +1464,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.45188114, y: 0.32817993, z: -0.18330805, w: 0.80901146}
-  m_LocalPosition: {x: -0.6624696, y: 1.283072, z: -0.4624834}
+  m_LocalRotation: {x: 0.37635, y: -0.3285665, z: 0.14478369, w: 0.85407406}
+  m_LocalPosition: {x: 0.5130814, y: 1.1166763, z: -0.7218151}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1548,7 +1548,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 52.491734
+    Value: -33.75226
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1558,7 +1558,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 33.371956
+    Value: 22.56159
     Center: 17.5
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -1592,7 +1592,7 @@ MonoBehaviour:
   ReferenceFrame: 2
   RecenterTarget: 2
   PanAxis:
-    Value: 44.160408
+    Value: -42.083958
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1602,7 +1602,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 58.37192
+    Value: 47.56163
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -2549,7 +2549,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.07244443, y: -0.14646341, z: 0.010755647, w: 0.9865012}
+  m_LocalRotation: {x: -0.023743417, y: -0.85173696, z: -0.03874198, w: 0.5219957}
   m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2627,7 +2627,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: -16.88975
+    Value: -116.99505
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -2637,7 +2637,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 8.400037
+    Value: -5.208704
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -3686,7 +3686,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584244815106028661
+  _initializedTimestamp: -8584244811606643603
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -3971,7 +3971,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 1.1757, y: 65}
+  m_AnchoredPosition: {x: 1.1757, y: 27}
   m_SizeDelta: {x: 998.2666, y: 231.7052}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &6672078648296691078
@@ -4285,7 +4285,7 @@ Transform:
   m_GameObject: {fileID: 7075362909638396278}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.41}
+  m_LocalPosition: {x: 0, y: 0.77, z: 1.41}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4553,7 +4553,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584244815106028661
+  _initializedTimestamp: -8584244811606643603
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -4794,13 +4794,14 @@ MonoBehaviour:
   slotPrefab: {fileID: 3929976265598659023, guid: 01889a12b99f9d44398db8c93c375a42, type: 3}
   slotsParent: {fileID: 1978485132004035348}
   iconDatabase: {fileID: 11400000, guid: 8e46de64285b4cc88c5f7e4e97f4d157, type: 2}
-  emptySlotIcon: {fileID: 21300000, guid: 3c60a670bf7af1342bdaf65f921b5bfe, type: 3}
+  emptySlotIcon: {fileID: 21300000, guid: 14bead82cc9e2e74aa99d8e2e8594eb3, type: 3}
   fallbackTypeRevolverIcon: {fileID: 21300000, guid: 21132263b5f3bab44894b759464ff290, type: 3}
   fallbackTypeLootIcon: {fileID: 21300000, guid: 4f1d9e687fc26544b9d34d4c5bea1395, type: 3}
   slotNumberIcons:
   - {fileID: 21300000, guid: 91c3d3bf681de9845aae2b16f6e12f1b, type: 3}
   - {fileID: 21300000, guid: bc170da78c65fb54888bd00cc58264d0, type: 3}
   - {fileID: 21300000, guid: 8fe6e961922b81042b17e5d431a0631d, type: 3}
+  slotNumberIconSize: {x: 120, y: 70}
   selectedSlotScale: 1.12
   normalSlotScale: 1
 --- !u!114 &2447267575867540026
@@ -5447,7 +5448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: _initializedTimestamp
-      value: -8584244815106028661
+      value: -8584244811606643603
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: <IsNested>k__BackingField

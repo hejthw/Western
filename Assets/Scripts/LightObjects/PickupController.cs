@@ -75,6 +75,14 @@ public class PickupController : NetworkBehaviour
             return;
         if (TryCashIn())
             return;
+
+        PlayerController pc = GetComponent<PlayerController>();
+        if (pc != null && pc.IsArmed)
+        {
+            // На E не бросаем/не подбираем, если активен револьвер.
+            return;
+        }
+
         if (heldObject != null)
         {
             Revolver revolver = heldObject.GetComponent<Revolver>();
@@ -431,7 +439,17 @@ public class PickupController : NetworkBehaviour
             }
             else
             {
-                inv.MoveBoundRevolverToSlot(revolver, slot);
+                if (!inv.IsSlotEmpty(slot))
+                {
+                    NetworkObject playerNetObj = GetComponent<NetworkObject>();
+                    // Убираем текущий предмет в его исходный слот и достаем предмет из нажатого слота.
+                    inv.UnequipRevolver(playerNetObj);
+                    inv.EquipFromSlot(slot, playerNetObj);
+                }
+                else
+                {
+                    inv.MoveBoundRevolverToSlot(revolver, slot);
+                }
             }
             return;
         }
