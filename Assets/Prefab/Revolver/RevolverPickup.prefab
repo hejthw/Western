@@ -138,6 +138,7 @@ MonoBehaviour:
   fragile: 0
   pullSpeed: 15
   semiFragile: 0
+  thirdPersonVisualPrefab: {fileID: 0}
 --- !u!65 &6220897268445605181
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -177,6 +178,7 @@ MonoBehaviour:
   fragile: 0
   pullSpeed: 15
   semiFragile: 0
+  thirdPersonVisualPrefab: {fileID: 0}
   revolverData: {fileID: 11400000, guid: e2d994d400840eb18a2f9b484a48b590, type: 2}
   revolverWeaponPrefab: {fileID: 7630292203656044341, guid: d13e2ab1dc41b84b188358e6be240470, type: 3}
 --- !u!1001 &4811430179260912949

@@ -10,6 +10,7 @@ public class Dynamite : LightObject, IUsable
     public float explosionRadius = 5f;
     public float explosionForce = 500f;
     public LayerMask wallLayer;
+    public string GetInteractLabel() => "Ignite";
 
     private readonly SyncVar<bool> _isLit = new SyncVar<bool>();
     public bool IsLit => _isLit.Value;

@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using Steamworks;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class SteamMainMenuController : MonoBehaviour
@@ -11,35 +9,28 @@ public class SteamMainMenuController : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject mainPanel;
     [SerializeField] private GameObject lobbyPanel;
+    [SerializeField] private GameObject settingsPanel;
 
-    [Header("Main Panel")]
-    [SerializeField] private TMP_Text statusText;
+    [Header("Main Panel Buttons")]
     [SerializeField] private Button createLobbyButton;
     [SerializeField] private Button joinLobbyButton;
+    [SerializeField] private Button settingsButton;
     [SerializeField] private Button quitButton;
+    
+    [Header("Lobby Buttons")]
+    [SerializeField] private Button backToMainButton;
 
-    [Header("Lobby Panel — Slots")]
-    [Tooltip("Ровно 4 Transform-а — контейнеры слотов в нужном порядке")]
-    [SerializeField] private Transform[] slotRoots = new Transform[4];
-    [SerializeField] private GameObject lobbyItemPrefab;
-    [SerializeField] private GameObject lobbyItemEmptyPrefab;
-
-    [Header("Lobby Panel — Buttons")]
-    [SerializeField] private Button leaveLobbyButton;
-    [SerializeField] private Button inviteFriendsButton;
-    [SerializeField] private Button startButton;
-
+    [Header("Settings buttons")]
+    [SerializeField] private Button backToMainMenuButton;
     private SteamLobbyManager _lobbyManager;
     
-    private readonly GameObject[] _slotInstances = new GameObject[4];
-
     private void Awake()
     {
-        EnsureSteamObjects();
         EnsureEventSystem();
+        EnsureDependencies();
         BindButtons();
         WireLobbyEvents();
-        SwitchToMainPanel();
+        SwitchToMain();
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -48,15 +39,12 @@ public class SteamMainMenuController : MonoBehaviour
     private void OnDestroy()
     {
         if (_lobbyManager == null) return;
-        _lobbyManager.StatusChangedEvent -= HandleStatusChanged;
-        _lobbyManager.LobbyEnteredEvent -= HandleLobbyEntered;
-        _lobbyManager.LobbyLeftEvent -= HandleLobbyLeft;
-        _lobbyManager.LobbyMembersChangedEvent -= HandleMembersChanged;
-        _lobbyManager.LobbyReadyChangedEvent -= HandleReadyChanged;
+        _lobbyManager.LobbyEnteredEvent -= OnLobbyEntered;
+        _lobbyManager.LobbyLeftEvent -= OnLobbyLeft;
     }
     
 
-    private void EnsureSteamObjects()
+    private void EnsureDependencies()
     {
         if (FindFirstObjectByType<SteamManager>() == null)
             new GameObject("SteamManager").AddComponent<SteamManager>();
@@ -81,168 +69,50 @@ public class SteamMainMenuController : MonoBehaviour
     {
         createLobbyButton.onClick.RemoveAllListeners();
         joinLobbyButton.onClick.RemoveAllListeners();
+        settingsButton.onClick.RemoveAllListeners();
         quitButton.onClick.RemoveAllListeners();
-        leaveLobbyButton.onClick.RemoveAllListeners();
-        inviteFriendsButton.onClick.RemoveAllListeners();
-        startButton.onClick.RemoveAllListeners();
+        backToMainButton.onClick.RemoveAllListeners();
+
 
         createLobbyButton.onClick.AddListener(() => _lobbyManager.HostGame());
         joinLobbyButton.onClick.AddListener(() => _lobbyManager.OpenFriendsOverlay());
+        settingsButton.onClick.AddListener(OpenSettings);
         quitButton.onClick.AddListener(Application.Quit);
-        leaveLobbyButton.onClick.AddListener(() => _lobbyManager.LeaveLobby());
-        inviteFriendsButton.onClick.AddListener(() => _lobbyManager.InviteFriend());
-        startButton.onClick.AddListener(() =>
-        {
-            MusicDirector.StopGlobal();
-            _lobbyManager.StartGameForLobby("NetworkTest");
-        });
-
-        startButton.interactable = false;
-
-        if (statusText != null && string.IsNullOrEmpty(statusText.text))
-            statusText.text = "Готово";
+        backToMainButton.onClick.AddListener(CloseSettings);
+        backToMainMenuButton.onClick.AddListener(CloseSettings);
     }
 
     private void WireLobbyEvents()
     {
-        _lobbyManager.StatusChangedEvent += HandleStatusChanged;
-        _lobbyManager.LobbyEnteredEvent += HandleLobbyEntered;
-        _lobbyManager.LobbyLeftEvent += HandleLobbyLeft;
-        _lobbyManager.LobbyMembersChangedEvent += HandleMembersChanged;
-        _lobbyManager.LobbyReadyChangedEvent += HandleReadyChanged;
+        _lobbyManager.LobbyEnteredEvent += OnLobbyEntered;
+        _lobbyManager.LobbyLeftEvent += OnLobbyLeft;
     }
     
 
-    private void HandleLobbyEntered(CSteamID _)
-    {
-        SwitchToLobbyPanel();
-        MusicDirector.PlayGlobal(MusicCue.Lobby);
-    }
-
-    private void HandleLobbyLeft()
-    {
-        ClearAllSlots();
-        SwitchToMainPanel();
-        MusicDirector.StopGlobal();
-    }
-
-    private void HandleStatusChanged(string status)
-    {
-        if (statusText != null) statusText.text = status;
-    }
-    
-    private void HandleMembersChanged(IReadOnlyList<string> _)
-    {
-        RefreshAllSlots();
-        UpdateStartButton();
-    }
-
-    private void HandleReadyChanged()
-    {
-        for (int i = 0; i < _slotInstances.Length; i++)
-            _slotInstances[i]?.GetComponent<LobbyItemUI>()?.Refresh();
-
-        UpdateStartButton();
-    }
-    
-    private void RefreshAllSlots()
-    {
-        List<CSteamID> members = _lobbyManager.GetLobbyMemberIDs();
-
-        for (int i = 0; i < slotRoots.Length; i++)
-        {
-            bool hasPlayer = members != null && i < members.Count;
-
-            if (hasPlayer)
-            {
-                CSteamID id = members[i];
-                
-                if (_slotInstances[i] != null && _slotInstances[i].GetComponent<LobbyItemUI>() == null)
-                {
-                    Destroy(_slotInstances[i]);
-                    _slotInstances[i] = null;
-                }
-                
-                if (_slotInstances[i] == null)
-                {
-                    _slotInstances[i] = Instantiate(lobbyItemPrefab, slotRoots[i]);
-                    ResetRectTransform(_slotInstances[i]);
-                    _slotInstances[i].SetActive(true);
-                }
-
-                _slotInstances[i].SetActive(true);
-                _slotInstances[i].GetComponent<LobbyItemUI>().Init(id, _lobbyManager);
-            }
-            else
-            {
-                if (_slotInstances[i] != null && _slotInstances[i].GetComponent<LobbyItemUI>() != null)
-                {
-                    Destroy(_slotInstances[i]);
-                    _slotInstances[i] = null;
-                }
-                
-                if (_slotInstances[i] == null)
-                {
-                    _slotInstances[i] = Instantiate(lobbyItemEmptyPrefab, slotRoots[i]);
-                    ResetRectTransform(_slotInstances[i]);
-                    _slotInstances[i].SetActive(true);
-                }
-            }
-        }
-    }
-
-    private void ClearAllSlots()
-    {
-        for (int i = 0; i < _slotInstances.Length; i++)
-        {
-            if (_slotInstances[i] != null)
-            {
-                Destroy(_slotInstances[i]);
-                _slotInstances[i] = null;
-            }
-        }
-    }
-
-    private static void ResetRectTransform(GameObject go)
-    {
-        RectTransform rt = go.GetComponent<RectTransform>();
-        if (rt == null) return;
-        rt.localPosition = Vector3.zero;
-        rt.localRotation = Quaternion.identity;
-        rt.localScale = Vector3.one;
-        rt.anchoredPosition = Vector2.zero;
-    }
+    private void OnLobbyEntered(Steamworks.CSteamID _) => SwitchToLobby();
+    private void OnLobbyLeft() => SwitchToMain();
     
 
-    private void SwitchToMainPanel()
+    public void SwitchToMain()
     {
         mainPanel.SetActive(true);
         lobbyPanel.SetActive(false);
+        settingsPanel.SetActive(false);
     }
 
-    private void SwitchToLobbyPanel()
+    public void SwitchToLobby()
     {
         mainPanel.SetActive(false);
         lobbyPanel.SetActive(true);
+        settingsPanel.SetActive(false);
     }
 
-    private void UpdateStartButton()
+    public void OpenSettings()
     {
-        if (startButton == null || _lobbyManager == null) return;
-
-        bool isHost = _lobbyManager.IsLobbyHost;
-        bool allReady = _lobbyManager.AreAllPlayersReady();
-
-        startButton.interactable = isHost && allReady;
-
-        TMP_Text label = startButton.GetComponentInChildren<TMP_Text>();
-        if (label == null) return;
-
-        if (!isHost)          
-            label.text = "Ожидание хоста";
-        else if (!allReady)   
-            label.text = "Ожидание готовности";
-        else                  
-            label.text = "Запуск";
+        mainPanel.SetActive(false);
+        lobbyPanel.SetActive(false);
+        settingsPanel.SetActive(true);
     }
+
+    public void CloseSettings() => SwitchToMain();
 }

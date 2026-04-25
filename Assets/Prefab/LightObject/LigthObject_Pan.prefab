@@ -233,3 +233,6 @@ MonoBehaviour:
   _componentIndexCache: 1
   _addedNetworkObject: {fileID: 699250205459573484}
   _networkObjectCache: {fileID: 699250205459573484}
+  rb: {fileID: 0}
+  pushForceMultiplier: 3
+  minPushForce: 1

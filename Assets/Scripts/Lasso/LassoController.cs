@@ -1,11 +1,12 @@
 ﻿using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.LowLevel;
 
 public class LassoController : NetworkBehaviour
 {
     [Header("Keys")]
-    public Key throwKey = Key.F;
     public Key pullKey = Key.G;
     public Key jumpOffKey = Key.Space;
 
@@ -40,7 +41,7 @@ public class LassoController : NetworkBehaviour
 
     private void HandleThrow()
     {
-        if (!Keyboard.current[throwKey].wasPressedThisFrame) return;
+        if (!Mouse.current.rightButton.wasPressedThisFrame) return;
 
         Vector3 dir = cameraTransform.forward;
         Vector3 startPos = launchPoint != null
