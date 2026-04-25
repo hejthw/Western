@@ -2,6 +2,7 @@
 using FishNet.Object;
 using FishNet.Component.Transforming;
 using System.Collections;
+using FishNet.Connection;
 
 public class PickupController : NetworkBehaviour
 {
@@ -343,6 +344,12 @@ public class PickupController : NetworkBehaviour
 
         value = ResolveLootValue(treasure, heldObject.name);
         return value > 0;
+    }
+    
+    [TargetRpc]
+    public void TargetSetCashZone(NetworkConnection conn, bool entered)
+    {
+        UIEvents.RaiseOnCashZoneChanged(entered);
     }
 
 
