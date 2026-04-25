@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Managing.Object.DefaultPrefabObjects
   _prefabs:
   - {fileID: 3847531644440900572, guid: a1ee401e5aa805141b4c7b69e590415f, type: 3}
+  - {fileID: 6625014154515603207, guid: 149be82b1ae0f4b4fac6e832354d9f09, type: 3}
   - {fileID: 3821164930249990725, guid: 941d36c02a72d524d82d96f376a63d55, type: 3}
   - {fileID: 7197141313096897733, guid: f49c084233f1e4e4caae1520b7653582, type: 3}
   - {fileID: 5371529590579357906, guid: 3b73bfb6a4cec5949a1365148940f2ce, type: 3}
@@ -26,12 +27,14 @@ MonoBehaviour:
   - {fileID: 5714688594638102390, guid: bda34d0c342cdf44588dcb6b13837b63, type: 3}
   - {fileID: 4515827531417748447, guid: 24f0b523ab2566f4083c9341c748cd7d, type: 3}
   - {fileID: 4512293259955182956, guid: 0d6d0f48b03b17f49a6340103cd9b9d0, type: 3}
+  - {fileID: 6525034281304109364, guid: 21644ad4ce10dcf43a45780e736cf653, type: 3}
   - {fileID: 1820688516834759840, guid: 322b41fca2bb03f4e9cf5a207f4322c3, type: 3}
   - {fileID: 8475222101369129519, guid: 8cf33e8e99a9b0c4c8f29ff725650de6, type: 3}
   - {fileID: 7630292203656044341, guid: d13e2ab1dc41b84b188358e6be240470, type: 3}
   - {fileID: 6374202138214646336, guid: f0cd39e9ba73af44eb82a0216d7cee6f, type: 3}
   - {fileID: 4607811138900368580, guid: 6dd29e43f1ec47b46a412b5fa71e5c90, type: 3}
   - {fileID: 4512293259955182956, guid: dafef736ca1ae384e9a19eb672843563, type: 3}
+  - {fileID: 7050245311834900459, guid: 985182c14e1cb1449afa2ef3c80d3741, type: 3}
   - {fileID: 7894399120581566736, guid: 33ec016b3133060488d6662935027fa8, type: 3}
   - {fileID: 201277550, guid: 5b712878ecece354ba4ffb026c0a221c, type: 3}
   - {fileID: 2145805682021688670, guid: 0f468f91bba413c4ca183ff1393c1257, type: 3}
@@ -65,6 +68,3 @@ MonoBehaviour:
   - {fileID: 4512293259955182956, guid: f32d4c19de900e64cb73cedcb8ba6f70, type: 3}
   - {fileID: 5459691189218685076, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
   - {fileID: 611616139817875448, guid: bf5f023b4017a5e41a9815ec5745df3d, type: 3}
-  - {fileID: 6625014154515603207, guid: 149be82b1ae0f4b4fac6e832354d9f09, type: 3}
-  - {fileID: 7050245311834900459, guid: 985182c14e1cb1449afa2ef3c80d3741, type: 3}
-  - {fileID: 6525034281304109364, guid: 21644ad4ce10dcf43a45780e736cf653, type: 3}
