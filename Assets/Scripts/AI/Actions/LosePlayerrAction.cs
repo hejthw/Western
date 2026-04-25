@@ -25,15 +25,14 @@ public partial class LosePlayerrAction : Action
     {
         if (HasLineOfSight.Value)
         {
-            // Увидели снова — сбрасываем таймер
             _timer = LosingTime.Value;
-            return Status.Failure; // возвращаем Failure чтобы BT переключился на боевую ноду
+            return Status.Failure;
         }
 
         _timer -= Time.deltaTime;
 
         if (_timer <= 0f)
-            return Status.Success; // LoS не было всё время — потеряли игрока
+            return Status.Success;
 
         return Status.Running;
     }

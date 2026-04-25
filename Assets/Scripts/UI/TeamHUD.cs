@@ -17,7 +17,7 @@ public class TeamHUDEntry : MonoBehaviour
 
     [Header("Health Bar")]
     [SerializeField] private Image healthBarImage;
-    private const float MaxHealthBarWidth = 112f;
+    private const float MaxHealthBarWidth = 123f;
     private const float HealthBarLerpSpeed = 5f;
     private float _knockdownDuration;
 

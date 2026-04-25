@@ -160,6 +160,9 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 5714688594638102390}
   _networkObjectCache: {fileID: 5714688594638102390}
   fragile: 0
+  pullSpeed: 15
+  semiFragile: 0
+  thirdPersonVisualPrefab: {fileID: 0}
 --- !u!114 &5714688594638102390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,6 +175,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 0
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours:
+  - {fileID: 1305765168208889163}
+  - {fileID: 3386793061371103214}
+  - {fileID: 8110411017316854539}
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: -8584262908988759398
   NetworkObserver: {fileID: 0}
   _enablePrediction: 1
   _predictionType: 0
@@ -196,27 +220,6 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 0.5, y: 0.5, z: 0.5}
     IsValid: 1
-  <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours:
-  - {fileID: 1305765168208889163}
-  - {fileID: 3386793061371103214}
-  - {fileID: 8110411017316854539}
-  InitializedParentNetworkBehaviour: {fileID: 0}
-  InitializedNestedNetworkObjects: []
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
-  _initializedTimestamp: -8584262908988759398
 --- !u!114 &3386793061371103214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,3 +281,6 @@ MonoBehaviour:
   _componentIndexCache: 2
   _addedNetworkObject: {fileID: 5714688594638102390}
   _networkObjectCache: {fileID: 5714688594638102390}
+  rb: {fileID: 0}
+  pushForceMultiplier: 3
+  minPushForce: 1
