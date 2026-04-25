@@ -8,6 +8,10 @@ public class GraphicsSettings : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Toggle fullscreenToggle;
     [SerializeField] private TMP_Dropdown resolutionDropdown;
+    [SerializeField] private Button switchToSoundButton;
+    
+    [SerializeField] private GameObject graphicsPanel;
+    [SerializeField] private GameObject soundPanel;
 
     private Resolution[] resolutions; //
     
@@ -30,23 +34,29 @@ public class GraphicsSettings : MonoBehaviour
 
         resolutionDropdown.RefreshShownValue();
         fullscreenToggle.isOn = Screen.fullScreen;
+        
         fullscreenToggle.onValueChanged.AddListener(SetFullscreen);
-
         resolutionDropdown.onValueChanged.AddListener(SetResolution);
+        switchToSoundButton.onClick.AddListener(SwitchToSound);
     }
 
-    public void SetFullscreen(bool isFullscreen)
+    private void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
         PlayerPrefs.SetInt("Fullscreen", isFullscreen ? 1 : 0);
     }
 
-    public void SetResolution(int index)
+    private void SetResolution(int index)
     {
         Resolution res = resolutions[index];
         Screen.SetResolution(res.width, res.height, Screen.fullScreen);
         PlayerPrefs.SetString("Resolution", res.width + "x" + res.height);
     }
-    
+
+    private void SwitchToSound()
+    {
+        graphicsPanel.SetActive(!graphicsPanel.activeSelf);
+        soundPanel.SetActive(!soundPanel.activeSelf);
+    }
     
 }

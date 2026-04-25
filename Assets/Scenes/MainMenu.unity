@@ -496,7 +496,7 @@ RectTransform:
   m_Father: {fileID: 641006448}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -678,7 +678,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &221025764
 RectTransform:
   m_ObjectHideFlags: 0
@@ -778,6 +778,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GraphicsSettings
   fullscreenToggle: {fileID: 1592972246}
   resolutionDropdown: {fileID: 1619007366}
+  switchToSoundButton: {fileID: 166507629}
+  graphicsPanel: {fileID: 221025763}
+  soundPanel: {fileID: 2012213736}
 --- !u!1 &268414013
 GameObject:
   m_ObjectHideFlags: 0
@@ -3426,7 +3429,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &931244972
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5620,6 +5623,7 @@ MonoBehaviour:
   settingsButton: {fileID: 1004336870}
   quitButton: {fileID: 1060225310}
   backToMainButton: {fileID: 1014551504}
+  backToMainMenuButton: {fileID: 1191923588}
 --- !u!4 &1386370904
 Transform:
   m_ObjectHideFlags: 0
@@ -6541,7 +6545,7 @@ RectTransform:
   m_Father: {fileID: 763597892}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 40, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7058,7 +7062,7 @@ RectTransform:
   m_Father: {fileID: 268414014}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7924,7 +7928,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2012213737
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8024,6 +8028,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundSettings
   soundSlider: {fileID: 891356290}
   musicSlider: {fileID: 768435118}
+  switchToGraphicsButton: {fileID: 1040497102}
+  graphicsPanel: {fileID: 221025763}
+  soundPanel: {fileID: 2012213736}
 --- !u!1 &2028027788
 GameObject:
   m_ObjectHideFlags: 0
@@ -8411,7 +8418,7 @@ RectTransform:
   m_Father: {fileID: 946309278}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 40, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

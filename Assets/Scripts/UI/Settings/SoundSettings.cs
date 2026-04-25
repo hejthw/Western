@@ -9,6 +9,10 @@ public class SoundSettings : MonoBehaviour
     [SerializeField] private Slider soundSlider;
     [SerializeField] private Slider musicSlider;
     
+    [SerializeField] private Button switchToGraphicsButton;
+    [SerializeField] private GameObject graphicsPanel;
+    [SerializeField] private GameObject soundPanel;
+    
     private void Start()
     {
         float savedVolume = PlayerPrefs.GetFloat("SoundVolume", 1f);
@@ -22,6 +26,7 @@ public class SoundSettings : MonoBehaviour
         
         soundSlider.onValueChanged.AddListener(SetVolume);
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        switchToGraphicsButton.onClick.AddListener(SwitchToGraphics);
     }
 
     private void SetVolume(float volume)
@@ -32,5 +37,11 @@ public class SoundSettings : MonoBehaviour
     private void SetMusicVolume(float volume)
     {
         PlayerPrefs.SetFloat("MusicVolume", volume);
+    }
+    
+    private void SwitchToGraphics()
+    {
+        graphicsPanel.SetActive(!graphicsPanel.activeSelf);
+        soundPanel.SetActive(!soundPanel.activeSelf);
     }
 }

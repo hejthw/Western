@@ -2,6 +2,7 @@
 using FishNet.Object;
 using FishNet.Component.Transforming;
 using System.Collections;
+using FishNet.Connection;
 
 public class PickupController : NetworkBehaviour
 {
@@ -18,6 +19,7 @@ public class PickupController : NetworkBehaviour
     private bool _isInsideCashZone;
     private bool _lastLoggedCashZoneState;
   
+    [SerializeField] private TutorialUISpawner uiSpawner;
 
     private void Awake()
     {
@@ -213,7 +215,8 @@ public class PickupController : NetworkBehaviour
         obj.transform.SetParent(holdPoint, false);
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
-
+        
+        uiSpawner?.OnItemPickedUp(obj);
         Debug.Log("Attached " + obj.name + " locally");
     }
 
@@ -234,6 +237,7 @@ public class PickupController : NetworkBehaviour
         heldObject.GetComponent<LightObject>().ServerThrow(pos, velocity);
         heldObject = null;
         heldRb = null;
+        uiSpawner?.OnItemDropped();
     }
 
     private void HandleDrop()
@@ -340,6 +344,12 @@ public class PickupController : NetworkBehaviour
 
         value = ResolveLootValue(treasure, heldObject.name);
         return value > 0;
+    }
+    
+    [TargetRpc]
+    public void TargetSetCashZone(NetworkConnection conn, bool entered)
+    {
+        UIEvents.RaiseOnCashZoneChanged(entered);
     }
 
 
