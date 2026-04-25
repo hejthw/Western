@@ -93,7 +93,7 @@ public class LobbyPanelController : MonoBehaviour
     private void OnStartClicked()
     {
         MusicDirector.StopGlobal();
-        _lobbyManager.StartGameForLobby("NetworkTest");
+        _lobbyManager.StartGameForLobby("MainScenes_LVL1");
     }
 
     private void RefreshAllSlots()
