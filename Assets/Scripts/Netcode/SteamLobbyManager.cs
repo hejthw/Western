@@ -39,9 +39,7 @@ public class SteamLobbyManager : MonoBehaviour
     private void Start()
     {
         EnsureSteamManager();
-
-        if (SceneManager.GetActiveScene().name != "MainMenu")
-            TryBindHostButtonInGameplayScene();
+        
 
         if (!SteamManager.Initialized)
         {
@@ -247,22 +245,6 @@ public class SteamLobbyManager : MonoBehaviour
             new GameObject("SteamManager").AddComponent<SteamManager>();
     }
     
-    private void TryBindHostButtonInGameplayScene()
-    {
-        foreach (Button button in FindObjectsByType<Button>(FindObjectsSortMode.None))
-        {
-            if (button == null) continue;
-            TMP_Text label = button.GetComponentInChildren<TMP_Text>();
-            if (label == null || string.IsNullOrWhiteSpace(label.text)) continue;
-            if (label.text.Trim().ToLowerInvariant() != "host") continue;
-
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(HostGame);
-            Debug.Log("[SteamLobby] Bound Host button for direct editor launch.");
-            return;
-        }
-    }
-
     private void NotifyMembersChanged() =>
         LobbyMembersChangedEvent?.Invoke(GetLobbyMemberNames());
 
@@ -270,5 +252,48 @@ public class SteamLobbyManager : MonoBehaviour
     {
         var nm = FindFirstObjectByType<FishNet.Managing.NetworkManager>();
         if (nm != null) Destroy(nm.gameObject);
+    }
+    
+    public void StartHostInCurrentScene()
+    {
+        if (!SteamManager.Initialized)
+        {
+            StatusChangedEvent?.Invoke("Steam is not initialized");
+            return;
+        }
+
+        if (InstanceFinder.NetworkManager == null)
+        {
+            StatusChangedEvent?.Invoke("NetworkManager not found in current scene");
+            Debug.LogError("[SteamLobby] NetworkManager not found in current scene.");
+            return;
+        }
+
+        FishySteamworks.FishySteamworks transport =
+            InstanceFinder.NetworkManager.TransportManager.GetTransport<FishySteamworks.FishySteamworks>();
+        if (transport == null)
+        {
+            StatusChangedEvent?.Invoke("FishySteamworks transport is missing");
+            Debug.LogError("[SteamLobby] FishySteamworks transport missing.");
+            return;
+        }
+
+        string selfSteamId = SteamUser.GetSteamID().ToString();
+        if (!ulong.TryParse(selfSteamId, out _))
+        {
+            StatusChangedEvent?.Invoke("Invalid local SteamId");
+            Debug.LogError($"[SteamLobby] Invalid local SteamId '{selfSteamId}'.");
+            return;
+        }
+
+        transport.SetClientAddress(selfSteamId);
+
+        if (!InstanceFinder.ServerManager.Started)
+            InstanceFinder.ServerManager.StartConnection();
+        if (!InstanceFinder.ClientManager.Started)
+            InstanceFinder.ClientManager.StartConnection();
+
+        StatusChangedEvent?.Invoke("Host started in current scene");
+        Debug.Log("[SteamLobby] Host started in current scene (editor/direct launch).");
     }
 }

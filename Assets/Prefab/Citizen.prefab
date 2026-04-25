@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 795490380925558475}
   - component: {fileID: 4822277112505486637}
   - component: {fileID: 4892289949281136317}
+  - component: {fileID: 6019028366394575169}
   m_Layer: 0
   m_Name: Citizen
   m_TagString: Untagged
@@ -326,7 +327,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 300745829150570369}
   _behaviorAgent: {fileID: 5687827164112810396}
   _navMeshAgent: {fileID: 6090642510061842057}
-  _rigidbody: {fileID: 0}
+  _rigidbody: {fileID: 6019028366394575169}
 --- !u!114 &4822277112505486637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,7 +343,7 @@ MonoBehaviour:
   _componentIndexCache: 2
   _addedNetworkObject: {fileID: 300745829150570369}
   _networkObjectCache: {fileID: 300745829150570369}
-  _componentConfiguration: 2
+  _componentConfiguration: 1
   _synchronizeParent: 0
   _packing:
     Position: 1
@@ -389,6 +390,33 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 300745829150570369}
   _networkObjectCache: {fileID: 300745829150570369}
   data: {fileID: 11400000, guid: d255d54b6083aad78b2d69de0d872f73, type: 2}
+--- !u!54 &6019028366394575169
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6851723002121039906}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &7070904914041509893
 GameObject:
   m_ObjectHideFlags: 0
