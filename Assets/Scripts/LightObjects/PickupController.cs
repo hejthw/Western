@@ -75,6 +75,14 @@ public class PickupController : NetworkBehaviour
             return;
         if (TryCashIn())
             return;
+
+        PlayerController pc = GetComponent<PlayerController>();
+        if (pc != null && pc.IsArmed)
+        {
+            TrySwitchFromRevolverToLookedItem();
+            return;
+        }
+
         if (heldObject != null)
         {
             Revolver revolver = heldObject.GetComponent<Revolver>();
@@ -89,6 +97,44 @@ public class PickupController : NetworkBehaviour
             }
         }
         TryPickup();
+    }
+
+    private void TrySwitchFromRevolverToLookedItem()
+    {
+        Ray ray = new Ray(cam.position, cam.forward);
+        if (!Physics.Raycast(ray, out var hit, pickupDistance, pickupLayer))
+            return;
+
+        if (!hit.collider.TryGetComponent(out LightObject obj))
+            obj = hit.collider.GetComponentInParent<LightObject>();
+        if (obj == null)
+            return;
+
+        ServerSwitchFromRevolverToItem(obj.NetworkObject);
+    }
+
+    [ServerRpc]
+    private void ServerSwitchFromRevolverToItem(NetworkObject targetItemNetObj)
+    {
+        if (targetItemNetObj == null)
+            return;
+
+        PlayerInventory inv = GetComponent<PlayerInventory>();
+        if (inv == null)
+            return;
+
+        PlayerController pc = GetComponent<PlayerController>();
+        if (pc == null || !pc.IsArmed)
+            return;
+
+        NetworkObject playerNetObj = GetComponent<NetworkObject>();
+        inv.UnequipRevolver(playerNetObj);
+
+        LightObject targetItem = targetItemNetObj.GetComponent<LightObject>();
+        if (targetItem == null)
+            return;
+
+        targetItem.ServerPickup(playerNetObj);
     }
     private bool TryInteractDoor()
     {
@@ -248,7 +294,8 @@ public class PickupController : NetworkBehaviour
             Revolver revolver = heldObject.GetComponent<Revolver>();
             if (revolver != null)
             {
-                revolver.Drop();
+                // Для револьвера дроп по кнопке отключён.
+                return;
             }
             else
             {
@@ -431,7 +478,17 @@ public class PickupController : NetworkBehaviour
             }
             else
             {
-                inv.MoveBoundRevolverToSlot(revolver, slot);
+                if (!inv.IsSlotEmpty(slot))
+                {
+                    NetworkObject playerNetObj = GetComponent<NetworkObject>();
+                    // Убираем текущий предмет в его исходный слот и достаем предмет из нажатого слота.
+                    inv.UnequipRevolver(playerNetObj);
+                    inv.EquipFromSlot(slot, playerNetObj);
+                }
+                else
+                {
+                    inv.MoveBoundRevolverToSlot(revolver, slot);
+                }
             }
             return;
         }
