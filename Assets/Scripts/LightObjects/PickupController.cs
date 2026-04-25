@@ -79,7 +79,7 @@ public class PickupController : NetworkBehaviour
         PlayerController pc = GetComponent<PlayerController>();
         if (pc != null && pc.IsArmed)
         {
-            // На E не бросаем/не подбираем, если активен револьвер.
+            TrySwitchFromRevolverToLookedItem();
             return;
         }
 
@@ -97,6 +97,44 @@ public class PickupController : NetworkBehaviour
             }
         }
         TryPickup();
+    }
+
+    private void TrySwitchFromRevolverToLookedItem()
+    {
+        Ray ray = new Ray(cam.position, cam.forward);
+        if (!Physics.Raycast(ray, out var hit, pickupDistance, pickupLayer))
+            return;
+
+        if (!hit.collider.TryGetComponent(out LightObject obj))
+            obj = hit.collider.GetComponentInParent<LightObject>();
+        if (obj == null)
+            return;
+
+        ServerSwitchFromRevolverToItem(obj.NetworkObject);
+    }
+
+    [ServerRpc]
+    private void ServerSwitchFromRevolverToItem(NetworkObject targetItemNetObj)
+    {
+        if (targetItemNetObj == null)
+            return;
+
+        PlayerInventory inv = GetComponent<PlayerInventory>();
+        if (inv == null)
+            return;
+
+        PlayerController pc = GetComponent<PlayerController>();
+        if (pc == null || !pc.IsArmed)
+            return;
+
+        NetworkObject playerNetObj = GetComponent<NetworkObject>();
+        inv.UnequipRevolver(playerNetObj);
+
+        LightObject targetItem = targetItemNetObj.GetComponent<LightObject>();
+        if (targetItem == null)
+            return;
+
+        targetItem.ServerPickup(playerNetObj);
     }
     private bool TryInteractDoor()
     {
@@ -256,7 +294,8 @@ public class PickupController : NetworkBehaviour
             Revolver revolver = heldObject.GetComponent<Revolver>();
             if (revolver != null)
             {
-                revolver.Drop();
+                // Для револьвера дроп по кнопке отключён.
+                return;
             }
             else
             {

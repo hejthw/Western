@@ -168,8 +168,8 @@ public class Revolver: NetworkBehaviour, IWeapon
 
     public void Drop()
     {
-        if (_playerController == null || !_playerController.IsOwner) return;
-        DropServerRpc(transform.position, transform.rotation);
+        // Дроп револьвера вручную отключён: оружие убирается только через слоты/взаимодействие.
+        return;
     }
 
     [ServerRpc]
