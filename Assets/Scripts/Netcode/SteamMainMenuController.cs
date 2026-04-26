@@ -75,7 +75,7 @@ public class SteamMainMenuController : MonoBehaviour
 
 
         createLobbyButton.onClick.AddListener(() => _lobbyManager.HostGame());
-        joinLobbyButton.onClick.AddListener(() => _lobbyManager.OpenFriendsOverlay());
+        joinLobbyButton.onClick.AddListener(() => _lobbyManager.OpenLobbyBrowser());
         settingsButton.onClick.AddListener(OpenSettings);
         quitButton.onClick.AddListener(Application.Quit);
         backToMainButton.onClick.AddListener(CloseSettings);
