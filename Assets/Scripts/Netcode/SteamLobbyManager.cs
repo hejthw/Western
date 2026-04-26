@@ -19,6 +19,7 @@ public class SteamLobbyManager : MonoBehaviour
     
     private CSteamID m_currentLobbyID;
     private bool _isGameStartRequested;
+    private bool _shouldOpenInviteDialogAfterCreation;
     
     private const string HostAddressKey = "HostAddress";
     private const string HostNameKey = "HostName";
@@ -73,16 +74,52 @@ public class SteamLobbyManager : MonoBehaviour
 
     public void InviteFriend()
     {
+        if (!SteamManager.Initialized) 
+        { 
+            StatusChangedEvent?.Invoke("Steam is not initialized"); 
+            return; 
+        }
+
         if (m_currentLobbyID.IsValid())
+        {
+            // Если мы в лобби, открываем диалог приглашения для этого лобби
             SteamFriends.ActivateGameOverlayInviteDialog(m_currentLobbyID);
+            StatusChangedEvent?.Invoke("Invite dialog opened for current lobby");
+        }
         else
-            StatusChangedEvent?.Invoke("No active lobby");
+        {
+            // Если не в лобби, создаем лобби и затем открываем диалог приглашения
+            StatusChangedEvent?.Invoke("Creating lobby to invite friends...");
+            _shouldOpenInviteDialogAfterCreation = true;
+            HostGame(); // Создаем лобби, после чего пользователь сможет пригласить друзей
+        }
     }
 
     public void OpenFriendsOverlay()
     {
         if (!SteamManager.Initialized) { StatusChangedEvent?.Invoke("Steam is not initialized"); return; }
+        
+        // Если мы в лобби, открываем диалог приглашения
+        if (m_currentLobbyID.IsValid())
+        {
+            SteamFriends.ActivateGameOverlayInviteDialog(m_currentLobbyID);
+            StatusChangedEvent?.Invoke("Opened invite dialog");
+        }
+        else
+        {
+            // Если не в лобби, открываем список друзей для поиска лобби
+            SteamFriends.ActivateGameOverlay("friends");
+            StatusChangedEvent?.Invoke("Opened friends list");
+        }
+    }
+
+    public void OpenLobbyBrowser()
+    {
+        if (!SteamManager.Initialized) { StatusChangedEvent?.Invoke("Steam is not initialized"); return; }
+        
+        // Открываем список друзей Steam, где можно увидеть лобби друзей и присоединиться к ним
         SteamFriends.ActivateGameOverlay("friends");
+        StatusChangedEvent?.Invoke("Opened friends list - check for friend's lobbies");
     }
 
     public void LeaveLobby()
@@ -92,6 +129,7 @@ public class SteamLobbyManager : MonoBehaviour
 
         m_currentLobbyID = CSteamID.Nil;
         _isGameStartRequested = false;
+        _shouldOpenInviteDialogAfterCreation = false; // Сбрасываем флаг при выходе из лобби
 
         StatusChangedEvent?.Invoke("You left the lobby");
         LobbyLeftEvent?.Invoke();
@@ -178,6 +216,13 @@ public class SteamLobbyManager : MonoBehaviour
 
         StatusChangedEvent?.Invoke("Lobby ready. Invite your friends.");
         NotifyMembersChanged();
+        
+        // Если лобби было создано для приглашения друзей, автоматически открываем диалог
+        if (_shouldOpenInviteDialogAfterCreation)
+        {
+            _shouldOpenInviteDialogAfterCreation = false;
+            SteamFriends.ActivateGameOverlayInviteDialog(m_currentLobbyID);
+        }
     }
 
     private void OnLobbyEntered(LobbyEnter_t result)

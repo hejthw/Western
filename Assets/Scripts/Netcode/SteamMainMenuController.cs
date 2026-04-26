@@ -14,6 +14,7 @@ public class SteamMainMenuController : MonoBehaviour
     [Header("Main Panel Buttons")]
     [SerializeField] private Button createLobbyButton;
     [SerializeField] private Button joinLobbyButton;
+    [SerializeField] private Button inviteFriendsButton;
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button quitButton;
     
@@ -69,13 +70,15 @@ public class SteamMainMenuController : MonoBehaviour
     {
         createLobbyButton.onClick.RemoveAllListeners();
         joinLobbyButton.onClick.RemoveAllListeners();
+        if (inviteFriendsButton != null) inviteFriendsButton.onClick.RemoveAllListeners();
         settingsButton.onClick.RemoveAllListeners();
         quitButton.onClick.RemoveAllListeners();
         backToMainButton.onClick.RemoveAllListeners();
 
 
         createLobbyButton.onClick.AddListener(() => _lobbyManager.HostGame());
-        joinLobbyButton.onClick.AddListener(() => _lobbyManager.OpenFriendsOverlay());
+        joinLobbyButton.onClick.AddListener(() => _lobbyManager.OpenLobbyBrowser());
+        if (inviteFriendsButton != null) inviteFriendsButton.onClick.AddListener(() => _lobbyManager.InviteFriend());
         settingsButton.onClick.AddListener(OpenSettings);
         quitButton.onClick.AddListener(Application.Quit);
         backToMainButton.onClick.AddListener(CloseSettings);

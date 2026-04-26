@@ -22,13 +22,19 @@ public class PlayerController : NetworkBehaviour
     /// <summary>Активная верёвка для прыжка Space (не только владелец лассо).</summary>
     public ClimbRopeNetwork ActiveRopeClimb { get; private set; }
 
-    /// <summary>Совпадает с последним применённым <see cref="ServerSetForcedMoveNetworkMode"/> (NT server vs client auth).</summary>
-    private bool _forcedMoveNetworkModeActive;
 
     [Header("Debug")]
     [Tooltip("Периодические логи владельца во время лазания по верёвке (позиция, скорость, kinematic, NT client-auth).")]
     [SerializeField] private bool debugRopeClimbTelemetry;
     [SerializeField] private int ropeDebugEveryNFrames = 12;
+    
+    [Header("Anti-Desync Settings")]
+    [Tooltip("Интервал проверки позиции на сервере (секунды)")]
+    [SerializeField] private float positionValidationInterval = 5f;
+    [Tooltip("Максимальное отклонение позиции перед принудительной синхронизацией")]
+    [SerializeField] private float maxPositionDeviation = 5f;
+    [Tooltip("Включить систему валидации позиции (отключите если есть проблемы с движением)")]
+    [SerializeField] private bool enablePositionValidation = false; // По умолчанию отключено
     // вынести отсюда
     private Rigidbody rb;
     private PlayerRotate playerRotate;
@@ -39,6 +45,10 @@ public class PlayerController : NetworkBehaviour
     
     private Revolver _currentWeapon;
     public float _recoilBuff;
+    
+    // Антидесинк системы
+    private Vector3 _lastValidatedPosition;
+    private float _lastPositionValidationTime;
 
     private void ChangeRecoilBuff(float buff)
     {
@@ -208,8 +218,8 @@ public class PlayerController : NetworkBehaviour
     }
 
     /// <summary>
-    /// Телепорт с верёвки без <see cref="ServerSetForcedMoveNetworkMode"/> — иначе гонка NT и кик
-    /// «update without client authority». Владелец применяет позицию сам (законный client-auth апдейт).
+    /// Телепорт с верёвки с принудительной синхронизацией позиции.
+    /// Владелец применяет позицию сам (законный client-auth апдейт).
     /// </summary>
     [Server]
     public void ServerTeleportFromRope(Vector3 worldPosition, Quaternion worldRotation)
@@ -268,77 +278,6 @@ public class PlayerController : NetworkBehaviour
             physics.ClearStaleMotionAfterNetworkSnap();
     }
 
-    /// <summary>
-    /// Принудительное движение с сервера (верёвка, лассо): временно переводим FishNet NetworkTransform
-    /// в server-authoritative. Порядок критичен (иначе Kick ExploitAttempt):
-    /// вход в режим — сначала владелец перестаёт слать ServerUpdateTransform, потом сервер и наблюдатели;
-    /// выход — сначала сервер и наблюдатели принимают client-auth, потом владелец снова шлёт апдейты.
-    /// </summary>
-    [Server]
-    public void ServerSetForcedMoveNetworkMode(bool forcedMoveActive)
-    {
-        if (!IsSpawned)
-            return;
-        if (Owner == null || !Owner.IsActive)
-            return;
-
-        if (forcedMoveActive)
-        {
-            TargetApplyForcedMoveNetworkMode(Owner, true);
-        }
-        else
-        {
-            ApplyForcedMoveNetworkTransformMode(false);
-            ObserversApplyForcedMoveToNonOwners(false);
-            TargetApplyForcedMoveNetworkMode(Owner, false);
-        }
-    }
-
-    [TargetRpc]
-    private void TargetApplyForcedMoveNetworkMode(NetworkConnection conn, bool forcedMoveActive)
-    {
-        ApplyForcedMoveNetworkTransformMode(forcedMoveActive);
-        if (forcedMoveActive)
-            ServerNotifyForcedMoveNetworkApplied(forcedMoveActive);
-    }
-
-    [ServerRpc(RequireOwnership = true)]
-    private void ServerNotifyForcedMoveNetworkApplied(bool forcedMoveActive)
-    {
-        ApplyForcedMoveNetworkTransformMode(forcedMoveActive);
-        ObserversApplyForcedMoveToNonOwners(forcedMoveActive);
-    }
-
-    [ObserversRpc(ExcludeOwner = true)]
-    private void ObserversApplyForcedMoveToNonOwners(bool forcedMoveActive)
-    {
-        ApplyForcedMoveNetworkTransformMode(forcedMoveActive);
-    }
-
-    private void ApplyForcedMoveNetworkTransformMode(bool forcedMoveActive)
-    {
-        if (!IsSpawned)
-            return;
-        if (_forcedMoveNetworkModeActive == forcedMoveActive)
-            return;
-
-        NetworkTransform nt = GetComponent<NetworkTransform>();
-        if (nt == null || !nt.isActiveAndEnabled)
-            return;
-
-        bool clientAuthoritative = !forcedMoveActive;
-        if (!NetworkTransformAuthorityUtil.SetClientAuthoritative(nt, clientAuthoritative))
-            return;
-
-        _forcedMoveNetworkModeActive = forcedMoveActive;
-
-        if (debugRopeClimbTelemetry)
-        {
-            bool ca = NetworkTransformAuthorityUtil.GetClientAuthoritative(nt);
-            string role = IsServerInitialized ? (IsClientInitialized ? "HOST" : "SERVER") : "CLIENT";
-            Debug.Log($"[RopeDbg NT] {role} ApplyForcedMove forced={forcedMoveActive} ntClientAuth={ca} pos={transform.position}");
-        }
-    }
 
     [ServerRpc]
     private void TakeDamageTest(int damage)
@@ -349,14 +288,18 @@ public class PlayerController : NetworkBehaviour
     {
         IsLassoPulling = state;
 
-   
+        // Отключаем/включаем систему движения
         if (physics != null)
             physics.enabled = !state;
 
         if (playerRotate != null)
             playerRotate.enabled = !state;
 
-      
+        // При выходе из лассо-режима принудительно синхронизируем позицию
+        if (!state && IsOwner)
+        {
+            StartCoroutine(DelayedPositionSyncAfterLasso());
+        }
 
         if (debugRopeClimbTelemetry)
         {
@@ -364,9 +307,47 @@ public class PlayerController : NetworkBehaviour
             Debug.Log($"[RopeDbg] [{who}] Lasso state: {state} | Physics enabled: {!state}");
         }
     }
+    
+    /// <summary>
+    /// Отложенная синхронизация после выхода из режима лассо для предотвращения десинхронизации
+    /// </summary>
+    private IEnumerator DelayedPositionSyncAfterLasso()
+    {
+        // Ждем один кадр чтобы все системы обновились
+        yield return null;
+        
+        // Сбрасываем физические силы
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        
+        // Принудительно синхронизируем позицию
+        NotifyNetworkTransformHardSync();
+        
+        // Дополнительно сбрасываем предсказания движения
+        if (physics != null)
+        {
+            physics.ResetOwnerMovementPredictionAfterForcedMove();
+            physics.ClearStaleMotionAfterNetworkSnap();
+        }
+        
+        if (debugRopeClimbTelemetry)
+        {
+            Debug.Log("[RopeDbg] Delayed position sync after lasso completed");
+        }
+    }
 
     private void LateUpdate()
     {
+        // Система валидации позиции на сервере
+        if (IsServer && enablePositionValidation)
+        {
+            HandleServerPositionValidation();
+        }
+        
+        // Дебаг информация для веревки
         if (!debugRopeClimbTelemetry || !IsOwner || rb == null)
             return;
         if (ActiveRopeClimb == null)
@@ -379,7 +360,7 @@ public class PlayerController : NetworkBehaviour
         string role = IsServerInitialized ? "HOST" : "CLIENT";
         Debug.Log(
             $"[RopeDbg tick] {role} pos={rb.position} vel={rb.linearVelocity} mag={rb.linearVelocity.magnitude:F3} " +
-            $"kin={rb.isKinematic} physOn={physics != null && physics.enabled} ntClientAuth={ntCa} forcedMode={_forcedMoveNetworkModeActive}");
+            $"kin={rb.isKinematic} physOn={physics != null && physics.enabled} ntClientAuth={ntCa}");
     }
 
     [TargetRpc]
@@ -415,10 +396,126 @@ public class PlayerController : NetworkBehaviour
                 rb.angularVelocity = Vector3.zero;
             }
         }
+        
         EnableMovement();
+        
+        // Улучшенный сброс предсказания движения
         if (physics != null)
+        {
             physics.ResetOwnerMovementPredictionAfterForcedMove();
+            physics.ClearStaleMotionAfterNetworkSnap();
+        }
+        
         SetLassoState(false);
+        
+        // Дополнительная принудительная синхронизация для предотвращения скольжения
+        if (IsOwner)
+        {
+            StartCoroutine(DelayedSyncAfterRopeClimb());
+        }
+    }
+    
+    /// <summary>
+    /// Дополнительная синхронизация после завершения лазания по веревке
+    /// </summary>
+    private IEnumerator DelayedSyncAfterRopeClimb()
+    {
+        // Ждем несколько кадров для стабилизации
+        yield return null;
+        yield return null;
+        
+        NotifyNetworkTransformHardSync();
+        
+        if (debugRopeClimbTelemetry)
+        {
+            Debug.Log("[RopeDbg] Delayed sync after rope climb completed");
+        }
+    }
+    
+    /// <summary>
+    /// Серверная валидация позиции игрока для предотвращения десинхронизации
+    /// </summary>
+    [Server]
+    private void HandleServerPositionValidation()
+    {
+        if (Owner == null || !Owner.IsActive)
+            return;
+            
+        // ВАЖНО: Пропускаем валидацию для хоста (он сам себе сервер)
+        if (IsHost)
+            return;
+            
+        // Пропускаем валидацию для мертвых игроков или во время принудительного движения
+        if (_isDied || IsLassoPulling || ActiveRopeClimb != null)
+            return;
+            
+        float currentTime = Time.time;
+        if (currentTime - _lastPositionValidationTime < positionValidationInterval)
+            return;
+            
+        _lastPositionValidationTime = currentTime;
+        Vector3 currentPosition = transform.position;
+        
+        // Первая валидация - просто записываем позицию
+        if (_lastValidatedPosition == Vector3.zero)
+        {
+            _lastValidatedPosition = currentPosition;
+            return;
+        }
+        
+        // Проверяем скорость движения
+        float distance = Vector3.Distance(_lastValidatedPosition, currentPosition);
+        float timeElapsed = positionValidationInterval;
+        float speed = distance / timeElapsed;
+        
+        // Максимальная допустимая скорость (спринт + запас) - сделали еще более мягкой
+        float maxAllowedSpeed = physics != null ? physics.GetMaxSprintSpeed() * 3f : 20f; // Увеличили лимит
+        
+        // Синхронизируем только при экстремальных скоростях
+        if (speed > maxAllowedSpeed)
+        {
+            Debug.LogWarning($"[AntiDesync] Player {Owner.ClientId} moving extremely fast: {speed:F2} > {maxAllowedSpeed:F2}, forcing sync");
+            ServerForcePositionCorrection();
+        }
+        
+        _lastValidatedPosition = currentPosition;
+    }
+    
+    /// <summary>
+    /// Принудительная коррекция позиции с сервера
+    /// </summary>
+    [Server]
+    private void ServerForcePositionCorrection()
+    {
+        if (Owner == null || !Owner.IsActive)
+            return;
+            
+        // Отправляем клиенту команду на принудительную синхронизацию
+        TargetForcePositionSync(Owner);
+        
+        // Также уведомляем всех наблюдателей
+        ServerBroadcastPostForcedMoveResync();
+    }
+    
+    /// <summary>
+    /// Принудительная синхронизация позиции для конкретного клиента
+    /// </summary>
+    [TargetRpc]
+    private void TargetForcePositionSync(NetworkConnection conn)
+    {
+        if (!IsOwner)
+            return;
+            
+        Debug.Log("[AntiDesync] Received force position sync from server");
+        
+        // Полный сброс состояния движения
+        if (physics != null)
+        {
+            physics.FullMovementStateReset();
+        }
+        
+        // Принудительная синхронизация NetworkTransform
+        NotifyNetworkTransformHardSync();
     }
 
     public void RequestRopeJumpOff(ClimbRopeNetwork rope)

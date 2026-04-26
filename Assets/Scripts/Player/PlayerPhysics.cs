@@ -2,6 +2,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using FishNet.Component.Transforming;
 using FishNet.Object;
+using System.Collections;
 
 /// <summary>
 /// Класс, отвечающий за RigidBody и его логику.
@@ -16,6 +17,9 @@ public class PlayerPhysics : NetworkBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PlayerInput input;
     [SerializeField] private Collider col;
+    
+    // Система антидесинка
+    private float _lastCollisionSyncTime;
 
     private float _currentSpeed;
     private float _speedBuff;
@@ -30,10 +34,24 @@ public class PlayerPhysics : NetworkBehaviour
     
     [Header("Fall Damage")]
     [SerializeField] private float fallDamageCoef = 1f;
-    [SerializeField] private float characterHeight = 2f; 
+    [SerializeField] private float characterHeight = 2f;
+    
+    [Header("Anti-Desync Settings")]
+    [Tooltip("Включить проверку на аномальные скорости")]
+    [SerializeField] private bool enableAnomalyDetection = false; // По умолчанию отключено
+    [Tooltip("Включить синхронизацию при столкновениях")]
+    [SerializeField] private bool enableCollisionSync = false; // По умолчанию отключено 
     
     public bool IsGrounded { get; private set; }
     public PlayerState CurrentState { get; private set; }
+    
+    /// <summary>
+    /// Получить максимальную скорость спринта (для системы валидации)
+    /// </summary>
+    public float GetMaxSprintSpeed()
+    {
+        return data != null ? data.sprintSpeed : 7f; // Значение по умолчанию
+    }
     
     private void Awake()
     {
@@ -103,6 +121,50 @@ public class PlayerPhysics : NetworkBehaviour
     {
         if (!IsOwner) return;
         ApplyMovement();
+        
+        // Периодическая проверка состояния для владельца (только если включено)
+        if (enableAnomalyDetection)
+        {
+            CheckForAnomalousState();
+        }
+    }
+    
+    /// <summary>
+    /// Проверка на аномальные состояния движения
+    /// </summary>
+    private void CheckForAnomalousState()
+    {
+        if (rb == null || !IsOwner) return;
+        
+        // Пропускаем для хостов
+        if (IsHost) return;
+        
+        // Делаем проверку реже - только каждые 2 секунды
+        if (Time.fixedTime % 2f > Time.fixedDeltaTime) return;
+        
+        // Проверяем на застревание в геометрии (более строгие условия)
+        if (rb.linearVelocity.magnitude < 0.05f && input.MoveInput.magnitude > 0.8f && _currentSpeed > 2f)
+        {
+            // Игрок пытается двигаться, но не движется - возможно застрял
+            Vector3 testDirection = GetMoveDirection();
+            if (testDirection != Vector3.zero && Physics.Raycast(transform.position, testDirection, 0.3f, data.whatIsGround))
+            {
+                Debug.LogWarning("[PlayerPhysics] Player appears stuck in geometry, requesting position sync");
+                RequestPositionValidation();
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Запрос валидации позиции с сервера
+    /// </summary>
+    private void RequestPositionValidation()
+    {
+        var playerController = GetComponent<PlayerController>();
+        if (playerController != null)
+        {
+            playerController.NotifyNetworkTransformHardSync();
+        }
     }
     
     /// <summary>
@@ -117,13 +179,53 @@ public class PlayerPhysics : NetworkBehaviour
         }
     }
 
-    /// <summary>Сброс внутреннего импульса движения у владельца после выхода с верёвки/лассо.</summary>
+    /// <summary>Сброс внутреннего импульса движения у владельца после выхода с верёвки/лассо или физических взаимодействий.</summary>
     public void ResetOwnerMovementPredictionAfterForcedMove()
     {
         if (!IsOwner) return;
+        
         _momentum = Vector3.zero;
         _currentSpeed = 0f;
         _isJumping = false;
+        _isFalling = false;
+        
+        // Дополнительно сбрасываем скорости в Rigidbody
+        if (rb != null)
+        {
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0); // Сохраняем Y для гравитации
+            rb.angularVelocity = Vector3.zero;
+        }
+        
+        Debug.Log("[PlayerPhysics] Movement prediction and momentum reset");
+    }
+    
+    /// <summary>
+    /// Полный сброс всех состояний движения - используется после серьезных физических взаимодействий
+    /// </summary>
+    public void FullMovementStateReset()
+    {
+        if (!IsOwner) return;
+        
+        _momentum = Vector3.zero;
+        _currentSpeed = 0f;
+        _isJumping = false;
+        _isFalling = false;
+        _fallStartY = 0f;
+        
+        // Сбрасываем все скорости
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+        
+        // Принудительное обновление состояния игрока
+        if (input != null)
+        {
+            CurrentState = _player.ResolvePlayerState(false, IsGrounded, false, 0f);
+        }
+        
+        Debug.Log("[PlayerPhysics] Full movement state reset");
     }
 
     /// <summary>Игнор столкновений с маской whatIsGround (скольжение по полу во время лазания).</summary>
@@ -163,7 +265,24 @@ public class PlayerPhysics : NetworkBehaviour
             ? 0f
             : rb.linearVelocity.y;
 
-        rb.linearVelocity = new Vector3(momentum.x, yVelocity, momentum.z);
+        Vector3 newVelocity = new Vector3(momentum.x, yVelocity, momentum.z);
+        
+        // Проверка на аномальные скорости (защита от десинхронизации)
+        if (enableAnomalyDetection)
+        {
+            // Делаем проверку менее агрессивной и только для экстремальных случаев
+            float maxReasonableSpeed = data.sprintSpeed * 4f; // Увеличили лимит в 2 раза
+            Vector3 horizontalVel = new Vector3(newVelocity.x, 0, newVelocity.z);
+            
+            if (horizontalVel.magnitude > maxReasonableSpeed)
+            {
+                Debug.LogWarning($"[PlayerPhysics] Extreme velocity detected: {horizontalVel.magnitude}, clamping to {maxReasonableSpeed}");
+                horizontalVel = horizontalVel.normalized * maxReasonableSpeed;
+                newVelocity = new Vector3(horizontalVel.x, yVelocity, horizontalVel.z);
+            }
+        }
+
+        rb.linearVelocity = newVelocity;
     }
 
     private void Jump()
@@ -243,6 +362,52 @@ public class PlayerPhysics : NetworkBehaviour
     private void RequestFallDamageServerRpc(int damage)
     {
         _playerHealth.TakeDamage(damage);
+    }
+
+    /// <summary>
+    /// Обработчик столкновений для предотвращения десинхронизации
+    /// </summary>
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!IsOwner || !enableCollisionSync) return;
+        
+        // Пропускаем синхронизацию для хостов (они сами себе авторитет)
+        if (IsHost) return;
+        
+        // Предотвращаем слишком частые синхронизации (увеличили интервал)
+        if (Time.time - _lastCollisionSyncTime < 3f) return;
+        
+        // Проверяем, было ли столкновение достаточно сильным И НЕ с землей
+        float impactForce = collision.relativeVelocity.magnitude;
+        bool isGroundCollision = (data.whatIsGround.value & (1 << collision.gameObject.layer)) != 0;
+        
+        // Синхронизируем только при сильных ударах НЕ о землю
+        if (impactForce > 5f && !isGroundCollision) // Увеличили порог и исключили землю
+        {
+            _lastCollisionSyncTime = Time.time;
+            
+            // Небольшая задержка для стабилизации физики
+            StartCoroutine(DelayedSyncAfterCollision());
+        }
+    }
+    
+    /// <summary>
+    /// Отложенная синхронизация после столкновения
+    /// </summary>
+    private IEnumerator DelayedSyncAfterCollision()
+    {
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        
+        // Сбрасываем предсказания движения
+        ResetOwnerMovementPredictionAfterForcedMove();
+        
+        // Запрашиваем синхронизацию позиции
+        var playerController = GetComponent<PlayerController>();
+        if (playerController != null)
+        {
+            playerController.NotifyNetworkTransformHardSync();
+        }
     }
 
     // public void AddExternalForce(Vector3 force, ForceMode mode = ForceMode.Impulse)

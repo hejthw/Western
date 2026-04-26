@@ -4646,6 +4646,9 @@ MonoBehaviour:
   weaponHoldPoint: {fileID: 6787961388630782479}
   debugRopeClimbTelemetry: 0
   ropeDebugEveryNFrames: 12
+  positionValidationInterval: 2
+  maxPositionDeviation: 5
+  enablePositionValidation: 0
   kinematicDelay: 3
   _recoilBuff: 0
 --- !u!114 &2479261188838793012

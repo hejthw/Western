@@ -5620,6 +5620,7 @@ MonoBehaviour:
   settingsPanel: {fileID: 1399680189}
   createLobbyButton: {fileID: 285401768}
   joinLobbyButton: {fileID: 895861452}
+  inviteFriendsButton: {fileID: 967614003}
   settingsButton: {fileID: 1004336870}
   quitButton: {fileID: 1060225310}
   backToMainButton: {fileID: 1014551504}

@@ -52,7 +52,7 @@ public class LobbyPanelController : MonoBehaviour
         startButton.onClick.RemoveAllListeners();
 
         leaveLobbyButton.onClick.AddListener(() => _lobbyManager.LeaveLobby());
-        inviteFriendsButton.onClick.AddListener(() => _lobbyManager.InviteFriend());
+        inviteFriendsButton.onClick.AddListener(() => _lobbyManager.OpenLobbyBrowser());
         startButton.onClick.AddListener(OnStartClicked);
 
         startButton.interactable = false;

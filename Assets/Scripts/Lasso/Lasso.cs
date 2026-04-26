@@ -281,11 +281,13 @@ public class LassoNetwork : NetworkBehaviour
         if (pullingPlayerRb == null) return;
 
         isPlayerPulling = true;
-        playerController.ServerSetForcedMoveNetworkMode(true);
         ApplyPulledStateLocal(ownerNetObj, true);
         RpcSetPulledState(ownerNetObj.ObjectId, true);
         currentInteractable?.OnLassoPull(this);
         currentPullSpeed = 0f;
+        
+        // Принудительная синхронизация в начале лассо
+        playerController?.NotifyNetworkTransformHardSync();
 
         TargetSetPlayerPullState(ownerNetObj.Owner, true);
         if (serverPullCoroutine != null)
@@ -462,8 +464,9 @@ public class LassoNetwork : NetworkBehaviour
         if (isPlayerPulling && ownerNetObj != null)
         {
             PlayerController ownerPc = ownerNetObj.GetComponent<PlayerController>();
-            ownerPc?.ServerSetForcedMoveNetworkMode(false);
+            // Заменяем старую систему на прямой вызов синхронизации
             ownerPc?.ServerBroadcastPostForcedMoveResync();
+            ownerPc?.NotifyNetworkTransformHardSync();
             TargetSetPlayerPullState(ownerNetObj.Owner, false);
         }
 

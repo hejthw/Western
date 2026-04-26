@@ -262,6 +262,9 @@ public class PickupController : NetworkBehaviour
         obj.transform.localPosition = Vector3.zero;
         obj.transform.localRotation = Quaternion.identity;
         
+        // Принудительная синхронизация игрока после физического взаимодействия
+        ForcePlayerPositionSync();
+        
         uiSpawner?.OnItemPickedUp(obj);
         Debug.Log("Attached " + obj.name + " locally");
     }
@@ -281,6 +284,10 @@ public class PickupController : NetworkBehaviour
         if (nt != null) nt.enabled = true;
 
         heldObject.GetComponent<LightObject>().ServerThrow(pos, velocity);
+        
+        // Принудительная синхронизация игрока после физического взаимодействия
+        ForcePlayerPositionSync();
+        
         heldObject = null;
         heldRb = null;
         uiSpawner?.OnItemDropped();
@@ -576,5 +583,53 @@ public class PickupController : NetworkBehaviour
             return trimmed.Substring(0, trimmed.Length - cloneSuffix.Length).Trim();
 
         return trimmed;
+    }
+
+    /// <summary>
+    /// Принудительная синхронизация позиции игрока после физических взаимодействий
+    /// </summary>
+    private void ForcePlayerPositionSync()
+    {
+        if (!IsOwner) return;
+
+        // Получаем компоненты игрока
+        PlayerController playerController = GetComponent<PlayerController>();
+        PlayerPhysics playerPhysics = GetComponent<PlayerPhysics>();
+        NetworkTransform nt = GetComponent<NetworkTransform>();
+        Rigidbody rb = GetComponent<Rigidbody>();
+
+        // Сбрасываем физику и предсказания
+        if (playerPhysics != null)
+        {
+            playerPhysics.ClearStaleMotionAfterNetworkSnap();
+            playerPhysics.ResetOwnerMovementPredictionAfterForcedMove();
+        }
+
+        // Принудительно синхронизируем NetworkTransform
+        if (nt != null && nt.enabled)
+        {
+            try
+            {
+                nt.Teleport();
+                nt.ForceSend();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[PickupController] ForcePlayerPositionSync failed: {ex.Message}");
+            }
+        }
+
+        // Сбрасываем физические силы
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        // Синхронизация через PlayerController если необходимо
+        if (playerController != null)
+        {
+            playerController.NotifyNetworkTransformHardSync();
+        }
     }
 }
