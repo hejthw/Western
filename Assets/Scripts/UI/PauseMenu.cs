@@ -1,8 +1,10 @@
 ﻿using System.Collections;
+using FishNet;
 using FishNet.Managing;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Unity.Cinemachine;
 using Unity.Netcode;
 
 /// <summary>
@@ -41,6 +43,9 @@ public class PauseMenuUI : MonoBehaviour
 
     [Header("Animation")]
     [SerializeField] private float _fadeDuration = 0.18f;
+
+    public CinemachineInputAxisController inputAxis;
+    public PlayerPhysics playerPhysics;
 
     // ------------------------------------------------------------------ //
 
@@ -90,15 +95,56 @@ public class PauseMenuUI : MonoBehaviour
         _confirmQuitYesButton?.onClick.RemoveListener(ConfirmQuit);
         _confirmQuitNoButton?.onClick.RemoveListener(CancelQuit);
     }
+    
 
-    // ------------------------------------------------------------------ //
-    // Публичный API
+    private void StartCamera()
+    {
+        foreach (var c in inputAxis.Controllers)
+        {
+            if (c.Name == "Look X (Pan)")
+            {
+                c.Enabled = true;
+
+            }
+            if (c.Name == "Look Y (Tilt)")
+            {
+                c.Enabled = true;
+            }
+        }
+
+        playerPhysics.enabled = true;
+    }
+    
+    private void StopCamera()
+    {
+        foreach (var c in inputAxis.Controllers)
+        {
+            if (c.Name == "Look X (Pan)")
+            {
+                c.Enabled = false;
+
+            }
+            if (c.Name == "Look Y (Tilt)")
+            {
+                c.Enabled = false;
+            }
+        }
+        playerPhysics.enabled = false;
+    }
 
     public void TogglePause()
     {
         Debug.Log("Toogle");
-        if (_isPaused) Resume();
-        else           Pause();
+        if (_isPaused)
+        {
+            Resume();
+            
+        }
+        else
+        {
+            Pause();
+
+        }
     }
 
     public void Pause()
@@ -118,6 +164,7 @@ public class PauseMenuUI : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible   = true;
+        StopCamera();
     }
 
     public void Resume()
@@ -131,6 +178,7 @@ public class PauseMenuUI : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible   = false;
+        StartCamera();
     }
 
     // ------------------------------------------------------------------ //
@@ -173,10 +221,6 @@ public class PauseMenuUI : MonoBehaviour
     {
         switch (_pendingQuitTarget)
         {
-            case QuitTarget.Disconnect:
-                Disconnect();
-                break;
-
             case QuitTarget.Desktop:
                 QuitToDesktop();
                 break;
@@ -189,17 +233,6 @@ public class PauseMenuUI : MonoBehaviour
         _pausePanel?.SetActive(true);
     }
 
-    // ------------------------------------------------------------------ //
-    // Мультиплеер
-
-    private void Disconnect()
-    {
-        Resume();   // восстанавливаем курсор/ввод до смены сцены
-        
-        // Загрузить сцену главного меню (замените на своё имя сцены)
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
-    }
-
     private void QuitToDesktop()
     {
 #if UNITY_EDITOR
@@ -209,13 +242,6 @@ public class PauseMenuUI : MonoBehaviour
 #endif
     }
 
-    // ------------------------------------------------------------------ //
-    // Вспомогательные методы
-
-    /// <summary>
-    /// Отключает/включает компонент PlayerInput на том же GameObject,
-    /// чтобы во время паузы не обрабатывались игровые действия.
-    /// </summary>
     private void SetPlayerInputEnabled(bool enabled)
     {
         if (_playerInput != null)

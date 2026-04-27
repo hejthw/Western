@@ -33,6 +33,7 @@ public class NetworkSoundManager : NetworkBehaviour
     private void HandlePlay(SoundID id)
     {
         if (!IsOwner) return;
+        audioSource.volume = PlayerPrefs.GetFloat("SoundVolume", 0.5f);
         PlayLocally(id);
         CmdRequestSound((int)id);
     }
