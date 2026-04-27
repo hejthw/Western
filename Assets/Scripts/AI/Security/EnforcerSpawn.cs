@@ -27,7 +27,7 @@ public class EnforcerSpawner : NetworkBehaviour
         NetworkObject car = Instantiate(_trainCarPrefab, _spawnPoint.position, _spawnPoint.rotation);
         ServerManager.Spawn(car);
 
-        int count = Random.Range(_minNpc, _maxNpc + 1);
+        int count = _maxNpc;
         SpawnNpcs(count);
 
         StartCoroutine(ReplenishCoroutine());
@@ -56,8 +56,7 @@ public class EnforcerSpawner : NetworkBehaviour
         while (true)
         {
             yield return new WaitForSeconds(_checkInterval);
-
-            // Убираем мёртвые/уничтоженные объекты из списка
+            
             _spawnedNpcs.RemoveAll(npc => npc == null);
 
             int alive = _spawnedNpcs.Count;

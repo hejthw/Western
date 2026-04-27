@@ -66,6 +66,7 @@ public class HeistDoor : NetworkBehaviour
     private void NotifyDoorOpenedForAllClients()
     {
         OpenedByLocalPlayer?.Invoke();
+        PlayerEvents.RaiseSuspicion(SuspicionType.DoorOpen);
     }
 
     public bool IsOpened()

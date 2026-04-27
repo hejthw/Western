@@ -63,7 +63,6 @@ public partial class UpdateTargetAction : Action
         if (nearest != null && nearest != Player.Value)
         {
             Player.Value = nearest;
-            Debug.Log($"[UpdateTarget] Новый таргет: {nearest.name} ({minDist:F1}m)");
         }
     }
 }

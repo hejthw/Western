@@ -42,6 +42,9 @@ public class Suspicion : NetworkBehaviour
             case SuspicionType.RevolverShoot:
                 SetTagAndColliderClientRpc("Suspicion", revolverColliderRadius);
                 break;
+            case SuspicionType.DoorOpen:
+                SetTagAndColliderClientRpc("Suspicion", revolverColliderRadius * 2);
+                break;
         }
 
         yield return new WaitForSeconds(suspicionTime);
@@ -53,6 +56,9 @@ public class Suspicion : NetworkBehaviour
                 break;
 
             case SuspicionType.RevolverShoot:
+                SetTagAndColliderClientRpc("Untagged", _defaultColliderRadius);
+                break;
+            case SuspicionType.DoorOpen:
                 SetTagAndColliderClientRpc("Untagged", _defaultColliderRadius);
                 break;
         }
