@@ -62,42 +62,36 @@ public class PauseMenuUI : NetworkBehaviour
 
     private void OnEnable()
     {
-        if (IsOwner)
-        {
-            if (_playerInput != null)
-                _playerInput.OnEscape += TogglePause;
+        if (_playerInput != null)
+            _playerInput.OnEscape += TogglePause;
 
-            _resumeButton?.onClick.AddListener(Resume);
-            _settingsButton?.onClick.AddListener(OpenSettings);
-            _disconnectButton?.onClick.AddListener(OnDisconnectClicked);
-            _quitToDesktopButton?.onClick.AddListener(OnQuitToDesktopClicked);
+        _resumeButton?.onClick.AddListener(Resume);
+        _settingsButton?.onClick.AddListener(OpenSettings);
+        _disconnectButton?.onClick.AddListener(OnDisconnectClicked);
+        _quitToDesktopButton?.onClick.AddListener(OnQuitToDesktopClicked);
 
-            _settingsBackButton?.onClick.AddListener(CloseSettings);
+        _settingsBackButton?.onClick.AddListener(CloseSettings);
 
-            _confirmQuitYesButton?.onClick.AddListener(ConfirmQuit);
-            _confirmQuitNoButton?.onClick.AddListener(CancelQuit); 
-        }
+        _confirmQuitYesButton?.onClick.AddListener(ConfirmQuit);
+        _confirmQuitNoButton?.onClick.AddListener(CancelQuit); 
+
         
     }
 
     private void OnDisable()
     {
-        if (IsOwner)
-        {
-            if (_playerInput != null)
-                _playerInput.OnEscape -= TogglePause;
+        if (_playerInput != null)
+            _playerInput.OnEscape -= TogglePause;
 
-            _resumeButton?.onClick.RemoveListener(Resume);
-            _settingsButton?.onClick.RemoveListener(OpenSettings);
-            _disconnectButton?.onClick.RemoveListener(OnDisconnectClicked);
-            _quitToDesktopButton?.onClick.RemoveListener(OnQuitToDesktopClicked);
+        _resumeButton?.onClick.RemoveListener(Resume);
+        _settingsButton?.onClick.RemoveListener(OpenSettings);
+        _disconnectButton?.onClick.RemoveListener(OnDisconnectClicked);
+        _quitToDesktopButton?.onClick.RemoveListener(OnQuitToDesktopClicked);
 
-            _settingsBackButton?.onClick.RemoveListener(CloseSettings);
+        _settingsBackButton?.onClick.RemoveListener(CloseSettings);
 
-            _confirmQuitYesButton?.onClick.RemoveListener(ConfirmQuit);
-            _confirmQuitNoButton?.onClick.RemoveListener(CancelQuit);
-        }
-        
+        _confirmQuitYesButton?.onClick.RemoveListener(ConfirmQuit);
+        _confirmQuitNoButton?.onClick.RemoveListener(CancelQuit);
     }
     
 
@@ -143,12 +137,10 @@ public class PauseMenuUI : NetworkBehaviour
         if (_isPaused)
         {
             Resume();
-            
         }
         else
         {
             Pause();
-
         }
     }
 
