@@ -142,6 +142,7 @@ public class Revolver: NetworkBehaviour, IWeapon
         Vector3 direction = muzzle.forward;
 
         _playerController.RequestRevolverShoot(NetworkObject, origin, direction);
+        PlayerEvents.RaiseSuspicion(SuspicionType.RevolverShoot);
         SoundBus.Play(SoundID.Shoot);
         _fireTimer = revolverData.timeBeforeShot;
         

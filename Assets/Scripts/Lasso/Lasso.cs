@@ -263,6 +263,7 @@ public class LassoNetwork : NetworkBehaviour
             case LassoInteractionType.PullCharacter:
                 interactable.OnLassoPull(this);
                 interactable.OnLassoDetach(this);
+                RpcPullObject();
                 ReturnToPlayer();
                 break;
         }

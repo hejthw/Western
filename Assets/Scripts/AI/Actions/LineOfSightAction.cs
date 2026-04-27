@@ -35,6 +35,9 @@ public partial class LineOfSightAction : Action
         if (Self?.Value == null || Player?.Value == null)
             return Status.Failure;
 
+        _selfTransform = Self.Value.transform;
+        _playerTransform = Player.Value.transform;
+        
         _losTimer -= Time.deltaTime;
     
         if (_losTimer <= 0f)

@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 0b5a7d10a1d5dae4293f7298ca3175ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 1592299294624308153}
   - component: {fileID: 9123428909589395796}
   m_Layer: 0
-  m_Name: Security
+  m_Name: Enforcer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -382,7 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Behavior::Unity.Behavior.BehaviorGraphAgent
-  m_Graph: {fileID: -582874144839336215, guid: c5223085f4db611009b3f5a710ca3109, type: 2}
+  m_Graph: {fileID: -582874144839336215, guid: 1828adbee1ea1364883fa26bf2aa46c4, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 3130484035978264892
   - rid: 3130484047327264849
@@ -478,7 +478,7 @@ MonoBehaviour:
   _isGlobal: 0
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 1
+  _defaultDespawnType: 0
   _initializedTimestamp: -8584250169055936779
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
@@ -497,7 +497,7 @@ MonoBehaviour:
   _teleportThreshold: 1
   <PrefabId>k__BackingField: 29
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 11941036603752996714
+  <AssetPathHash>k__BackingField: 8388750741030576394
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: -7.9687266, y: 0.99999994, z: 0.83100235}
