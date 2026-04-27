@@ -115,10 +115,12 @@ public class TaskUIController : MonoBehaviour
 
             // На игроке UI должен искаться по локальной копии владельца
             onlyForOwner = true;
-            StartCoroutine(ApplyOwnerTaskUIVisibility(playerController));
         }
 
         InitializeUI();
+        
+        if (taskPanel == null && mainTaskText != null && mainTaskText.transform.parent != null)
+            taskPanel = mainTaskText.transform.parent.gameObject;
         
         // Если нужно автопоиск, делаем это при старте
         if (autoFindUIElements)
@@ -192,31 +194,6 @@ public class TaskUIController : MonoBehaviour
     {
         if (textElement.fontSize == 0 || textElement.fontSize < 10)
             textElement.fontSize = defaultFontSize;
-    }
-
-    private IEnumerator ApplyOwnerTaskUIVisibility(PlayerController playerController)
-    {
-        float timeout = 2f;
-        while (timeout > 0f && playerController != null && !playerController.IsSpawned)
-        {
-            timeout -= Time.deltaTime;
-            yield return null;
-        }
-
-        if (playerController == null || playerController.IsOwner)
-            yield break;
-
-        if (taskPanel != null)
-            taskPanel.SetActive(false);
-
-        if (mainTaskText != null)
-            mainTaskText.gameObject.SetActive(false);
-
-        foreach (var textElement in additionalTaskTexts)
-        {
-            if (textElement != null)
-                textElement.gameObject.SetActive(false);
-        }
     }
 
     /// <summary>

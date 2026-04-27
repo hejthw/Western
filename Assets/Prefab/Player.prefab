@@ -4610,13 +4610,13 @@ MonoBehaviour:
 '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6106e292af6903c46b9b366caf158709, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -2345714625931262742, guid: 6106e292af6903c46b9b366caf158709, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278230015
   m_fontColor: {r: 1, g: 0.60967547, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -4676,7 +4676,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &4782091303354485408
@@ -5290,6 +5290,7 @@ GameObject:
   - component: {fileID: 9102535406660520133}
   - component: {fileID: 533623451368962730}
   - component: {fileID: 2983364578087968541}
+  - component: {fileID: 8132413510461546234}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -5415,6 +5416,41 @@ MonoBehaviour:
   defeatBackToMenuButton: {fileID: 7875634966774189258}
   heistTimerSeconds: 40
   timerFinishedElementSeconds: 3
+--- !u!114 &8132413510461546234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5375274108382611991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a14138d25dfa3e4dafd862a8eff636d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskUIController
+  mainTaskText: {fileID: 8442556697978220020}
+  additionalTaskTexts: []
+  taskPanel: {fileID: 0}
+  taskPanelBackground: {fileID: 0}
+  autoFindUIElements: 0
+  mainTaskTextPath: player-ui-currenttask-task
+  onlyForOwner: 1
+  useAnimation: 1
+  fadeInDuration: 0.5
+  fadeOutDuration: 0.3
+  animationType: 1
+  maxDisplayedTasks: 3
+  autoHideWhenEmpty: 1
+  defaultDisplayTime: 0
+  preserveOriginalStyle: 1
+  replaceOldTasks: 1
+  defaultBackgroundColor: {r: 0, g: 0, b: 0, a: 0.7}
+  defaultFontSize: 18
+  taskNumberPrefix: "\u2022 "
+  taskAppearSound: {fileID: 0}
+  taskCompleteSound: {fileID: 0}
+  soundVolume: 0.7
+  enableDebugLogs: 0
 --- !u!1 &5419887655589957203
 GameObject:
   m_ObjectHideFlags: 0
@@ -6488,7 +6524,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6106e292af6903c46b9b366caf158709, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -6496,7 +6532,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 1, g: 0.7064719, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6555,7 +6591,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &6641898216677032255
@@ -7238,6 +7274,7 @@ Transform:
   - {fileID: 1005701852619884833}
   - {fileID: 6657445138780899547}
   - {fileID: 6143946665814662978}
+  - {fileID: 744166749803139553}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3110369444958837593
@@ -7409,7 +7446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
+  WasActiveDuringEdit: 1
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
@@ -8417,6 +8454,61 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &8371140763569148902
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 744166749803139553}
+  - component: {fileID: 8491044945473630829}
+  m_Layer: 0
+  m_Name: TaskManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &744166749803139553
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8371140763569148902}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2445.8079, y: 1240.0316, z: -201.84216}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3998414238054622849}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8491044945473630829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8371140763569148902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b22f5a9698669a498fae704c48afc8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskManager
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
+  defaultEventCollection: {fileID: 11400000, guid: 89d80c0b04d59f84f9220b161dbea476, type: 2}
+  additionalCollections: []
+  taskUIController: {fileID: 8132413510461546234}
+  autoFindUIController: 1
+  logTaskEvents: 1
+  maxConcurrentTasks: 5
+  persistTaskState: 0
+  saveKey: TaskManager_State
 --- !u!1 &8524954481100630683
 GameObject:
   m_ObjectHideFlags: 0
