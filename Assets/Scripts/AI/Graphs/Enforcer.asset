@@ -750,7 +750,7 @@ MonoBehaviour:
         BlackboardGroupReferences: []
         Root:
           rid: 2088918420308361346
-        m_VersionTimestamp: 639115462921402891
+        m_VersionTimestamp: 639127235734157556
     - rid: 3130484035978264840
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -1003,7 +1003,7 @@ MonoBehaviour:
   - rid: 8488898533375607071
   - rid: 8488898533375607177
   - rid: 8488898533375607546
-  m_VersionTimestamp: 639115462921402891
+  m_VersionTimestamp: 639127235734157556
   m_SerializedVersion: 2
   m_DebugInfo: {fileID: -3434644108501326915}
   m_RuntimeGraph: {fileID: -582874144839336215}
@@ -2150,7 +2150,7 @@ MonoBehaviour:
           m_Value0: 0
           m_Value1: 0
         Name: 
-        m_Value: 3
+        m_Value: 1.5
     - rid: 3130484047327265207
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -2158,7 +2158,7 @@ MonoBehaviour:
           m_Value0: 0
           m_Value1: 0
         Name: 
-        m_Value: 1
+        m_Value: 5
     - rid: 3130484047327265208
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:

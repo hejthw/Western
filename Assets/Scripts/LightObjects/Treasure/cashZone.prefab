@@ -469,9 +469,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da00345b5a5cbb245b9a0a72ef6bafc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CashZone
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 1378355014704506300}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 1378355014704506300}
 --- !u!114 &1378355014704506300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,7 +490,9 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 8633675619527316957}
+  - {fileID: 3530177380804955385}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -501,7 +503,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584243937242332269
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -517,15 +519,15 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 28
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 9916084341888860331
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: -0.16, y: 1.34, z: -12.11}
+    Rotation: {x: -0, y: -0, z: -0, w: 1}
+    Scale: {x: 3, y: 2, z: 3}
+    IsValid: 1
 --- !u!114 &3577563032814746571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -553,9 +555,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 706c60728c8ccf04aa297e1e9e049555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EscapeZone
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 1378355014704506300}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 1378355014704506300}
   requiredHoldTime: 3
 --- !u!1 &4489304969419155238
 GameObject:

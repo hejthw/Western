@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 5940302563835360443}
   - component: {fileID: 5369097489196108235}
   - component: {fileID: 7806895503402062149}
+  - component: {fileID: 1511526823214169081}
+  - component: {fileID: 5745860751170182980}
   m_Layer: 0
   m_Name: NetworkManager 1
   m_TagString: Untagged
@@ -126,6 +128,42 @@ MonoBehaviour:
   _maximumClients: 257
   _peerToPeer: 1
   _clientAddress: 
+--- !u!114 &1511526823214169081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698102620842058367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 756c28cd3141c4140ae776188ee26729, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Managing.Statistic.StatisticsManager
+  _runInRelease: 0
+  _networkTraffic:
+    _enableMode: 1
+    _updateClient: 0
+    _updateServer: 0
+--- !u!114 &5745860751170182980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698102620842058367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bc8f0363ddc75946a958043c5e49a83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Utility.BandwidthDisplay
+  _runInRelease: 0
+  _secondsAveraged: 1
+  _updateInterval: 1
+  _color: {r: 1, g: 1, b: 1, a: 1}
+  _placement: 2
+  _showOutgoing: 1
+  _showIncoming: 1
 --- !u!1001 &1059037637062350257
 PrefabInstance:
   m_ObjectHideFlags: 0

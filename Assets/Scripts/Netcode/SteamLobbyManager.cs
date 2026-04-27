@@ -19,6 +19,7 @@ public class SteamLobbyManager : MonoBehaviour
     
     private CSteamID m_currentLobbyID;
     private bool _isGameStartRequested;
+    private bool _shouldOpenInviteDialogAfterCreation;
     
     private const string HostAddressKey = "HostAddress";
     private const string HostNameKey = "HostName";
@@ -39,9 +40,7 @@ public class SteamLobbyManager : MonoBehaviour
     private void Start()
     {
         EnsureSteamManager();
-
-        if (SceneManager.GetActiveScene().name != "MainMenu")
-            TryBindHostButtonInGameplayScene();
+        
 
         if (!SteamManager.Initialized)
         {
@@ -75,16 +74,52 @@ public class SteamLobbyManager : MonoBehaviour
 
     public void InviteFriend()
     {
+        if (!SteamManager.Initialized) 
+        { 
+            StatusChangedEvent?.Invoke("Steam is not initialized"); 
+            return; 
+        }
+
         if (m_currentLobbyID.IsValid())
+        {
+            // Если мы в лобби, открываем диалог приглашения для этого лобби
             SteamFriends.ActivateGameOverlayInviteDialog(m_currentLobbyID);
+            StatusChangedEvent?.Invoke("Invite dialog opened for current lobby");
+        }
         else
-            StatusChangedEvent?.Invoke("No active lobby");
+        {
+            // Если не в лобби, создаем лобби и затем открываем диалог приглашения
+            StatusChangedEvent?.Invoke("Creating lobby to invite friends...");
+            _shouldOpenInviteDialogAfterCreation = true;
+            HostGame(); // Создаем лобби, после чего пользователь сможет пригласить друзей
+        }
     }
 
     public void OpenFriendsOverlay()
     {
         if (!SteamManager.Initialized) { StatusChangedEvent?.Invoke("Steam is not initialized"); return; }
+        
+        // Если мы в лобби, открываем диалог приглашения
+        if (m_currentLobbyID.IsValid())
+        {
+            SteamFriends.ActivateGameOverlayInviteDialog(m_currentLobbyID);
+            StatusChangedEvent?.Invoke("Opened invite dialog");
+        }
+        else
+        {
+            // Если не в лобби, открываем список друзей для поиска лобби
+            SteamFriends.ActivateGameOverlay("friends");
+            StatusChangedEvent?.Invoke("Opened friends list");
+        }
+    }
+
+    public void OpenLobbyBrowser()
+    {
+        if (!SteamManager.Initialized) { StatusChangedEvent?.Invoke("Steam is not initialized"); return; }
+        
+        // Открываем список друзей Steam, где можно увидеть лобби друзей и присоединиться к ним
         SteamFriends.ActivateGameOverlay("friends");
+        StatusChangedEvent?.Invoke("Opened friends list - check for friend's lobbies");
     }
 
     public void LeaveLobby()
@@ -94,6 +129,7 @@ public class SteamLobbyManager : MonoBehaviour
 
         m_currentLobbyID = CSteamID.Nil;
         _isGameStartRequested = false;
+        _shouldOpenInviteDialogAfterCreation = false; // Сбрасываем флаг при выходе из лобби
 
         StatusChangedEvent?.Invoke("You left the lobby");
         LobbyLeftEvent?.Invoke();
@@ -180,6 +216,13 @@ public class SteamLobbyManager : MonoBehaviour
 
         StatusChangedEvent?.Invoke("Lobby ready. Invite your friends.");
         NotifyMembersChanged();
+        
+        // Если лобби было создано для приглашения друзей, автоматически открываем диалог
+        if (_shouldOpenInviteDialogAfterCreation)
+        {
+            _shouldOpenInviteDialogAfterCreation = false;
+            SteamFriends.ActivateGameOverlayInviteDialog(m_currentLobbyID);
+        }
     }
 
     private void OnLobbyEntered(LobbyEnter_t result)
@@ -247,22 +290,6 @@ public class SteamLobbyManager : MonoBehaviour
             new GameObject("SteamManager").AddComponent<SteamManager>();
     }
     
-    private void TryBindHostButtonInGameplayScene()
-    {
-        foreach (Button button in FindObjectsByType<Button>(FindObjectsSortMode.None))
-        {
-            if (button == null) continue;
-            TMP_Text label = button.GetComponentInChildren<TMP_Text>();
-            if (label == null || string.IsNullOrWhiteSpace(label.text)) continue;
-            if (label.text.Trim().ToLowerInvariant() != "host") continue;
-
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(HostGame);
-            Debug.Log("[SteamLobby] Bound Host button for direct editor launch.");
-            return;
-        }
-    }
-
     private void NotifyMembersChanged() =>
         LobbyMembersChangedEvent?.Invoke(GetLobbyMemberNames());
 
@@ -270,5 +297,48 @@ public class SteamLobbyManager : MonoBehaviour
     {
         var nm = FindFirstObjectByType<FishNet.Managing.NetworkManager>();
         if (nm != null) Destroy(nm.gameObject);
+    }
+    
+    public void StartHostInCurrentScene()
+    {
+        if (!SteamManager.Initialized)
+        {
+            StatusChangedEvent?.Invoke("Steam is not initialized");
+            return;
+        }
+
+        if (InstanceFinder.NetworkManager == null)
+        {
+            StatusChangedEvent?.Invoke("NetworkManager not found in current scene");
+            Debug.LogError("[SteamLobby] NetworkManager not found in current scene.");
+            return;
+        }
+
+        FishySteamworks.FishySteamworks transport =
+            InstanceFinder.NetworkManager.TransportManager.GetTransport<FishySteamworks.FishySteamworks>();
+        if (transport == null)
+        {
+            StatusChangedEvent?.Invoke("FishySteamworks transport is missing");
+            Debug.LogError("[SteamLobby] FishySteamworks transport missing.");
+            return;
+        }
+
+        string selfSteamId = SteamUser.GetSteamID().ToString();
+        if (!ulong.TryParse(selfSteamId, out _))
+        {
+            StatusChangedEvent?.Invoke("Invalid local SteamId");
+            Debug.LogError($"[SteamLobby] Invalid local SteamId '{selfSteamId}'.");
+            return;
+        }
+
+        transport.SetClientAddress(selfSteamId);
+
+        if (!InstanceFinder.ServerManager.Started)
+            InstanceFinder.ServerManager.StartConnection();
+        if (!InstanceFinder.ClientManager.Started)
+            InstanceFinder.ClientManager.StartConnection();
+
+        StatusChangedEvent?.Invoke("Host started in current scene");
+        Debug.Log("[SteamLobby] Host started in current scene (editor/direct launch).");
     }
 }

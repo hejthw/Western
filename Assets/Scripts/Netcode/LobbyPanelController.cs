@@ -52,7 +52,7 @@ public class LobbyPanelController : MonoBehaviour
         startButton.onClick.RemoveAllListeners();
 
         leaveLobbyButton.onClick.AddListener(() => _lobbyManager.LeaveLobby());
-        inviteFriendsButton.onClick.AddListener(() => _lobbyManager.InviteFriend());
+        inviteFriendsButton.onClick.AddListener(() => _lobbyManager.OpenLobbyBrowser());
         startButton.onClick.AddListener(OnStartClicked);
 
         startButton.interactable = false;
@@ -93,7 +93,7 @@ public class LobbyPanelController : MonoBehaviour
     private void OnStartClicked()
     {
         MusicDirector.StopGlobal();
-        _lobbyManager.StartGameForLobby("NetworkTest");
+        _lobbyManager.StartGameForLobby("MainScenes_LVL1");
     }
 
     private void RefreshAllSlots()
