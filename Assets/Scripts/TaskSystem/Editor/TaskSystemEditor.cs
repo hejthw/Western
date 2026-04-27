@@ -341,10 +341,8 @@ public class TaskSystemEditor : EditorWindow
         }
         
         EditorGUILayout.LabelField("Task Manager Status:", EditorStyles.boldLabel);
-        var stats = taskManager.GetStats();
-        EditorGUILayout.LabelField($"Collections: {stats.totalCollections}");
-        EditorGUILayout.LabelField($"Total Events: {stats.totalEvents}");
-        EditorGUILayout.LabelField($"Active Tasks: {stats.activeTasks}/{stats.maxConcurrentTasks}");
+        EditorGUILayout.LabelField($"Active Tasks: {taskManager.GetActiveTaskIds().Count}/{taskManager.maxConcurrentTasks}");
+        EditorGUILayout.LabelField($"Log Events: {taskManager.logTaskEvents}");
         
         EditorGUILayout.Space();
         
@@ -384,7 +382,7 @@ public class TaskSystemEditor : EditorWindow
         
         if (GUILayout.Button("Show Task Manager Debug Info"))
         {
-            taskManager.DebugShowActiveTasks();
+            Debug.Log(taskManager.GetSystemInfo());
         }
     }
 

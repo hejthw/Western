@@ -25,6 +25,7 @@ public class CashHUD : MonoBehaviour
     private PickupController _pickupController;
     private PlayerController _playerController;
     private HeistDoor _heistDoor;
+    private Canvas _rootCanvas;
     private bool _cashProgressUnlocked;
     private Coroutine _timerRoutine;
     private bool _lastInCashZone;
@@ -38,6 +39,7 @@ public class CashHUD : MonoBehaviour
         Debug.Log($"[HUD] Awake. player={name}");
         _pickupController = GetComponentInParent<PickupController>();
         _playerController = GetComponentInParent<PlayerController>();
+        _rootCanvas = nameText != null ? nameText.GetComponentInParent<Canvas>() : null;
 
         if (heistTimerText != null)
             heistTimerText.gameObject.SetActive(false);
@@ -70,6 +72,9 @@ public class CashHUD : MonoBehaviour
         bool isOwner = _playerController != null && _playerController.IsOwner;
         if (!isOwner)
         {
+            if (_rootCanvas != null && _rootCanvas.enabled)
+                _rootCanvas.enabled = false;
+
             if (!_loggedWaitingForOwner)
             {
                 Debug.Log($"[HUD] Skip Update because !IsOwner. player={name}");
@@ -82,6 +87,9 @@ public class CashHUD : MonoBehaviour
                 finishHeistHintText.gameObject.SetActive(false);
             return;
         }
+        
+        if (_rootCanvas != null && !_rootCanvas.enabled)
+            _rootCanvas.enabled = true;
 
         if (_pickupController == null)
         {

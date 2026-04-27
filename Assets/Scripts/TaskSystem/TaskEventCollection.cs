@@ -157,6 +157,59 @@ public class TaskEventCollection : ScriptableObject
         
         Debug.Log("[TaskEventCollection] Sample events created!");
     }
+
+    /// <summary>
+    /// Создать события для системы ограбления
+    /// </summary>
+    [ContextMenu("Create Heist Events")]
+    public void CreateHeistEvents()
+    {
+        // Создаем событие для окончания таймера, если его нет
+        if (!HasEvent("heist_timer_finished"))
+        {
+            events.Add(new TaskEvent
+            {
+                eventId = "heist_timer_finished",
+                eventName = "Таймер ограбления закончился",
+                taskText = "Время вышло! Быстро к выходу!",
+                textColor = Color.red,
+                fontSize = 22,
+                canRepeat = false,
+                autoHideAfter = 0f // Не скрывать автоматически, важное сообщение
+            });
+            
+            Debug.Log("[TaskEventCollection] Heist timer event created!");
+        }
+
+        // Добавляем другие полезные события для ограбления
+        if (!HasEvent("heist_door_opened"))
+        {
+            events.Add(new TaskEvent
+            {
+                eventId = "heist_door_opened", 
+                eventName = "Дверь ограбления открыта",
+                taskText = "Дверь открыта! Собирайте сокровища!",
+                textColor = Color.green,
+                fontSize = 20,
+                autoHideAfter = 3f
+            });
+        }
+
+        if (!HasEvent("escape_zone_available"))
+        {
+            events.Add(new TaskEvent
+            {
+                eventId = "escape_zone_available",
+                eventName = "Зона побега доступна", 
+                taskText = "Зона побега активна! Удерживайте клавишу для завершения.",
+                textColor = Color.cyan,
+                fontSize = 18,
+                canRepeat = true
+            });
+        }
+
+        Debug.Log("[TaskEventCollection] Heist events created!");
+    }
 }
 
 /// <summary>

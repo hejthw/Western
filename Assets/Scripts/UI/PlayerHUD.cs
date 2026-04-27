@@ -50,7 +50,9 @@ public class PlayerHUD : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        if (!IsOwner)
+        base.OnStartClient();
+        PlayerController playerController = GetComponentInParent<PlayerController>();
+        if (playerController != null && !playerController.IsOwner)
             gameObject.SetActive(false);
     }
 

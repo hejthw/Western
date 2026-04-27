@@ -3346,6 +3346,155 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &302421348
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 302421352}
+  - component: {fileID: 302421351}
+  - component: {fileID: 302421350}
+  - component: {fileID: 302421349}
+  m_Layer: 0
+  m_Name: Task Event Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &302421349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302421348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
+  SceneId: 4093607270
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
+--- !u!114 &302421350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302421348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d4977a4c56b26048b8f9e28705d9720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskEventTrigger
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 302421349}
+  _networkObjectCache: {fileID: 0}
+  eventCollection: {fileID: 11400000, guid: 89d80c0b04d59f84f9220b161dbea476, type: 2}
+  eventToTrigger: 2
+  onlyOwnerCanTrigger: 0
+  triggerOnce: 1
+  activationDelay: 0
+  requiredPlayersCount: 1
+  showVisualFeedback: 0
+  activationEffect: {fileID: 0}
+  readyColor: {r: 0, g: 1, b: 0, a: 1}
+  activationColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  enterSound: {fileID: 0}
+  activationSound: {fileID: 0}
+  OnTriggerActivated:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTriggerActivatedAllClients:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
+  enableDebugLogs: 1
+--- !u!65 &302421351
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302421348}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &302421352
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302421348}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.86, y: 0, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &323578050
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4588,6 +4737,155 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6389488586384218806, guid: 43d45c873f472eb4e94345793b21a569, type: 3}
+--- !u!1 &446653310
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 446653314}
+  - component: {fileID: 446653313}
+  - component: {fileID: 446653312}
+  - component: {fileID: 446653311}
+  m_Layer: 0
+  m_Name: Task Event Trigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &446653311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446653310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
+  SceneId: 4227661559
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
+--- !u!114 &446653312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446653310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d4977a4c56b26048b8f9e28705d9720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskEventTrigger
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 446653311}
+  _networkObjectCache: {fileID: 0}
+  eventCollection: {fileID: 11400000, guid: 89d80c0b04d59f84f9220b161dbea476, type: 2}
+  eventToTrigger: 1
+  onlyOwnerCanTrigger: 0
+  triggerOnce: 1
+  activationDelay: 0
+  requiredPlayersCount: 1
+  showVisualFeedback: 0
+  activationEffect: {fileID: 0}
+  readyColor: {r: 0, g: 1, b: 0, a: 1}
+  activationColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  enterSound: {fileID: 0}
+  activationSound: {fileID: 0}
+  OnTriggerActivated:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTriggerActivatedAllClients:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
+  enableDebugLogs: 1
+--- !u!65 &446653313
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446653310}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &446653314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 446653310}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.08, y: 1.57, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &452483612
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6296,6 +6594,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8150258291661882811, guid: 79d313631af932248b08c2ff8b15e803, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.4238
+      objectReference: {fileID: 0}
+    - target: {fileID: 8150258291661882811, guid: 79d313631af932248b08c2ff8b15e803, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.1309
+      objectReference: {fileID: 0}
     - target: {fileID: 8987141751255193089, guid: 79d313631af932248b08c2ff8b15e803, type: 3}
       propertyPath: m_Name
       value: Door
@@ -6303,7 +6609,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4967984912772042933, guid: 79d313631af932248b08c2ff8b15e803, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1853641588}
   m_SourcePrefab: {fileID: 100100000, guid: 79d313631af932248b08c2ff8b15e803, type: 3}
 --- !u!1001 &617671840
 PrefabInstance:
@@ -7386,6 +7695,33 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 7049899964203178221, guid: f41c75c22c6377444bb1c1ab6060a7d7, type: 3}
+--- !u!1 &702844665 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5075525502460383143, guid: 6f8b382387c18194d9704c692ad60e30, type: 3}
+  m_PrefabInstance: {fileID: 898230648}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &702844669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702844665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a016309aed9c834f8a7f52daae9fdc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeistTimerEventHandler
+  taskEventIdOnTimerEnd: heist_timer_finished
+  eventCollection: {fileID: 11400000, guid: 89d80c0b04d59f84f9220b161dbea476, type: 2}
+  autoFindTaskManager: 1
+  useCustomTimerEndText: 0
+  customTimerEndText: "\u0411\u0435\u0433\u0438\u0442\u0435 \u043A \u0442\u0435\u043B\u0435\u0433\u0435"
+  timerEndTextColor: {r: 1, g: 0, b: 0, a: 1}
+  timerEndFontSize: 22
+  customTimerDuration: 0
+  showCountdownLogs: 0
+  enableDebugLogs: 1
 --- !u!4 &703941832 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
@@ -8903,6 +9239,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d917a4c1bf400524e8da5f74a1f950aa, type: 3}
   m_PrefabInstance: {fileID: 800426268}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &811494449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 811494450}
+  m_Layer: 0
+  m_Name: NewCashZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &811494450
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811494449}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -25.16, y: 1.72, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &813068084 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -7768796009490323730, guid: 9e1a4d540a5df934e96ec36894d3fca3, type: 3}
@@ -9718,7 +10085,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5075525502460383143, guid: 6f8b382387c18194d9704c692ad60e30, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 702844669}
   m_SourcePrefab: {fileID: 100100000, guid: 6f8b382387c18194d9704c692ad60e30, type: 3}
 --- !u!4 &898922470 stripped
 Transform:
@@ -12273,15 +12643,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8686494540038190468, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.52
+      value: -15.59
       objectReference: {fileID: 0}
     - target: {fileID: 8686494540038190468, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5390007
+      value: 1.54
       objectReference: {fileID: 0}
     - target: {fileID: 8686494540038190468, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.6138327
+      value: 0.09
       objectReference: {fileID: 0}
     - target: {fileID: 8686494540038190468, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12312,9 +12682,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 5272784493676374210, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
+    - {fileID: 2390628420911848355, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8686494540038190468, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1656770008}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3578030848687599266, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1851044788}
   m_SourcePrefab: {fileID: 100100000, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
 --- !u!1001 &1194437088
 PrefabInstance:
@@ -13585,6 +13963,112 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: affdfc351e8ce874ea7dcf36bc1c1f92, type: 3}
   m_PrefabInstance: {fileID: 1306119712}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1318869708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1318869710}
+  - component: {fileID: 1318869712}
+  - component: {fileID: 1318869711}
+  m_Layer: 0
+  m_Name: Task UI Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1318869710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318869708}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1318869711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318869708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
+  SceneId: 4227759223
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
+--- !u!114 &1318869712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318869708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be36647635bfa044988c2a9d56158f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskSystemDebugger
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1318869711}
+  _networkObjectCache: {fileID: 0}
+  showOnScreenDebug: 0
+  debugTextSize: 12
+  autoUpdate: 1
+  updateInterval: 1
 --- !u!4 &1320635283 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
@@ -14797,6 +15281,179 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 63c6c940fcab7d64e8acc588ae7ae710, type: 3}
   m_PrefabInstance: {fileID: 1403130552}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1407808749
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1407808753}
+  - component: {fileID: 1407808752}
+  - component: {fileID: 1407808751}
+  - component: {fileID: 1407808750}
+  m_Layer: 0
+  m_Name: Task Event Trigger (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1407808750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407808749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
+  SceneId: 4093509503
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
+--- !u!114 &1407808751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407808749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d4977a4c56b26048b8f9e28705d9720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskEventTrigger
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1407808750}
+  _networkObjectCache: {fileID: 0}
+  eventCollection: {fileID: 11400000, guid: 89d80c0b04d59f84f9220b161dbea476, type: 2}
+  eventToTrigger: 4
+  onlyOwnerCanTrigger: 0
+  triggerOnce: 1
+  activationDelay: 0
+  requiredPlayersCount: 1
+  showVisualFeedback: 0
+  activationEffect: {fileID: 0}
+  readyColor: {r: 0, g: 1, b: 0, a: 1}
+  activationColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  enterSound: {fileID: 0}
+  activationSound: {fileID: 0}
+  OnTriggerActivated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1851044788}
+        m_TargetAssemblyTypeName: CashZoneController, Assembly-CSharp
+        m_MethodName: ActivateCashZoneChanges
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1853641588}
+        m_TargetAssemblyTypeName: HeistDoorController, Assembly-CSharp
+        m_MethodName: OpenDoor
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTriggerActivatedAllClients:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
+  enableDebugLogs: 1
+--- !u!65 &1407808752
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407808749}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1407808753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1407808749}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.003, y: -1.993, z: -4.98}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1411068616
 GameObject:
   m_ObjectHideFlags: 0
@@ -16163,7 +16820,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519873586}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.053881306, y: -0.6088583, z: 0.04150788, w: 0.7903578}
+  m_LocalRotation: {x: -0.07851794, y: -0.6797805, z: -0.07357198, w: 0.72547954}
   m_LocalPosition: {x: -0.21768, y: 1.763, z: -10.574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -16943,7 +17600,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1589046124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17741,6 +18398,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 778233c9799637645a8477a359d05161, type: 3}
+--- !u!4 &1656770008 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
+  m_PrefabInstance: {fileID: 2126578095}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1667225098
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19235,6 +19897,82 @@ Transform:
   m_Children: []
   m_Father: {fileID: 850466509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1851044779 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3578030848687599266, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
+  m_PrefabInstance: {fileID: 1189388415}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1851044782 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1378355014704506300, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
+  m_PrefabInstance: {fileID: 1189388415}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851044779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+--- !u!4 &1851044787 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8686494540038190468, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
+  m_PrefabInstance: {fileID: 1189388415}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1851044788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851044779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81084f741cf41a545a274665315ce885, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CashZoneController
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1851044782}
+  _networkObjectCache: {fileID: 0}
+  newPosition: {fileID: 811494450}
+  moveSpeed: 200000
+  smoothMovement: 0
+  delayBeforeMove: 0
+  hideAfterActivation: 0
+  showAfterActivation: 0
+  moveSound: {fileID: 0}
+  soundVolume: 0
+  enableDebugLogs: 0
+--- !u!1 &1853641581 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4967984912772042933, guid: 79d313631af932248b08c2ff8b15e803, type: 3}
+  m_PrefabInstance: {fileID: 614279565}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1853641584 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1836381503672564502, guid: 79d313631af932248b08c2ff8b15e803, type: 3}
+  m_PrefabInstance: {fileID: 614279565}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853641581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f37591b86d751ce41b33bac0f1c02f81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeistDoor
+--- !u!114 &1853641588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853641581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65cd17c60f712af4fa44bc7c2b2fe3af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeistDoorController
+  targetDoor: {fileID: 1853641584}
+  autoFindDoor: 0
+  enableDebugLogs: 0
 --- !u!1001 &1859758300
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21043,6 +21781,155 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 62ec40ef2be4aef4998c76f0f1dec58c, type: 3}
   m_PrefabInstance: {fileID: 1980959795}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1982589626
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1982589630}
+  - component: {fileID: 1982589629}
+  - component: {fileID: 1982589628}
+  - component: {fileID: 1982589627}
+  m_Layer: 0
+  m_Name: Task Event Trigger (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1982589627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982589626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
+  SceneId: 4294802558
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
+--- !u!114 &1982589628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982589626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d4977a4c56b26048b8f9e28705d9720, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskEventTrigger
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 1982589627}
+  _networkObjectCache: {fileID: 0}
+  eventCollection: {fileID: 11400000, guid: 89d80c0b04d59f84f9220b161dbea476, type: 2}
+  eventToTrigger: 3
+  onlyOwnerCanTrigger: 0
+  triggerOnce: 1
+  activationDelay: 0
+  requiredPlayersCount: 1
+  showVisualFeedback: 0
+  activationEffect: {fileID: 0}
+  readyColor: {r: 0, g: 1, b: 0, a: 1}
+  activationColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  enterSound: {fileID: 0}
+  activationSound: {fileID: 0}
+  OnTriggerActivated:
+    m_PersistentCalls:
+      m_Calls: []
+  OnTriggerActivatedAllClients:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerExit:
+    m_PersistentCalls:
+      m_Calls: []
+  enableDebugLogs: 1
+--- !u!65 &1982589629
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982589626}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1982589630
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982589626}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.232, y: -1.059, z: -9.516}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1984962018
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22655,23 +23542,35 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1851044787}
     m_Modifications:
     - target: {fileID: 100000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
       propertyPath: m_Name
       value: SM_Veh_Wagon_Shop_01
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.9
+      value: -0.45999974
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.12075578
+      value: -0.7091225
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.2063662
+      value: 0.13582218
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
       propertyPath: m_LocalRotation.w
@@ -22679,7 +23578,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6c83951ddcfeb8c41abb24e019e63530, type: 3}
       propertyPath: m_LocalRotation.y
@@ -23103,8 +24002,13 @@ SceneRoots:
   - {fileID: 1429229718}
   - {fileID: 1451604119}
   - {fileID: 614279565}
-  - {fileID: 2126578095}
   - {fileID: 1189388415}
   - {fileID: 796941082}
   - {fileID: 898230648}
   - {fileID: 610214936}
+  - {fileID: 1318869710}
+  - {fileID: 446653314}
+  - {fileID: 302421352}
+  - {fileID: 1982589630}
+  - {fileID: 1407808753}
+  - {fileID: 811494450}

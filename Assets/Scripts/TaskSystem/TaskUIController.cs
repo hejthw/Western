@@ -46,7 +46,7 @@ public class TaskUIController : MonoBehaviour
     public TaskAnimationType animationType = TaskAnimationType.Fade;
     
     [Header("Display Settings")]
-    [Tooltip("Максимальное количение одновременно отображаемых задач")]
+    [Tooltip("Максимальное количество одновременно отображаемых задач")]
     [Range(1, 5)]
     public int maxDisplayedTasks = 3;
     
@@ -58,6 +58,9 @@ public class TaskUIController : MonoBehaviour
     
     [Tooltip("Сохранять оригинальный стиль текста (шрифт, размер, цвет)")]
     public bool preserveOriginalStyle = true;
+    
+    [Tooltip("Новая задача заменяет старую вместо добавления")]
+    public bool replaceOldTasks = true;
     
     [Header("Visual Settings")]
     [Tooltip("Цвет фона панели по умолчанию")]
@@ -99,16 +102,23 @@ public class TaskUIController : MonoBehaviour
 
     private void Awake()
     {
-        InitializeUI();
-        
         // Проверяем, находимся ли мы на префабе игрока
-        PlayerController playerController = GetComponent<PlayerController>();
+        PlayerController playerController = GetComponentInParent<PlayerController>();
         if (playerController != null)
         {
-            // Мы на игроке - отключаем автопоиск и настраиваем сразу
-            autoFindUIElements = false;
+            TaskUIController[] playerControllers = playerController.GetComponentsInChildren<TaskUIController>(true);
+            if (playerControllers.Length > 0 && playerControllers[0] != this)
+            {
+                enabled = false;
+                return;
+            }
+
+            // На игроке UI должен искаться по локальной копии владельца
             onlyForOwner = true;
+            StartCoroutine(ApplyOwnerTaskUIVisibility(playerController));
         }
+
+        InitializeUI();
         
         // Если нужно автопоиск, делаем это при старте
         if (autoFindUIElements)
@@ -184,23 +194,49 @@ public class TaskUIController : MonoBehaviour
             textElement.fontSize = defaultFontSize;
     }
 
+    private IEnumerator ApplyOwnerTaskUIVisibility(PlayerController playerController)
+    {
+        float timeout = 2f;
+        while (timeout > 0f && playerController != null && !playerController.IsSpawned)
+        {
+            timeout -= Time.deltaTime;
+            yield return null;
+        }
+
+        if (playerController == null || playerController.IsOwner)
+            yield break;
+
+        if (taskPanel != null)
+            taskPanel.SetActive(false);
+
+        if (mainTaskText != null)
+            mainTaskText.gameObject.SetActive(false);
+
+        foreach (var textElement in additionalTaskTexts)
+        {
+            if (textElement != null)
+                textElement.gameObject.SetActive(false);
+        }
+    }
+
     /// <summary>
     /// Показать новую задачу
     /// </summary>
     public void ShowTask(TaskEvent taskEvent)
     {
         // Если контроллер находится на игроке, показываем только владельцу
-        PlayerController playerController = GetComponent<PlayerController>();
+        PlayerController playerController = GetComponentInParent<PlayerController>();
         if (playerController != null && !playerController.IsOwner)
         {
-            return; // Не показываем задачи на чужих копиях игрока
+            return;
         }
-        
+
         if (taskEvent == null || !taskEvent.IsValid())
         {
             Debug.LogError("[TaskUIController] Invalid task event provided");
             return;
         }
+        
         
         // Проверяем, не отображается ли уже эта задача
         if (activeTasks.ContainsKey(taskEvent.eventId))
@@ -210,8 +246,17 @@ public class TaskUIController : MonoBehaviour
             return;
         }
         
-        // Если достигнут лимит задач, добавляем в очередь
-        if (activeTasks.Count >= maxDisplayedTasks)
+        // Если включена замена старых задач, очищаем все активные
+        if (replaceOldTasks && activeTasks.Count > 0)
+        {
+            ClearAllTasks();
+            
+            if (enableDebugLogs)
+                Debug.Log($"[TaskUIController] Cleared old tasks to show new task '{taskEvent.eventId}'");
+        }
+        
+        // Если достигнут лимит задач и не включена замена, добавляем в очередь
+        if (!replaceOldTasks && activeTasks.Count >= maxDisplayedTasks)
         {
             taskQueue.Enqueue(taskEvent);
             if (enableDebugLogs)
@@ -228,8 +273,17 @@ public class TaskUIController : MonoBehaviour
         TextMeshProUGUI targetText = GetAvailableTextElement();
         if (targetText == null)
         {
-            Debug.LogError("[TaskUIController] No available text elements for displaying task");
+            Debug.LogError($"[TaskUIController] No available text elements for displaying task '{taskEvent.eventId}'. " +
+                          $"Active tasks: {activeTasks.Count}, Max tasks: {maxDisplayedTasks}, " +
+                          $"Main text: {(mainTaskText != null ? "present" : "missing")}, " +
+                          $"Additional texts: {additionalTaskTexts.Count}");
             return;
+        }
+        
+        if (enableDebugLogs)
+        {
+            Debug.Log($"[TaskUIController] Displaying task '{taskEvent.eventId}' on element '{targetText.name}'. " +
+                     $"Active tasks: {activeTasks.Count + 1}/{maxDisplayedTasks}");
         }
         
         // Создаем информацию об отображении
@@ -289,18 +343,45 @@ public class TaskUIController : MonoBehaviour
 
     private TextMeshProUGUI GetAvailableTextElement()
     {
-        // Сначала проверяем основной элемент
-        if (mainTaskText != null && !mainTaskText.gameObject.activeSelf)
+        // При замене старых задач всегда используем основной элемент
+        if (replaceOldTasks && mainTaskText != null)
+        {
+            return mainTaskText;
+        }
+        
+        // Проверяем основной элемент - если он не используется активными задачами
+        if (mainTaskText != null && !IsTextElementUsed(mainTaskText))
             return mainTaskText;
         
         // Затем ищем среди дополнительных
         foreach (var textElement in additionalTaskTexts)
         {
-            if (textElement != null && !textElement.gameObject.activeSelf)
+            if (textElement != null && !IsTextElementUsed(textElement))
                 return textElement;
         }
         
+        // Если нет свободных элементов, используем основной (перезаписываем)
+        if (mainTaskText != null)
+        {
+            if (enableDebugLogs)
+                Debug.Log("[TaskUIController] All text elements busy, reusing main text element");
+            return mainTaskText;
+        }
+        
         return null;
+    }
+
+    /// <summary>
+    /// Проверяет, используется ли текстовый элемент активными задачами
+    /// </summary>
+    private bool IsTextElementUsed(TextMeshProUGUI textElement)
+    {
+        foreach (var task in activeTasks.Values)
+        {
+            if (task.textElement == textElement)
+                return true;
+        }
+        return false;
     }
 
     /// <summary>
@@ -331,11 +412,20 @@ public class TaskUIController : MonoBehaviour
 
     private void CompleteTaskHiding(TaskDisplayInfo displayInfo)
     {
-        // Скрываем элемент
-        displayInfo.textElement.gameObject.SetActive(false);
-        
         // Удаляем из активных задач
         activeTasks.Remove(displayInfo.taskEvent.eventId);
+        
+        // В режиме замены просто очищаем текст, элемент остается активным для следующей задачи
+        if (replaceOldTasks)
+        {
+            displayInfo.textElement.text = "";
+        }
+        else
+        {
+            // В режиме множественных задач скрываем элемент
+            displayInfo.textElement.gameObject.SetActive(false);
+            displayInfo.textElement.text = "";
+        }
         
         // Воспроизводим звук завершения
         if (taskCompleteSound != null)
@@ -762,6 +852,34 @@ public class TaskUIController : MonoBehaviour
             if (enableDebugLogs)
                 Debug.Log("[TaskUIController] UI elements refreshed");
         }
+    }
+
+    /// <summary>
+    /// Создает дополнительный текстовый элемент на основе основного
+    /// </summary>
+    private TextMeshProUGUI CreateAdditionalTextElement()
+    {
+        if (mainTaskText == null) return null;
+
+        // Создаем копию основного текстового элемента
+        GameObject newTextGO = Instantiate(mainTaskText.gameObject, mainTaskText.transform.parent);
+        newTextGO.name = $"Task Text Additional {additionalTaskTexts.Count + 1}";
+        
+        TextMeshProUGUI newTextComp = newTextGO.GetComponent<TextMeshProUGUI>();
+        
+        // Позиционируем под предыдущим элементом
+        RectTransform newRect = newTextGO.GetComponent<RectTransform>();
+        RectTransform mainRect = mainTaskText.GetComponent<RectTransform>();
+        
+        if (newRect != null && mainRect != null)
+        {
+            newRect.anchoredPosition = mainRect.anchoredPosition + Vector2.down * (mainRect.sizeDelta.y + 10) * (additionalTaskTexts.Count + 1);
+        }
+        
+        // Изначально скрываем
+        newTextGO.SetActive(false);
+        
+        return newTextComp;
     }
 }
 

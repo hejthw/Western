@@ -1087,7 +1087,7 @@ MonoBehaviour:
   taskUIController: {fileID: 6930355707663911395}
   autoFindUIController: 1
   logTaskEvents: 1
-  maxConcurrentTasks: 3
+  maxConcurrentTasks: 5
   persistTaskState: 0
   saveKey: TaskManager_State
 --- !u!1 &1773709885116389087
@@ -1519,8 +1519,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.371381, y: 0.2705082, z: -0.11405097, w: 0.8808484}
-  m_LocalPosition: {x: -0.6315849, y: 1.086838, z: -0.6438551}
+  m_LocalRotation: {x: 0.4319191, y: 0.45787185, z: -0.27164742, w: 0.7280158}
+  m_LocalPosition: {x: -0.7687355, y: 1.3258543, z: -0.1939373}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1603,7 +1603,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: 42.475147
+    Value: 72.6659
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1613,7 +1613,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: 20.722239
+    Value: 36.359814
     Center: 17.5
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -1647,7 +1647,7 @@ MonoBehaviour:
   ReferenceFrame: 2
   RecenterTarget: 2
   PanAxis:
-    Value: 34.143402
+    Value: 64.33414
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -1657,7 +1657,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 45.722275
+    Value: 61.359837
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -2139,14 +2139,13 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1111130491856068305}
+  m_Children: []
   m_Father: {fileID: 8365019581305403337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -30, y: -12}
-  m_SizeDelta: {x: 306, y: 54}
+  m_AnchoredPosition: {x: -30, y: -43.58542}
+  m_SizeDelta: {x: 306, y: 105.0242}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &4873597171237822778
 CanvasRenderer:
@@ -2163,7 +2162,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4000847220445199765}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -2211,16 +2210,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4091566935879175574}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4813618238847197144}
+  m_Father: {fileID: 8365019581305403337}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 777, y: 476}
   m_SizeDelta: {x: 280.8046, y: 37.9445}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7191584867747587783
@@ -2317,7 +2316,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: -68.59433}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2604,7 +2603,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.08158528, y: 0.7531367, z: 0.09514318, w: 0.6458148}
+  m_LocalRotation: {x: 0.07620613, y: 0.66829944, z: -0.06912658, w: 0.73674285}
   m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2682,7 +2681,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: 98.77382
+    Value: 84.42235
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -2692,7 +2691,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -14.399984
+    Value: 11.810952
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -3209,6 +3208,7 @@ RectTransform:
   - {fileID: 1888978805437033006}
   - {fileID: 2702392610181775238}
   - {fileID: 4813618238847197144}
+  - {fileID: 1111130491856068305}
   - {fileID: 8158413398486050312}
   - {fileID: 5169361288268769659}
   - {fileID: 2323417372300413344}
@@ -3335,6 +3335,7 @@ MonoBehaviour:
   autoHideWhenEmpty: 1
   defaultDisplayTime: 0
   preserveOriginalStyle: 1
+  replaceOldTasks: 1
   defaultBackgroundColor: {r: 0, g: 0, b: 0, a: 0.7}
   defaultFontSize: 18
   taskNumberPrefix: "\u2022 "
@@ -3884,7 +3885,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6106e292af6903c46b9b366caf158709, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -3892,7 +3893,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 1, g: 0.60967547, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3951,7 +3952,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &6741484574031347934
