@@ -48,87 +48,88 @@ public class TaskManager : NetworkBehaviour
     public System.Action<string> OnTaskCompleted;
     public System.Action OnTasksCleared;
 
-    // Singleton для удобного доступа
+    // Singleton pattern
     public static TaskManager Instance { get; private set; }
+
+    #region Unity & FishNet Lifecycle
 
     private void Awake()
     {
-        // Регистрируем себя как Instance
-        if (Instance == null)
+        // Настройка singleton
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            InitializeCollections();
-        }
-        else if (Instance != this)
-        {
-            Debug.LogWarning($"[TaskManager] Multiple TaskManager instances detected. Destroying duplicate: {gameObject.name}");
             Destroy(gameObject);
             return;
         }
+        
+        Instance = this;
     }
 
     private void OnDestroy()
     {
-        // Очищаем Instance если это мы
         if (Instance == this)
         {
             Instance = null;
         }
-        
-        if (IsServer)
-            SaveTaskState();
     }
 
     public override void OnStartServer()
     {
-        base.OnStartServer();
-        
-        if (autoFindUIController && taskUIController == null)
-        {
-            taskUIController = FindObjectOfType<TaskUIController>();
-        }
-        
-        // Даем время UI контроллеру найти свои элементы
-        if (taskUIController != null && taskUIController.autoFindUIElements)
-        {
-            StartCoroutine(DelayedUIControllerRefresh());
-        }
-        
-        if (persistTaskState)
-        {
-            LoadTaskState();
-        }
-        
         if (logTaskEvents)
-            Debug.Log("[TaskManager] Server started - Task system ready");
+            Debug.Log("[TaskManager] Started as server");
+        
+        InitializeCollections();
+        LoadPersistentState();
+        
+        // Поиск UI контроллера
+        if (autoFindUIController)
+        {
+            StartCoroutine(DelayedUIControllerSearch());
+        }
     }
 
     public override void OnStartClient()
     {
-        base.OnStartClient();
+        if (logTaskEvents)
+            Debug.Log("[TaskManager] Started as client");
         
-        if (!IsServer && autoFindUIController && taskUIController == null)
+        InitializeCollections();
+        
+        // Поиск UI контроллера
+        if (autoFindUIController)
         {
-            taskUIController = FindObjectOfType<TaskUIController>();
+            StartCoroutine(DelayedUIControllerSearch());
         }
     }
+
+    public override void OnStopServer()
+    {
+        SavePersistentState();
+        
+        if (logTaskEvents)
+            Debug.Log("[TaskManager] Stopped server");
+    }
+
+    #endregion
+
+    #region Initialization
 
     private void InitializeCollections()
     {
         allCollections.Clear();
         
-        // Добавляем основную коллекцию
+        // Добавляем коллекцию по умолчанию
         if (defaultEventCollection != null)
         {
-            allCollections[defaultEventCollection.name] = defaultEventCollection;
+            allCollections[defaultEventCollection.collectionName] = defaultEventCollection;
         }
         
         // Добавляем дополнительные коллекции
         foreach (var collection in additionalCollections)
         {
-            if (collection != null && !allCollections.ContainsKey(collection.name))
+            if (collection != null)
             {
-                allCollections[collection.name] = collection;
+                allCollections[collection.collectionName] = collection;
             }
         }
         
@@ -142,6 +143,9 @@ public class TaskManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void TriggerEventServerRpc(string eventId, NetworkObject triggeringPlayer)
     {
+        if (logTaskEvents)
+            Debug.Log($"[TaskManager] Server received TriggerEventServerRpc: eventId='{eventId}', triggeringPlayer={triggeringPlayer?.name}, IsServer={IsServer}");
+            
         if (string.IsNullOrEmpty(eventId))
         {
             Debug.LogWarning("[TaskManager] TriggerEvent called with empty eventId");
@@ -155,11 +159,11 @@ public class TaskManager : NetworkBehaviour
             return;
         }
         
-        // Проверяем, можно ли повторно активировать событие
-        if (!eventData.canRepeat && triggeredEvents.ContainsKey(eventId))
+        // Проверяем, не активно ли уже это событие
+        if (activeTaskIds.Contains(eventId))
         {
             if (logTaskEvents)
-                Debug.Log($"[TaskManager] Event '{eventId}' already triggered and cannot repeat");
+                Debug.Log($"[TaskManager] Event '{eventId}' is already active");
             return;
         }
         
@@ -197,6 +201,9 @@ public class TaskManager : NetworkBehaviour
     [ObserversRpc]
     private void BroadcastTaskEventObserversRpc(string eventId, NetworkObject triggeringPlayer)
     {
+        if (logTaskEvents)
+            Debug.Log($"[TaskManager] Client received BroadcastTaskEventObserversRpc: eventId='{eventId}', triggeringPlayer={triggeringPlayer?.name}");
+            
         TaskEvent eventData = FindEventInCollections(eventId);
         if (eventData == null)
         {
@@ -204,27 +211,12 @@ public class TaskManager : NetworkBehaviour
             return;
         }
         
-        // Обновляем UI
-        if (taskUIController != null)
-        {
-            taskUIController.ShowTask(eventData);
-        }
-        else if (logTaskEvents)
-        {
-            Debug.LogWarning("[TaskManager] TaskUIController not found! Task UI will not be updated.");
-        }
+        TaskUIController localUIController = FindLocalOwnerTaskUIController();
+        if (localUIController != null)
+            localUIController.ShowTask(eventData);
         
-        // Воспроизводим звук
-        if (eventData.activationSound != null)
-        {
-            AudioSource.PlayClipAtPoint(eventData.activationSound, Camera.main.transform.position, eventData.soundVolume);
-        }
-        
-        // Уведомляем подписчиков
+        // Уведомляем подписчиков на клиенте
         OnTaskActivated?.Invoke(eventId, eventData);
-        
-        if (logTaskEvents)
-            Debug.Log($"[TaskManager] Client received task event: '{eventId}'");
     }
 
     /// <summary>
@@ -241,17 +233,16 @@ public class TaskManager : NetworkBehaviour
             OnTaskCompleted?.Invoke(eventId);
             
             if (logTaskEvents)
-                Debug.Log($"[TaskManager] Task '{eventId}' completed manually");
+                Debug.Log($"[TaskManager] Task '{eventId}' completed");
         }
     }
 
     [ObserversRpc]
     private void CompleteTaskObserversRpc(string eventId)
     {
-        if (taskUIController != null)
-        {
-            taskUIController.HideTask(eventId);
-        }
+        TaskUIController localUIController = FindLocalOwnerTaskUIController();
+        if (localUIController != null)
+            localUIController.HideTask(eventId);
         
         OnTaskCompleted?.Invoke(eventId);
     }
@@ -264,7 +255,7 @@ public class TaskManager : NetworkBehaviour
     {
         activeTaskIds.Clear();
         ClearAllTasksObserversRpc();
-        
+
         OnTasksCleared?.Invoke();
         
         if (logTaskEvents)
@@ -274,26 +265,21 @@ public class TaskManager : NetworkBehaviour
     [ObserversRpc]
     private void ClearAllTasksObserversRpc()
     {
-        if (taskUIController != null)
-        {
-            taskUIController.ClearAllTasks();
-        }
+        TaskUIController localUIController = FindLocalOwnerTaskUIController();
+        if (localUIController != null)
+            localUIController.ClearAllTasks();
         
         OnTasksCleared?.Invoke();
     }
 
-    private TaskEvent FindEventInCollections(string eventId)
-    {
-        foreach (var collection in allCollections.Values)
-        {
-            TaskEvent eventData = collection.GetEvent(eventId);
-            if (eventData != null)
-                return eventData;
-        }
-        return null;
-    }
+    #endregion
 
-    private IEnumerator AutoHideTask(string eventId, float delay)
+    #region Task Management
+
+    /// <summary>
+    /// Корутина для автоматического скрытия задачи
+    /// </summary>
+    private System.Collections.IEnumerator AutoHideTask(string eventId, float delay)
     {
         yield return new WaitForSeconds(delay);
         
@@ -308,19 +294,49 @@ public class TaskManager : NetworkBehaviour
     /// </summary>
     public void AddEventCollection(TaskEventCollection collection)
     {
-        if (collection != null && !allCollections.ContainsKey(collection.name))
+        if (collection != null)
         {
-            allCollections[collection.name] = collection;
+            allCollections[collection.collectionName] = collection;
             
             if (logTaskEvents)
-                Debug.Log($"[TaskManager] Added event collection: {collection.name}");
+                Debug.Log($"[TaskManager] Added collection: {collection.collectionName}");
         }
+    }
+
+    /// <summary>
+    /// Удалить коллекцию событий
+    /// </summary>
+    public void RemoveEventCollection(string collectionName)
+    {
+        if (allCollections.ContainsKey(collectionName))
+        {
+            allCollections.Remove(collectionName);
+            
+            if (logTaskEvents)
+                Debug.Log($"[TaskManager] Removed collection: {collectionName}");
+        }
+    }
+
+    /// <summary>
+    /// Найти событие во всех коллекциях
+    /// </summary>
+    private TaskEvent FindEventInCollections(string eventId)
+    {
+        foreach (var collection in allCollections.Values)
+        {
+            TaskEvent foundEvent = collection.GetEvent(eventId);
+            if (foundEvent != null)
+            {
+                return foundEvent;
+            }
+        }
+        return null;
     }
 
     /// <summary>
     /// Получить все активные задачи
     /// </summary>
-    public List<string> GetActiveTasks()
+    public List<string> GetActiveTaskIds()
     {
         return new List<string>(activeTaskIds);
     }
@@ -334,166 +350,110 @@ public class TaskManager : NetworkBehaviour
     }
 
     /// <summary>
-    /// Получить время активации события
+    /// Получить время активации задачи
     /// </summary>
-    public float GetEventTriggerTime(string eventId)
+    public float GetTaskActivationTime(string eventId)
     {
         return triggeredEvents.TryGetValue(eventId, out float time) ? time : -1f;
     }
 
-    /// <summary>
-    /// Сохранить состояние задач
-    /// </summary>
-    private void SaveTaskState()
+    #endregion
+
+    #region Persistence
+
+    private void SavePersistentState()
     {
         if (!persistTaskState) return;
         
-        TaskManagerSaveData saveData = new TaskManagerSaveData
-        {
-            triggeredEvents = triggeredEvents,
-            activeTaskIds = activeTaskIds
-        };
-        
-        string json = JsonUtility.ToJson(saveData);
-        PlayerPrefs.SetString(saveKey, json);
-        PlayerPrefs.Save();
+        // Простое сохранение активных задач
+        string activeTasksJson = string.Join(",", activeTaskIds);
+        PlayerPrefs.SetString(saveKey, activeTasksJson);
         
         if (logTaskEvents)
-            Debug.Log("[TaskManager] Task state saved");
+            Debug.Log($"[TaskManager] Saved {activeTaskIds.Count} active tasks");
     }
 
-    /// <summary>
-    /// Загрузить состояние задач
-    /// </summary>
-    private void LoadTaskState()
+    private void LoadPersistentState()
     {
         if (!persistTaskState) return;
         
-        string json = PlayerPrefs.GetString(saveKey, "");
-        if (!string.IsNullOrEmpty(json))
+        string savedTasks = PlayerPrefs.GetString(saveKey, "");
+        if (!string.IsNullOrEmpty(savedTasks))
         {
-            try
-            {
-                TaskManagerSaveData saveData = JsonUtility.FromJson<TaskManagerSaveData>(json);
-                
-                // Восстанавливаем состояние (только на сервере)
-                if (IsServer)
-                {
-                    foreach (var kvp in saveData.triggeredEvents)
-                        triggeredEvents[kvp.Key] = kvp.Value;
-                    
-                    foreach (string taskId in saveData.activeTaskIds)
-                        activeTaskIds.Add(taskId);
-                }
-                
-                if (logTaskEvents)
-                    Debug.Log($"[TaskManager] Task state loaded: {triggeredEvents.Count} events, {activeTaskIds.Count} active tasks");
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"[TaskManager] Failed to load task state: {e.Message}");
-            }
+            activeTaskIds.Clear();
+            activeTaskIds.AddRange(savedTasks.Split(','));
+            
+            if (logTaskEvents)
+                Debug.Log($"[TaskManager] Loaded {activeTaskIds.Count} active tasks");
         }
     }
 
-    private void OnApplicationPause(bool pauseStatus)
-    {
-        if (pauseStatus && IsServer)
-            SaveTaskState();
-    }
+    #endregion
 
-    private void OnApplicationFocus(bool hasFocus)
-    {
-        if (!hasFocus && IsServer)
-            SaveTaskState();
-    }
+    #region UI Management
 
+    private TaskUIController FindLocalOwnerTaskUIController()
+    {
+        PlayerController[] players = FindObjectsOfType<PlayerController>();
+        foreach (var player in players)
+        {
+            if (player != null && player.IsOwner)
+            {
+                TaskUIController ownerController = player.GetComponentInChildren<TaskUIController>(true);
+                if (ownerController != null)
+                    return ownerController;
+            }
+        }
+
+        if (taskUIController != null)
+            return taskUIController;
+
+        return FindObjectOfType<TaskUIController>();
+    }
 
     /// <summary>
-    /// Получить статистику менеджера задач
+    /// Корутина для отложенного обновления UI контроллера
     /// </summary>
-    public TaskManagerStats GetStats()
+    private System.Collections.IEnumerator DelayedUIControllerSearch()
     {
-        return new TaskManagerStats
+        yield return new WaitForSeconds(0.5f);
+        
+        if (taskUIController == null)
         {
-            totalCollections = allCollections.Count,
-            totalEvents = GetTotalEventCount(),
-            triggeredEvents = triggeredEvents.Count,
-            activeTasks = activeTaskIds.Count,
-            maxConcurrentTasks = maxConcurrentTasks
-        };
-    }
-
-    private int GetTotalEventCount()
-    {
-        int count = 0;
-        foreach (var collection in allCollections.Values)
-        {
-            if (collection != null)
-                count += collection.events.Count;
-        }
-        return count;
-    }
-
-    [ContextMenu("Debug: Show Active Tasks")]
-    public void DebugShowActiveTasks()
-    {
-        Debug.Log($"[TaskManager] Active tasks ({activeTaskIds.Count}):");
-        foreach (string taskId in activeTaskIds)
-        {
-            float triggerTime = GetEventTriggerTime(taskId);
-            Debug.Log($"  - {taskId} (triggered at: {triggerTime})");
+            taskUIController = FindObjectOfType<TaskUIController>();
+            
+            if (taskUIController != null && logTaskEvents)
+            {
+                Debug.Log($"[TaskManager] Found TaskUIController: {taskUIController.name}");
+            }
         }
     }
 
-    [ContextMenu("Debug: Clear All Tasks")]
-    public void DebugClearAllTasks()
+    #endregion
+
+    #region Public API
+
+    /// <summary>
+    /// Очистить все задачи (публичный метод)
+    /// </summary>
+    [ContextMenu("Clear All Tasks")]
+    public void ClearAllTasks()
     {
         if (IsServer)
             ClearAllTasksServerRpc();
     }
 
     /// <summary>
-    /// Корутина для отложенного обновления UI контроллера
+    /// Получить информацию о системе (для отладки)
     /// </summary>
-    private System.Collections.IEnumerator DelayedUIControllerRefresh()
+    public string GetSystemInfo()
     {
-        yield return new WaitForSeconds(2f); // Ждем, пока игроки точно спавнятся
-        
-        if (taskUIController != null)
-        {
-            taskUIController.RefreshUIElements();
-            
-            if (logTaskEvents)
-                Debug.Log("[TaskManager] UI Controller refreshed after player spawn");
-        }
+        return $"TaskManager Info:\n" +
+               $"- Role: {(IsServer ? "Server" : "Client")}\n" +
+               $"- Collections: {allCollections.Count}\n" +
+               $"- Active Tasks: {activeTaskIds.Count}\n" +
+               $"- UI Controller: {(taskUIController != null ? taskUIController.name : "null")}";
     }
-}
 
-/// <summary>
-/// Данные для сохранения состояния TaskManager
-/// </summary>
-[System.Serializable]
-public class TaskManagerSaveData
-{
-    public Dictionary<string, float> triggeredEvents = new Dictionary<string, float>();
-    public List<string> activeTaskIds = new List<string>();
-}
-
-/// <summary>
-/// Статистика TaskManager
-/// </summary>
-[System.Serializable]
-public class TaskManagerStats
-{
-    public int totalCollections;
-    public int totalEvents;
-    public int triggeredEvents;
-    public int activeTasks;
-    public int maxConcurrentTasks;
-    
-    public override string ToString()
-    {
-        return $"Collections: {totalCollections}, Events: {totalEvents}, Triggered: {triggeredEvents}, Active: {activeTasks}/{maxConcurrentTasks}";
-    }
+    #endregion
 }

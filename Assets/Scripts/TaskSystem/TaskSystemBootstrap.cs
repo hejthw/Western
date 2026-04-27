@@ -1,182 +1,172 @@
 using UnityEngine;
+using FishNet.Object;
 
 /// <summary>
-/// Bootstrap класс для инициализации системы задач и обеспечения персистентности
-/// Не является NetworkBehaviour, поэтому может использовать DontDestroyOnLoad
+/// Bootstrap компонент для системы задач
+/// Управляет жизненным циклом TaskManager и обеспечивает его персистентность
 /// </summary>
 public class TaskSystemBootstrap : MonoBehaviour
 {
-    [Header("Task System Setup")]
+    [Header("Task Manager Settings")]
     [Tooltip("Префаб TaskManager для создания")]
     public GameObject taskManagerPrefab;
     
-    [Tooltip("Автоматически создать TaskManager если его нет")]
+    [Tooltip("Автоматически создавать TaskManager если не найден")]
     public bool autoCreateTaskManager = true;
     
-    [Tooltip("Сохранять TaskManager между сценами")]
+    [Tooltip("Сохранять между сценами")]
     public bool persistBetweenScenes = true;
-
+    
     [Header("Debug")]
-    [Tooltip("Показывать отладочные сообщения")]
-    public bool enableDebugLogs = true;
+    [Tooltip("Показывать отладочную информацию")]
+    public bool enableDebugLogs = false;
 
+    private TaskManager taskManagerInstance;
     private static TaskSystemBootstrap instance;
-    private static bool isInitialized = false;
 
     private void Awake()
     {
-        // Singleton pattern для Bootstrap
-        if (instance == null)
+        // Singleton pattern
+        if (instance != null && instance != this)
         {
-            instance = this;
-            
-            if (persistBetweenScenes)
-                DontDestroyOnLoad(gameObject);
-            
-            InitializeTaskSystem();
-        }
-        else if (instance != this)
-        {
-            if (enableDebugLogs)
-                Debug.Log("[TaskSystemBootstrap] Duplicate bootstrap destroyed");
             Destroy(gameObject);
-        }
-    }
-
-    private void InitializeTaskSystem()
-    {
-        if (isInitialized)
-        {
-            if (enableDebugLogs)
-                Debug.Log("[TaskSystemBootstrap] Task system already initialized");
             return;
         }
-
-        if (enableDebugLogs)
-            Debug.Log("[TaskSystemBootstrap] Initializing task system...");
-
-        // Проверяем, есть ли уже TaskManager в сцене
-        TaskManager existingManager = FindObjectOfType<TaskManager>();
         
-        if (existingManager == null && autoCreateTaskManager)
+        instance = this;
+        
+        if (persistBetweenScenes)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        
+        InitializeTaskManager();
+    }
+
+    private void InitializeTaskManager()
+    {
+        // Ищем существующий TaskManager
+        taskManagerInstance = FindObjectOfType<TaskManager>();
+        
+        if (taskManagerInstance == null && autoCreateTaskManager)
         {
             CreateTaskManager();
         }
-        else if (existingManager != null)
-        {
-            if (enableDebugLogs)
-                Debug.Log("[TaskSystemBootstrap] Found existing TaskManager in scene");
-        }
-
-        isInitialized = true;
         
         if (enableDebugLogs)
-            Debug.Log("[TaskSystemBootstrap] Task system initialized successfully");
+        {
+            Debug.Log($"[TaskSystemBootstrap] TaskManager initialized: {(taskManagerInstance != null ? taskManagerInstance.name : "null")}");
+        }
     }
 
     private void CreateTaskManager()
     {
-        GameObject managerGO;
+        GameObject managerObject;
         
         if (taskManagerPrefab != null)
         {
-            managerGO = Instantiate(taskManagerPrefab);
-            if (enableDebugLogs)
-                Debug.Log("[TaskSystemBootstrap] Created TaskManager from prefab");
+            managerObject = Instantiate(taskManagerPrefab);
         }
         else
         {
-            // Создаем TaskManager с нуля
-            managerGO = new GameObject("Task Manager");
-            TaskManager manager = managerGO.AddComponent<TaskManager>();
+            // Создаем простой объект с TaskManager
+            managerObject = new GameObject("TaskManager");
+            managerObject.AddComponent<TaskManager>();
             
             // Добавляем NetworkObject если его нет
-            if (managerGO.GetComponent<FishNet.Object.NetworkObject>() == null)
+            if (managerObject.GetComponent<NetworkObject>() == null)
             {
-                managerGO.AddComponent<FishNet.Object.NetworkObject>();
+                managerObject.AddComponent<NetworkObject>();
             }
-            
-            if (enableDebugLogs)
-                Debug.Log("[TaskSystemBootstrap] Created TaskManager from scratch");
         }
         
-        // TaskManager сам решает, нужно ли ему быть персистентным через NetworkManager
-        // Мы не используем DontDestroyOnLoad для NetworkBehaviour объектов
+        taskManagerInstance = managerObject.GetComponent<TaskManager>();
+        
+        if (persistBetweenScenes)
+        {
+            // НЕ вызываем DontDestroyOnLoad для NetworkBehaviour!
+            // Это управляется через Bootstrap
+        }
         
         if (enableDebugLogs)
-            Debug.Log($"[TaskSystemBootstrap] TaskManager created: {managerGO.name}");
-    }
-
-    /// <summary>
-    /// Принудительная пересоздание TaskManager (например, при смене сцены)
-    /// </summary>
-    public static void RecreateTaskManager()
-    {
-        if (instance != null && instance.autoCreateTaskManager)
         {
-            TaskManager existing = FindObjectOfType<TaskManager>();
-            if (existing == null)
-            {
-                instance.CreateTaskManager();
-                
-                if (instance.enableDebugLogs)
-                    Debug.Log("[TaskSystemBootstrap] TaskManager recreated");
-            }
+            Debug.Log($"[TaskSystemBootstrap] Created TaskManager: {managerObject.name}");
         }
     }
 
     /// <summary>
-    /// Проверить, инициализирована ли система задач
+    /// Получить текущий экземпляр TaskManager
     /// </summary>
-    public static bool IsSystemInitialized()
+    public TaskManager GetTaskManager()
     {
-        return isInitialized && TaskManager.Instance != null;
-    }
-
-    /// <summary>
-    /// Получить экземпляр Bootstrap
-    /// </summary>
-    public static TaskSystemBootstrap GetInstance()
-    {
-        return instance;
-    }
-
-    private void OnApplicationQuit()
-    {
-        isInitialized = false;
-    }
-
-#if UNITY_EDITOR
-    /// <summary>
-    /// Сброс статических переменных в редакторе
-    /// </summary>
-    [UnityEditor.InitializeOnLoadMethod]
-    private static void ResetStaticVariables()
-    {
-        isInitialized = false;
-        instance = null;
-    }
-#endif
-
-    [ContextMenu("Force Initialize Task System")]
-    public void ForceInitialize()
-    {
-        isInitialized = false;
-        InitializeTaskSystem();
-    }
-
-    [ContextMenu("Debug: Show System Status")]
-    public void ShowSystemStatus()
-    {
-        Debug.Log($"[TaskSystemBootstrap] System Status:");
-        Debug.Log($"  - Bootstrap Instance: {(instance != null ? "✓" : "✗")}");
-        Debug.Log($"  - System Initialized: {(isInitialized ? "✓" : "✗")}");
-        Debug.Log($"  - TaskManager Instance: {(TaskManager.Instance != null ? "✓" : "✗")}");
-        
-        if (TaskManager.Instance != null)
+        if (taskManagerInstance == null)
         {
-            var stats = TaskManager.Instance.GetStats();
-            Debug.Log($"  - TaskManager Stats: {stats}");
+            taskManagerInstance = FindObjectOfType<TaskManager>();
+        }
+        
+        return taskManagerInstance;
+    }
+
+    /// <summary>
+    /// Пересоздать TaskManager (например, при смене сцены)
+    /// </summary>
+    [ContextMenu("Recreate Task Manager")]
+    public void RecreateTaskManager()
+    {
+        if (taskManagerInstance != null)
+        {
+            if (enableDebugLogs)
+                Debug.Log("[TaskSystemBootstrap] Destroying old TaskManager");
+                
+            Destroy(taskManagerInstance.gameObject);
+            taskManagerInstance = null;
+        }
+        
+        CreateTaskManager();
+    }
+
+    /// <summary>
+    /// Проверить статус системы (для отладки)
+    /// </summary>
+    [ContextMenu("Debug System Status")]
+    public void DebugSystemStatus()
+    {
+        Debug.Log("=== Task System Status ===");
+        Debug.Log($"Bootstrap: {(instance != null ? "Active" : "Missing")}");
+        Debug.Log($"TaskManager: {(taskManagerInstance != null ? taskManagerInstance.name : "null")}");
+        
+        if (taskManagerInstance != null)
+        {
+            Debug.Log(taskManagerInstance.GetSystemInfo());
+        }
+        
+        TaskUIController[] uiControllers = FindObjectsOfType<TaskUIController>();
+        Debug.Log($"TaskUIControllers: {uiControllers.Length}");
+        
+        TaskEventTrigger[] triggers = FindObjectsOfType<TaskEventTrigger>();
+        Debug.Log($"TaskEventTriggers: {triggers.Length}");
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
+    }
+
+    /// <summary>
+    /// Получить глобальный экземпляр Bootstrap
+    /// </summary>
+    public static TaskSystemBootstrap Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<TaskSystemBootstrap>();
+            }
+            return instance;
         }
     }
 }

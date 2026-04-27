@@ -15,28 +15,63 @@ MonoBehaviour:
   collectionName: New Task Event Collection
   description: Created with Task System Editor
   events:
-  - eventId: 0
-    eventName: 
-    taskText: 123
-    textColor: {r: 0, g: 0, b: 0, a: 0}
-    fontSize: 0
-    activationSound: {fileID: 0}
-    soundVolume: 0
-    autoHideAfter: 0
-    canRepeat: 0
-    requireMinPlayers: 0
-    minPlayersRequired: 0
   - eventId: 1
-    eventName: 
-    taskText: 456
-    textColor: {r: 0, g: 0, b: 0, a: 0}
-    fontSize: 0
+    eventName: "\u041F\u0440\u043E\u0431\u0435\u0440\u0438\u0442\u0435\u0441\u044C
+      \u0432 \u0431\u0430\u043D\u043A"
+    taskText: "\u041F\u0440\u043E\u0431\u0435\u0440\u0438\u0442\u0435\u0441\u044C
+      \u0432 \u0431\u0430\u043D\u043A"
+    textColor: {r: 1, g: 1, b: 1, a: 1}
+    fontSize: 20
     activationSound: {fileID: 0}
-    soundVolume: 0
+    soundVolume: 1
     autoHideAfter: 0
-    canRepeat: 0
+    canRepeat: 1
     requireMinPlayers: 0
-    minPlayersRequired: 0
+    minPlayersRequired: 1
+  - eventId: 2
+    eventName: "\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435"
+    taskText: "\u041D\u0430\u0439\u0434\u0438\u0442\u0435 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435"
+    textColor: {r: 1, g: 1, b: 0.2, a: 1}
+    fontSize: 20
+    activationSound: {fileID: 0}
+    soundVolume: 1
+    autoHideAfter: 0
+    canRepeat: 1
+    requireMinPlayers: 0
+    minPlayersRequired: 1
+  - eventId: 3
+    eventName: "\u0412\u0441\u043A\u0440\u043E\u0439\u0442\u0435 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435"
+    taskText: "\u0412\u0441\u043A\u0440\u043E\u0439\u0442\u0435 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435"
+    textColor: {r: 0.2, g: 1, b: 1, a: 1}
+    fontSize: 20
+    activationSound: {fileID: 0}
+    soundVolume: 1
+    autoHideAfter: 0
+    canRepeat: 1
+    requireMinPlayers: 0
+    minPlayersRequired: 1
+  - eventId: 4
+    eventName: "\u0413\u0440\u0430\u0431\u044C\u0442\u0435 \u0434\u0440\u0430\u0433\u043E\u0446\u0435\u043D\u043D\u043E\u0441\u0442\u0438"
+    taskText: "\u0413\u0440\u0430\u0431\u044C\u0442\u0435 \u0434\u0440\u0430\u0433\u043E\u0446\u0435\u043D\u043D\u043E\u0441\u0442\u0438"
+    textColor: {r: 1, g: 0.5, b: 0, a: 1}
+    fontSize: 22
+    activationSound: {fileID: 0}
+    soundVolume: 1
+    autoHideAfter: 0
+    canRepeat: 1
+    requireMinPlayers: 0
+    minPlayersRequired: 1
+  - eventId: heist_timer_finished
+    eventName: "\u0412\u0440\u0435\u043C\u044F \u0432\u044B\u0448\u043B\u043E"
+    taskText: "\u0411\u0435\u0433\u0438\u0442\u0435 \u043A \u0442\u0435\u043B\u0435\u0433\u0435"
+    textColor: {r: 1, g: 0.2, b: 0.2, a: 1}
+    fontSize: 24
+    activationSound: {fileID: 0}
+    soundVolume: 1
+    autoHideAfter: 0
+    canRepeat: 1
+    requireMinPlayers: 0
+    minPlayersRequired: 1
   defaultUISettings:
     defaultTextColor: {r: 1, g: 1, b: 1, a: 1}
     defaultFontSize: 18

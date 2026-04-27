@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using FishNet.Object;
 
 /// <summary>
@@ -49,6 +50,19 @@ public class TaskEventTrigger : NetworkBehaviour
     [Tooltip("Звук при активации")]
     public AudioClip activationSound;
     
+    [Header("Script Actions")]
+    [Tooltip("Выполняется при активации триггера (на сервере)")]
+    public UnityEvent OnTriggerActivated;
+    
+    [Tooltip("Выполняется при активации триггера на всех клиентах")]
+    public UnityEvent OnTriggerActivatedAllClients;
+    
+    [Tooltip("Выполняется когда игрок входит в триггер")]
+    public UnityEvent<PlayerController> OnPlayerEnter;
+    
+    [Tooltip("Выполняется когда игрок выходит из триггера")]
+    public UnityEvent<PlayerController> OnPlayerExit;
+
     [Header("Debug")]
     [Tooltip("Показывать отладочную информацию")]
     public bool enableDebugLogs = false;
@@ -61,10 +75,10 @@ public class TaskEventTrigger : NetworkBehaviour
     private Color originalColor;
     private Material triggerMaterial;
     
-    // События для других скриптов
+    // C# События для других скриптов (для программного использования)
     public System.Action<string> OnEventTriggered;
-    public System.Action<PlayerController> OnPlayerEnter;
-    public System.Action<PlayerController> OnPlayerExit;
+    public System.Action<PlayerController> OnPlayerEnterAction;
+    public System.Action<PlayerController> OnPlayerExitAction;
 
     private void Awake()
     {
@@ -111,6 +125,7 @@ public class TaskEventTrigger : NetworkBehaviour
             
         // Уведомляем подписчиков
         OnPlayerEnter?.Invoke(player);
+        OnPlayerEnterAction?.Invoke(player);
         
         // Проверяем, можно ли активировать событие
         CheckActivationConditions(player);
@@ -132,6 +147,7 @@ public class TaskEventTrigger : NetworkBehaviour
             
         // Уведомляем подписчиков
         OnPlayerExit?.Invoke(player);
+        OnPlayerExitAction?.Invoke(player);
     }
 
     private void CheckActivationConditions(PlayerController triggeringPlayer)
@@ -201,19 +217,33 @@ public class TaskEventTrigger : NetworkBehaviour
             Debug.Log($"[TaskEventTrigger] Activating event '{eventToTrigger}' triggered by {triggeringPlayer.name}");
         
         // Находим менеджер задач и активируем событие
-        TaskManager taskManager = FindObjectOfType<TaskManager>();
-        if (taskManager != null)
+        TaskManager[] taskManagers = FindObjectsOfType<TaskManager>();
+        TaskManager serverTaskManager = null;
+        
+        foreach (var manager in taskManagers)
         {
-            taskManager.TriggerEventServerRpc(eventToTrigger, triggeringPlayer.NetworkObject);
+            if (manager.IsServer)
+            {
+                serverTaskManager = manager;
+                break;
+            }
+        }
+        
+        if (serverTaskManager != null)
+        {
+            serverTaskManager.TriggerEventServerRpc(eventToTrigger, triggeringPlayer.NetworkObject);
         }
         else
         {
-            Debug.LogError("[TaskEventTrigger] TaskManager not found! Cannot activate event.");
+            Debug.LogError("[TaskEventTrigger] Server TaskManager not found! Cannot activate event.");
             return;
         }
         
         // Визуальные и звуковые эффекты
         ShowActivationEffects();
+        
+        // Выполняем UnityEvent действия на сервере
+        OnTriggerActivated?.Invoke();
         
         // Уведомляем подписчиков
         OnEventTriggered?.Invoke(eventToTrigger);
@@ -247,6 +277,9 @@ public class TaskEventTrigger : NetworkBehaviour
             // Играем звук через сетевую систему для всех игроков
             PlayActivationSoundObserversRpc(soundToPlay.name);
         }
+        
+        // Выполняем действия для всех клиентов
+        ExecuteClientActionsObserversRpc();
     }
 
     [ObserversRpc]
@@ -255,6 +288,16 @@ public class TaskEventTrigger : NetworkBehaviour
         // Здесь должна быть логика воспроизведения звука по имени
         if (enableDebugLogs)
             Debug.Log($"[TaskEventTrigger] Playing activation sound: {soundName}");
+    }
+
+    [ObserversRpc]
+    private void ExecuteClientActionsObserversRpc()
+    {
+        // Выполняем UnityEvent действия на всех клиентах
+        OnTriggerActivatedAllClients?.Invoke();
+        
+        if (enableDebugLogs)
+            Debug.Log($"[TaskEventTrigger] Executed client actions for event: {eventToTrigger}");
     }
 
     private void UpdateVisualState(bool isActivating = false)

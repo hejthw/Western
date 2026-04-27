@@ -30,7 +30,8 @@ public class PlayerInventoryUI : NetworkBehaviour
     public override void OnStartClient()
     {
         base.OnStartClient();
-        if (!IsOwner) return;
+        PlayerController playerController = GetComponentInParent<PlayerController>();
+        if (playerController != null && !playerController.IsOwner) return;
 
         playerInventory = GetComponent<PlayerInventory>();
         if (playerInventory == null)
