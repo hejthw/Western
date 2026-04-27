@@ -22,6 +22,7 @@ public class PlayerInput : MonoBehaviour
     public event Action OnAttackEvent;
     public event Action OnPickupEvent;
     public event Action OnDropEvent;
+    public event Action OnEscape;
     public event Action<int> OnSlotKeyPressed;
     public event Action OnLassoPullStarted;
     public event Action OnLassoPullEnded;
@@ -42,10 +43,11 @@ public class PlayerInput : MonoBehaviour
     private InputAction _slot3;
     private InputAction _lassoPull;
     private InputAction _finish;
+    private InputAction _escape;
 
     private bool _bound;
 
-    private void Start()
+    private void OnEnable()
     {
         _systemPlayerInput = GetComponent<UnityEngine.InputSystem.PlayerInput>();
         if (_systemPlayerInput == null || _systemPlayerInput.actions == null)
@@ -121,6 +123,12 @@ public class PlayerInput : MonoBehaviour
         {
             _finish.performed += FinishPerformed;
             _finish.canceled += FinishCanceled;
+        }
+
+        _escape = map.FindAction("Escape", throwIfNotFound: false);
+        if (_escape != null)
+        {
+            _escape.performed += EscapePerformed;
         }
 
         _bound = true;
@@ -219,6 +227,12 @@ public class PlayerInput : MonoBehaviour
             _finish = null;
         }
 
+        if (_escape != null)
+        {
+            _escape.performed -= FinishPerformed;
+            _escape = null;
+        }
+
         _systemPlayerInput = null;
         _bound = false;
     }
@@ -307,6 +321,12 @@ public class PlayerInput : MonoBehaviour
     private void FinishCanceled(InputAction.CallbackContext ctx)
     {
         IsHoldingFinish = false;
+    }
+
+    private void EscapePerformed(InputAction.CallbackContext ctx)
+    {
+        OnEscape?.Invoke();
+        Debug.Log("Escape");
     }
 
     public string GetPickupBindingDisplay()

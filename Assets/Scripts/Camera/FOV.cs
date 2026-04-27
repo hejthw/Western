@@ -13,8 +13,7 @@ public class FOV : MonoBehaviour
     
     void Start()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+
     }
     
     void OnEnable()

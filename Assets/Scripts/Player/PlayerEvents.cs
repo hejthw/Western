@@ -4,11 +4,11 @@ public static class PlayerEvents
 {
     public static event Action NextTargetEvent;
     public static event Action PrevTargetEvent;
-    public static event Action OnSuspicion;
+    public static event Action<SuspicionType> OnSuspicion;
     
-    public static void RaiseSuspicion()
+    public static void RaiseSuspicion(SuspicionType type)
     {
-        OnSuspicion?.Invoke();
+        OnSuspicion?.Invoke(type);
     }
 
     public static void RaiseNextTargetEvent()
