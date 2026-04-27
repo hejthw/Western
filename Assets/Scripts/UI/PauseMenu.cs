@@ -1,20 +1,16 @@
 ﻿using System.Collections;
 using FishNet;
 using FishNet.Managing;
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.Cinemachine;
 using Unity.Netcode;
 
-/// <summary>
-/// Меню паузы для мультиплеерной игры.
-/// Подписывается на <see cref="PlayerInput.OnEscape"/> и показывает/скрывает панель паузы.
-/// В мультиплеере игра не ставится на паузу (Time.timeScale остаётся 1),
-/// вместо этого блокируется только локальный ввод игрока.
-/// </summary>
+
 [RequireComponent(typeof(CanvasGroup))]
-public class PauseMenuUI : MonoBehaviour
+public class PauseMenuUI : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerInput _playerInput;
@@ -66,34 +62,42 @@ public class PauseMenuUI : MonoBehaviour
 
     private void OnEnable()
     {
-        if (_playerInput != null)
-            _playerInput.OnEscape += TogglePause;
+        if (IsOwner)
+        {
+            if (_playerInput != null)
+                _playerInput.OnEscape += TogglePause;
 
-        _resumeButton?.onClick.AddListener(Resume);
-        _settingsButton?.onClick.AddListener(OpenSettings);
-        _disconnectButton?.onClick.AddListener(OnDisconnectClicked);
-        _quitToDesktopButton?.onClick.AddListener(OnQuitToDesktopClicked);
+            _resumeButton?.onClick.AddListener(Resume);
+            _settingsButton?.onClick.AddListener(OpenSettings);
+            _disconnectButton?.onClick.AddListener(OnDisconnectClicked);
+            _quitToDesktopButton?.onClick.AddListener(OnQuitToDesktopClicked);
 
-        _settingsBackButton?.onClick.AddListener(CloseSettings);
+            _settingsBackButton?.onClick.AddListener(CloseSettings);
 
-        _confirmQuitYesButton?.onClick.AddListener(ConfirmQuit);
-        _confirmQuitNoButton?.onClick.AddListener(CancelQuit);
+            _confirmQuitYesButton?.onClick.AddListener(ConfirmQuit);
+            _confirmQuitNoButton?.onClick.AddListener(CancelQuit); 
+        }
+        
     }
 
     private void OnDisable()
     {
-        if (_playerInput != null)
-            _playerInput.OnEscape -= TogglePause;
+        if (IsOwner)
+        {
+            if (_playerInput != null)
+                _playerInput.OnEscape -= TogglePause;
 
-        _resumeButton?.onClick.RemoveListener(Resume);
-        _settingsButton?.onClick.RemoveListener(OpenSettings);
-        _disconnectButton?.onClick.RemoveListener(OnDisconnectClicked);
-        _quitToDesktopButton?.onClick.RemoveListener(OnQuitToDesktopClicked);
+            _resumeButton?.onClick.RemoveListener(Resume);
+            _settingsButton?.onClick.RemoveListener(OpenSettings);
+            _disconnectButton?.onClick.RemoveListener(OnDisconnectClicked);
+            _quitToDesktopButton?.onClick.RemoveListener(OnQuitToDesktopClicked);
 
-        _settingsBackButton?.onClick.RemoveListener(CloseSettings);
+            _settingsBackButton?.onClick.RemoveListener(CloseSettings);
 
-        _confirmQuitYesButton?.onClick.RemoveListener(ConfirmQuit);
-        _confirmQuitNoButton?.onClick.RemoveListener(CancelQuit);
+            _confirmQuitYesButton?.onClick.RemoveListener(ConfirmQuit);
+            _confirmQuitNoButton?.onClick.RemoveListener(CancelQuit);
+        }
+        
     }
     
 
@@ -134,6 +138,7 @@ public class PauseMenuUI : MonoBehaviour
 
     public void TogglePause()
     {
+        if (!IsOwner) return;
         Debug.Log("Toogle");
         if (_isPaused)
         {
