@@ -1883,6 +1883,7 @@ MonoBehaviour:
   tutorial: {fileID: 1461315383606600200}
   playerInput: {fileID: 2479261188838793012}
   inputAxis: {fileID: 2649622787159371485}
+  _networkObject: {fileID: 4737990210302664583}
 --- !u!1 &1482183935801100594
 GameObject:
   m_ObjectHideFlags: 0
@@ -7405,7 +7406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
+  WasActiveDuringEdit: 1
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
