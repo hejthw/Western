@@ -163,7 +163,7 @@ public class PlayerController : NetworkBehaviour
     }
 
     /// <summary>
-    /// Локально на этом экземпляре (владелец): сброс целей NT после выхода из принудительного движения.
+    /// Локально на этом экземпляре (владелец): сброс целей синхронизации после выхода из принудительного движения.
     /// Для чужих копий игрока вызывайте <see cref="ServerBroadcastPostForcedMoveResync"/> с сервера.
     /// </summary>
     public void NotifyNetworkTransformHardSync()
@@ -175,16 +175,37 @@ public class PlayerController : NetworkBehaviour
     {
         if (!IsSpawned)
             return;
-        NetworkTransform nt = GetComponent<NetworkTransform>();
-        if (nt == null || !nt.enabled) return;
-        try
+
+        // Пытаемся найти SimplePlayerSync_FishNet4 (новая система)
+        SimplePlayerSync_FishNet4 simpleSync = GetComponent<SimplePlayerSync_FishNet4>();
+        if (simpleSync != null)
         {
-            nt.Teleport();
-            nt.ForceSend();
+            try
+            {
+                simpleSync.ForceSync();
+                if (physics != null)
+                    physics.ClearStaleMotionAfterNetworkSnap();
+                return;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[PlayerController] ApplyNetworkTransformResyncLocal (SimplePlayerSync): {ex.Message}");
+            }
         }
-        catch (System.Exception ex)
+
+        // Fallback на NetworkTransform (старая система)
+        NetworkTransform nt = GetComponent<NetworkTransform>();
+        if (nt != null && nt.enabled)
         {
-            Debug.LogError($"[PlayerController] ApplyNetworkTransformResyncLocal: {ex.Message}");
+            try
+            {
+                nt.Teleport();
+                nt.ForceSend();
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[PlayerController] ApplyNetworkTransformResyncLocal (NetworkTransform): {ex.Message}");
+            }
         }
 
         if (physics != null)
@@ -257,11 +278,21 @@ public class PlayerController : NetworkBehaviour
 
         Physics.SyncTransforms();
 
-        NetworkTransform nt = GetComponent<NetworkTransform>();
-        if (nt != null)
+        // Пытаемся использовать SimplePlayerSync_FishNet4 (новая система)
+        SimplePlayerSync_FishNet4 simpleSync = GetComponent<SimplePlayerSync_FishNet4>();
+        if (simpleSync != null)
         {
-            nt.Teleport();
-            nt.ForceSend();
+            simpleSync.Teleport(worldPosition, worldRotation);
+        }
+        else
+        {
+            // Fallback на NetworkTransform (старая система)
+            NetworkTransform nt = GetComponent<NetworkTransform>();
+            if (nt != null)
+            {
+                nt.Teleport();
+                nt.ForceSend();
+            }
         }
 
         if (physics != null)
@@ -322,6 +353,28 @@ public class PlayerController : NetworkBehaviour
         if (_forcedMoveNetworkModeActive == forcedMoveActive)
             return;
 
+        // Проверяем наличие SimplePlayerSync_FishNet4 (новая система)
+        SimplePlayerSync_FishNet4 simpleSync = GetComponent<SimplePlayerSync_FishNet4>();
+        if (simpleSync != null)
+        {
+            // SimplePlayerSync_FishNet4 не требует переключения режимов авторитетности
+            // Просто принудительно синхронизируем при необходимости
+            if (forcedMoveActive)
+            {
+                simpleSync.ForceSync();
+            }
+            
+            _forcedMoveNetworkModeActive = forcedMoveActive;
+            
+            if (debugRopeClimbTelemetry)
+            {
+                string role = IsServerInitialized ? (IsClientInitialized ? "HOST" : "SERVER") : "CLIENT";
+                Debug.Log($"[RopeDbg SimpleSync_FishNet4] {role} ApplyForcedMove forced={forcedMoveActive} pos={transform.position}");
+            }
+            return;
+        }
+
+        // Fallback на NetworkTransform (старая система)
         NetworkTransform nt = GetComponent<NetworkTransform>();
         if (nt == null || !nt.isActiveAndEnabled)
             return;
@@ -374,12 +427,29 @@ public class PlayerController : NetworkBehaviour
         if (ropeDebugEveryNFrames > 1 && Time.frameCount % ropeDebugEveryNFrames != 0)
             return;
 
-        NetworkTransform nt = GetComponent<NetworkTransform>();
-        bool ntCa = nt != null && NetworkTransformAuthorityUtil.GetClientAuthoritative(nt);
+        string syncType = "None";
+        bool syncAuth = false;
+        
+        SimplePlayerSync_FishNet4 simpleSync = GetComponent<SimplePlayerSync_FishNet4>();
+        if (simpleSync != null)
+        {
+            syncType = "SimpleSync_FishNet4";
+            syncAuth = IsOwner; // SimplePlayerSync_FishNet4 всегда client-authoritative для владельца
+        }
+        else
+        {
+            NetworkTransform nt = GetComponent<NetworkTransform>();
+            if (nt != null)
+            {
+                syncType = "NetworkTransform";
+                syncAuth = NetworkTransformAuthorityUtil.GetClientAuthoritative(nt);
+            }
+        }
+        
         string role = IsServerInitialized ? "HOST" : "CLIENT";
         Debug.Log(
             $"[RopeDbg tick] {role} pos={rb.position} vel={rb.linearVelocity} mag={rb.linearVelocity.magnitude:F3} " +
-            $"kin={rb.isKinematic} physOn={physics != null && physics.enabled} ntClientAuth={ntCa} forcedMode={_forcedMoveNetworkModeActive}");
+            $"kin={rb.isKinematic} physOn={physics != null && physics.enabled} sync={syncType} syncAuth={syncAuth} forcedMode={_forcedMoveNetworkModeActive}");
     }
 
     [TargetRpc]
