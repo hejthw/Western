@@ -36,6 +36,7 @@ public class PlayerHealth : NetworkBehaviour
 
     private void OnHealthChanged(int prev, int next, bool asServer)
     {
+        Debug.Log($"{prev} => {next}");
         if (asServer) return;
         if (IsOwner) PlayerHealthEvents.RaiseHealthChange(next);
         else PlayerHealthEvents.RaiseTeammateHealthChange(this, next);

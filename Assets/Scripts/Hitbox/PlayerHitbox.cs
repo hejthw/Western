@@ -9,10 +9,10 @@ public class PlayerHitbox : MonoBehaviour
     
     public float GetMultiplier() => hitboxType switch
     {
-        HitboxType.Head  => 0.05f,
-        HitboxType.Torso => 0.1f,
-        HitboxType.Arms => 0.03f,
-        HitboxType.Legs => 0.03f,
+        HitboxType.Head  => 0.15f,
+        HitboxType.Torso => 0.075f,
+        HitboxType.Arms => 0.02f,
+        HitboxType.Legs => 0.02f,
         _ => 1.0f
     };
 }
