@@ -1,20 +1,16 @@
 ﻿using System.Collections;
 using FishNet;
 using FishNet.Managing;
+using FishNet.Object;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Unity.Cinemachine;
 using Unity.Netcode;
 
-/// <summary>
-/// Меню паузы для мультиплеерной игры.
-/// Подписывается на <see cref="PlayerInput.OnEscape"/> и показывает/скрывает панель паузы.
-/// В мультиплеере игра не ставится на паузу (Time.timeScale остаётся 1),
-/// вместо этого блокируется только локальный ввод игрока.
-/// </summary>
+
 [RequireComponent(typeof(CanvasGroup))]
-public class PauseMenuUI : MonoBehaviour
+public class PauseMenuUI : NetworkBehaviour
 {
     [Header("References")]
     [SerializeField] private PlayerInput _playerInput;
@@ -77,7 +73,9 @@ public class PauseMenuUI : MonoBehaviour
         _settingsBackButton?.onClick.AddListener(CloseSettings);
 
         _confirmQuitYesButton?.onClick.AddListener(ConfirmQuit);
-        _confirmQuitNoButton?.onClick.AddListener(CancelQuit);
+        _confirmQuitNoButton?.onClick.AddListener(CancelQuit); 
+
+        
     }
 
     private void OnDisable()
@@ -134,16 +132,15 @@ public class PauseMenuUI : MonoBehaviour
 
     public void TogglePause()
     {
+        if (!IsOwner) return;
         Debug.Log("Toogle");
         if (_isPaused)
         {
             Resume();
-            
         }
         else
         {
             Pause();
-
         }
     }
 

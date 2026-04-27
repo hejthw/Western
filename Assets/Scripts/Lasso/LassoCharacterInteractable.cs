@@ -49,6 +49,7 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
             StopCoroutine(holdCoroutine);
 
         holdCoroutine = StartCoroutine(HoldRoutine(lasso));
+        OnLassoPull(lasso);
     }
 
     public void OnLassoPull(LassoNetwork lasso)
@@ -70,6 +71,7 @@ public class LassoCharacterInteractable : NetworkBehaviour, ILassoInteractable
             StopCoroutine(knockdownCoroutine);
 
         knockdownCoroutine = StartCoroutine(KnockdownRoutine());
+        lasso.ReturnToPlayer();
     }
 
     public void OnLassoDetach(LassoNetwork lasso)

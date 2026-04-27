@@ -1,17 +1,27 @@
 ﻿using System;
+using FishNet.Object;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialCanvas : MonoBehaviour
+public class TutorialCanvas : NetworkBehaviour
 {
     public Button continueButton;
     public GameObject tutorial;
     public PlayerInput playerInput;
     public CinemachineInputAxisController inputAxis;
 
+    [SerializeField] private NetworkObject _networkObject;
+
+    public override void OnStartClient()
+    {
+        if (!IsOwner) tutorial.SetActive(false);
+        base.OnStartClient();
+    }
+    
     public void Awake()
     {
+
         playerInput.enabled = false;
         foreach (var c in inputAxis.Controllers)
         {
