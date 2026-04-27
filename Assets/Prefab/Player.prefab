@@ -500,7 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f886b2ce45a84f47ad5fd39667f9525d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkSoundManager
-  _componentIndexCache: 13
+  _componentIndexCache: 14
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   audioSource: {fileID: 9175134048067860785}
@@ -830,7 +830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f8f3780d7e4dd6a9ef31ac6c25de94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawner
-  _componentIndexCache: 11
+  _componentIndexCache: 12
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   spawnPoints: []
@@ -9301,7 +9301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: _initializedTimestamp
-      value: -8584244811606643603
+      value: -8584243148267586945
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: <IsNested>k__BackingField
@@ -9386,6 +9386,10 @@ PrefabInstance:
     - target: {fileID: 7696105253319526697, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: m_Name
       value: Lasso
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696105253319526697, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8567151649600317548, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: m_Enabled
