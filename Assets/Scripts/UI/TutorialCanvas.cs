@@ -1,4 +1,5 @@
 ﻿using System;
+using FishNet.Object;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +11,16 @@ public class TutorialCanvas : MonoBehaviour
     public PlayerInput playerInput;
     public CinemachineInputAxisController inputAxis;
 
+    [SerializeField] private NetworkObject _networkObject;
+    
     public void Awake()
     {
+        if (_networkObject != null && !_networkObject.IsOwner)
+        {
+            tutorial.SetActive(false);
+            return;
+        }
+        
         playerInput.enabled = false;
         foreach (var c in inputAxis.Controllers)
         {
