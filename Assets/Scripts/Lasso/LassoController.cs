@@ -58,7 +58,7 @@ public class LassoController : NetworkBehaviour
             Invoke(nameof(ThrowAgain), 0.05f);
         }
         
-        PlayerEvents.RaiseSuspicion();
+        PlayerEvents.RaiseSuspicion(SuspicionType.Lasso);
         UIEvents.RaiseOnLassoStateChanged(LassoHUDState.Flying);
         SoundBus.Play(SoundID.LassoThrow);
     }
