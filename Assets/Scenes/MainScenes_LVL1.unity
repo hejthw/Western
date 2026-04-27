@@ -8389,9 +8389,10 @@ MonoBehaviour:
   _npcPrefabs:
   - {fileID: 577405625571252360, guid: 456f49f5e22ed52478fdba4e8459c392, type: 3}
   _spawnPoint: {fileID: 749534858}
-  _minNpc: 1
-  _maxNpc: 2
+  _minNpc: 3
+  _maxNpc: 3
   _spawnRadius: 3
+  _checkInterval: 5
 --- !u!4 &749534858
 Transform:
   m_ObjectHideFlags: 0
@@ -19684,11 +19685,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.891035
+      value: -1.51
       objectReference: {fileID: 0}
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5087045
+      value: 1.51
       objectReference: {fileID: 0}
     - target: {fileID: 1947007565608119490, guid: 6234630275f7a9825ba6c7afb81e2533, type: 3}
       propertyPath: m_LocalPosition.z
@@ -21741,6 +21742,116 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 778233c9799637645a8477a359d05161, type: 3}
+--- !u!1 &2043152467
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2043152470}
+  - component: {fileID: 2043152469}
+  - component: {fileID: 2043152468}
+  m_Layer: 0
+  m_Name: EnforcerSpawn (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2043152468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043152467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
+  SceneId: 4294901486
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
+--- !u!114 &2043152469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043152467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e76bdb26e3a448dbad9d43d99131c7e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrainCarSpawner
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 2043152468}
+  _networkObjectCache: {fileID: 0}
+  _trainCarPrefab: {fileID: 4928334410691472558, guid: 04c481afa7d22724fba90aafe233ebd4, type: 3}
+  _npcPrefabs:
+  - {fileID: 577405625571252360, guid: 456f49f5e22ed52478fdba4e8459c392, type: 3}
+  _spawnPoint: {fileID: 2043152470}
+  _minNpc: 3
+  _maxNpc: 3
+  _spawnRadius: 3
+  _checkInterval: 5
+--- !u!4 &2043152470
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043152467}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -12.2, y: 0.75393, z: 35.17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1001 &2050947336
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22104,6 +22215,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   enforcerSpawners:
   - {fileID: 749534857}
+  - {fileID: 2043152469}
 --- !u!65 &2063556450
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22134,8 +22246,8 @@ Transform:
   m_GameObject: {fileID: 2063556447}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.023856625, w: 0.9997154}
-  m_LocalPosition: {x: -34.12, y: 2.97, z: 2.48}
-  m_LocalScale: {x: 1.714916, y: 3.3935, z: 3.86926}
+  m_LocalPosition: {x: -32.778, y: 1.894, z: 3.065}
+  m_LocalScale: {x: 0.48708758, y: 3.3935, z: 3.86926}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -23245,3 +23357,4 @@ SceneRoots:
   - {fileID: 898230648}
   - {fileID: 610214936}
   - {fileID: 749534858}
+  - {fileID: 2043152470}

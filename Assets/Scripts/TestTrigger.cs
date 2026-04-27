@@ -4,16 +4,26 @@ using UnityEngine;
 public class TestTrigger : NetworkBehaviour
 {
     public EnforcerSpawner[] enforcerSpawners;
-    
+    public int n;
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("OnTriggerEnter");
-        foreach (EnforcerSpawner enforcer in enforcerSpawners)
-            enforcer.SpawnTrainCar();
+        if (other.CompareTag("Player"))
+        {
+            n += 1;
+            if (n == 1)
+            {
+                Debug.Log("OnTriggerEnter");
+                foreach (EnforcerSpawner enforcer in enforcerSpawners)
+                    enforcer.SpawnTrainCar();
+            }
+        }
     }
 
     public void OnTriggerExit(Collider other)
     {
-        Debug.Log("OnTriggerExit");
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("OnTriggerExit");
+        }
     }
 }
