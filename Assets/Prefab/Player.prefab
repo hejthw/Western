@@ -356,7 +356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f886b2ce45a84f47ad5fd39667f9525d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkSoundManager
-  _componentIndexCache: 13
+  _componentIndexCache: 14
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   audioSource: {fileID: 9175134048067860785}
@@ -565,7 +565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f8f3780d7e4dd6a9ef31ac6c25de94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawner
-  _componentIndexCache: 11
+  _componentIndexCache: 12
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   spawnPoints: []
@@ -1035,6 +1035,61 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!1 &1665456467219702491
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2353290466254631366}
+  - component: {fileID: 2968240826157899685}
+  m_Layer: 0
+  m_Name: TaskManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2353290466254631366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665456467219702491}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3998414238054622849}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2968240826157899685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665456467219702491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b22f5a9698669a498fae704c48afc8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskManager
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 0}
+  defaultEventCollection: {fileID: 11400000, guid: 89d80c0b04d59f84f9220b161dbea476, type: 2}
+  additionalCollections: []
+  taskUIController: {fileID: 6930355707663911395}
+  autoFindUIController: 1
+  logTaskEvents: 1
+  maxConcurrentTasks: 3
+  persistTaskState: 0
+  saveKey: TaskManager_State
 --- !u!1 &1773709885116389087
 GameObject:
   m_ObjectHideFlags: 0
@@ -1885,7 +1940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a03696678ea42b0b085894b7f5f1df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHUD
-  _componentIndexCache: 15
+  _componentIndexCache: 16
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   data: {fileID: 11400000, guid: 917b28ece089295e2a6a124bd5ae2a9d, type: 2}
@@ -2813,7 +2868,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8fecb74ac2946e5ada3b45ba51a252e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionScanner
-  _componentIndexCache: 10
+  _componentIndexCache: 11
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   scanDistance: 2
@@ -3129,6 +3184,7 @@ GameObject:
   - component: {fileID: 9102535406660520133}
   - component: {fileID: 533623451368962730}
   - component: {fileID: 2983364578087968541}
+  - component: {fileID: 6930355707663911395}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -3252,6 +3308,40 @@ MonoBehaviour:
   defeatBackToMenuButton: {fileID: 7875634966774189258}
   heistTimerSeconds: 40
   timerFinishedElementSeconds: 3
+--- !u!114 &6930355707663911395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5375274108382611991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a14138d25dfa3e4dafd862a8eff636d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaskUIController
+  mainTaskText: {fileID: 8442556697978220020}
+  additionalTaskTexts: []
+  taskPanel: {fileID: 0}
+  taskPanelBackground: {fileID: 0}
+  autoFindUIElements: 0
+  mainTaskTextPath: player-ui-currenttask-task
+  onlyForOwner: 1
+  useAnimation: 1
+  fadeInDuration: 0.5
+  fadeOutDuration: 0.3
+  animationType: 1
+  maxDisplayedTasks: 3
+  autoHideWhenEmpty: 1
+  defaultDisplayTime: 0
+  preserveOriginalStyle: 1
+  defaultBackgroundColor: {r: 0, g: 0, b: 0, a: 0.7}
+  defaultFontSize: 18
+  taskNumberPrefix: "\u2022 "
+  taskAppearSound: {fileID: 0}
+  taskCompleteSound: {fileID: 0}
+  soundVolume: 0.7
+  enableDebugLogs: 0
 --- !u!1 &5419887655589957203
 GameObject:
   m_ObjectHideFlags: 0
@@ -3393,7 +3483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f061ff669c74df8a127f3dd6a7c4dfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Suspicion
-  _componentIndexCache: 12
+  _componentIndexCache: 13
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   suspicionObject: {fileID: 5628976193001401049}
@@ -3686,7 +3776,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584244811606643603
+  _initializedTimestamp: -8584243148267586945
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -4050,7 +4140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 195548e2359d468084f4f7b27e071ed5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LassoHUD
-  _componentIndexCache: 14
+  _componentIndexCache: 15
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   idleIcon: {fileID: 21300000, guid: 34f955ff609a84e4990c347bcbf5f434, type: 3}
@@ -4315,6 +4405,7 @@ GameObject:
   - component: {fileID: 9106320914675195185}
   - component: {fileID: 2102189724618178019}
   - component: {fileID: 2447267575867540026}
+  - component: {fileID: 5982014202189211990}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -4348,6 +4439,7 @@ Transform:
   - {fileID: 1005701852619884833}
   - {fileID: 6657445138780899547}
   - {fileID: 6143946665814662978}
+  - {fileID: 2353290466254631366}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3110369444958837593
@@ -4376,7 +4468,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 2
+  m_CollisionDetection: 0
 --- !u!114 &7722940080758317849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4535,6 +4627,7 @@ MonoBehaviour:
   - {fileID: 9106320914675195185}
   - {fileID: 2102189724618178019}
   - {fileID: 2447267575867540026}
+  - {fileID: 5982014202189211990}
   - {fileID: 1755705840978634309}
   - {fileID: 6546633076592774692}
   - {fileID: 1772565907744420026}
@@ -4553,7 +4646,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584244811606643603
+  _initializedTimestamp: -8584243148267586945
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -4585,7 +4678,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7179411760756142996}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
@@ -4603,12 +4696,12 @@ MonoBehaviour:
   _interpolation: 2
   _extrapolation: 1
   _enableTeleport: 1
-  _teleportThreshold: 0.15
+  _teleportThreshold: 0.5
   _clientAuthoritative: 1
   _sendToOwner: 1
-  _interval: 1
+  _interval: 3
   _synchronizePosition: 1
-  _positionSensitivity: 0.001
+  _positionSensitivity: 0.05
   _positionSnapping:
     X: 0
     Y: 0
@@ -4819,6 +4912,27 @@ MonoBehaviour:
   _componentIndexCache: 9
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
+--- !u!114 &5982014202189211990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7179411760756142996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d46b70d35b6877749bdf50e20ab26082, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SimplePlayerSync_FishNet4
+  _componentIndexCache: 10
+  _addedNetworkObject: {fileID: 4737990210302664583}
+  _networkObjectCache: {fileID: 4737990210302664583}
+  positionThreshold: 0.1
+  rotationThreshold: 5
+  lerpSpeed: 15
+  teleportDistance: 5
+  forceSyncInterval: 1
+  enableDebugLogs: 0
 --- !u!1 &7766854876694965244
 GameObject:
   m_ObjectHideFlags: 0
@@ -5448,7 +5562,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: _initializedTimestamp
-      value: -8584244811606643603
+      value: -8584243148267586945
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: <IsNested>k__BackingField
