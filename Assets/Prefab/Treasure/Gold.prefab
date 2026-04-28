@@ -175,7 +175,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242350385048264
+  _initializedTimestamp: -8584242261656294276
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -191,7 +191,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 23
+  <PrefabId>k__BackingField: 25
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 8268717910445551545
   SceneId: 0
@@ -285,8 +285,8 @@ MonoBehaviour:
   fragile: 0
   pullSpeed: 15
   semiFragile: 0
-  thirdPersonVisualPrefab: {fileID: 7103095680108300308, guid: 8881b14c5a6333d46b1fd7ebf427542c, type: 3}
-  value: 200
+  thirdPersonVisualPrefab: {fileID: 1911594545992232655, guid: d3a1825a3a6962c4bbeb6df2052b7e14, type: 3}
+  value: 100
 --- !u!114 &2598048433907036776
 MonoBehaviour:
   m_ObjectHideFlags: 0
