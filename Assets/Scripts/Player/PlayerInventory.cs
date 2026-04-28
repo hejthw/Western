@@ -20,6 +20,8 @@ public class PlayerInventory : NetworkBehaviour
 
     private readonly SyncList<int> itemPrefabIds = new SyncList<int>();
     private readonly SyncList<byte[]> itemStates = new SyncList<byte[]>();
+    
+    [SerializeField] private TutorialUISpawner uiSpawner;
 
     private void Awake()
     {
@@ -77,6 +79,7 @@ public class PlayerInventory : NetworkBehaviour
         itemPrefabIds[slot] = prefabId;
         itemStates[slot] = state;
         OnSlotChanged?.Invoke(slot, true);
+        uiSpawner?.OnItemDropped();
         Debug.Log($"[Inventory] Stored item {prefabId} in slot {slot}");
     }
 
@@ -121,6 +124,7 @@ public class PlayerInventory : NetworkBehaviour
                 revolver.SetBullets(bullets);
                 revolver.AttachToPlayer(playerController, bullets);
                 revolver.BindInventorySlot(this, slot, prefabId);
+                uiSpawner.OnRevolverPickedUp();
                 playerController.EquipWeapon(revolver);
             }
             return;

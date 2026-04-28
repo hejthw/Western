@@ -3249,7 +3249,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: -68.59433}
+  m_margin: {x: 0, y: 0, z: 0, w: 0.37137607}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4505,7 +4505,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -7947,7 +7947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 1
+  WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
@@ -8193,6 +8193,7 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   slotsCount: 3
+  uiSpawner: {fileID: 3467060877160725033}
 --- !u!114 &9106320914675195185
 MonoBehaviour:
   m_ObjectHideFlags: 0

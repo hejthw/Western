@@ -142,7 +142,6 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 5054959219236590453}
-  - {fileID: 0}
   - {fileID: 5797999169629643145}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
@@ -154,7 +153,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242261656294276
+  _initializedTimestamp: -8584242236176625637
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -170,7 +169,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 41
+  <PrefabId>k__BackingField: 38
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 12641658835419776811
   SceneId: 0
@@ -258,7 +257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94c3f26fe2fe42938d6d9d37a0458397, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WhiskeyGlass
-  _componentIndexCache: 2
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3323535291510552653}
   _networkObjectCache: {fileID: 3323535291510552653}
   fragile: 1

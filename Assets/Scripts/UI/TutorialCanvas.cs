@@ -21,12 +21,6 @@ public class TutorialCanvas : NetworkBehaviour
     
     public void Awake()
     {
-        OnAwake();
-    }
-
-    private void OnAwake()
-    {
-        if (!IsOwner) return;
         playerInput.enabled = false;
         foreach (var c in inputAxis.Controllers)
         {
@@ -40,10 +34,15 @@ public class TutorialCanvas : NetworkBehaviour
                 c.Enabled = false;
             }
         }
+        continueButton.onClick.AddListener(CloseTutorial);
+        OnAwake();
+    }
+
+    private void OnAwake()
+    {
+        if (!IsOwner) return;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        
-        continueButton.onClick.AddListener(CloseTutorial);
     }
 
     public void CloseTutorial()
