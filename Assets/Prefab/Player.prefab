@@ -500,7 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f886b2ce45a84f47ad5fd39667f9525d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkSoundManager
-  _componentIndexCache: 13
+  _componentIndexCache: 14
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   audioSource: {fileID: 9175134048067860785}
@@ -830,7 +830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f8f3780d7e4dd6a9ef31ac6c25de94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawner
-  _componentIndexCache: 11
+  _componentIndexCache: 12
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   spawnPoints: []
@@ -1879,7 +1879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e3411916f84a96964b0fb7532e68be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialCanvas
-  _componentIndexCache: 17
+  _componentIndexCache: 18
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   continueButton: {fileID: 2556194930073215446}
@@ -3395,7 +3395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a03696678ea42b0b085894b7f5f1df7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHUD
-  _componentIndexCache: 16
+  _componentIndexCache: 17
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   data: {fileID: 11400000, guid: 917b28ece089295e2a6a124bd5ae2a9d, type: 2}
@@ -4974,7 +4974,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8fecb74ac2946e5ada3b45ba51a252e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionScanner
-  _componentIndexCache: 10
+  _componentIndexCache: 11
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   scanDistance: 2
@@ -5804,7 +5804,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f061ff669c74df8a127f3dd6a7c4dfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Suspicion
-  _componentIndexCache: 12
+  _componentIndexCache: 13
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   suspicionObject: {fileID: 5628976193001401049}
@@ -6279,7 +6279,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242940948285673
+  _initializedTimestamp: -8584242410835316296
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -6901,7 +6901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 195548e2359d468084f4f7b27e071ed5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LassoHUD
-  _componentIndexCache: 15
+  _componentIndexCache: 16
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   idleIcon: {fileID: 21300000, guid: 34f955ff609a84e4990c347bcbf5f434, type: 3}
@@ -7463,6 +7463,7 @@ MonoBehaviour:
   - {fileID: 9106320914675195185}
   - {fileID: 2102189724618178019}
   - {fileID: 2447267575867540026}
+  - {fileID: 273993979536218423}
   - {fileID: 1755705840978634309}
   - {fileID: 6546633076592774692}
   - {fileID: 1772565907744420026}
@@ -7484,7 +7485,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242940948285673
+  _initializedTimestamp: -8584242410835316296
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -7762,15 +7763,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d46b70d35b6877749bdf50e20ab26082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimplePlayerSync_FishNet4
-  _componentIndexCache: 255
+  _componentIndexCache: 10
   _addedNetworkObject: {fileID: 4737990210302664583}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 4737990210302664583}
   positionThreshold: 0.1
   rotationThreshold: 5
   lerpSpeed: 15
   teleportDistance: 5
   forceSyncInterval: 1
-  enableDebugLogs: 1
+  enableDebugLogs: 0
 --- !u!1 &7754376198811176298
 GameObject:
   m_ObjectHideFlags: 0
@@ -8183,7 +8184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6ec1cee47d94e008153e07ba50d8ae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenuUI
-  _componentIndexCache: 18
+  _componentIndexCache: 19
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   _playerInput: {fileID: 2479261188838793012}
@@ -8523,7 +8524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b22f5a9698669a498fae704c48afc8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TaskManager
-  _componentIndexCache: 14
+  _componentIndexCache: 15
   _addedNetworkObject: {fileID: 4737990210302664583}
   _networkObjectCache: {fileID: 4737990210302664583}
   defaultEventCollection: {fileID: 11400000, guid: 89d80c0b04d59f84f9220b161dbea476, type: 2}
@@ -9425,7 +9426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: _initializedTimestamp
-      value: -8584242940948285673
+      value: -8584242410835316296
       objectReference: {fileID: 0}
     - target: {fileID: 608948622990259887, guid: 31326f8a5f3766e4186704545e52ae8a, type: 3}
       propertyPath: <IsNested>k__BackingField
