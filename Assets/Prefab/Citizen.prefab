@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 4822277112505486637}
   - component: {fileID: 4892289949281136317}
   - component: {fileID: 6019028366394575169}
+  - component: {fileID: 2702949536719244835}
   m_Layer: 0
   m_Name: Citizen
   m_TagString: Untagged
@@ -211,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
+  WasActiveDuringEdit: 1
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
@@ -231,7 +232,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584243937242332269
+  _initializedTimestamp: -8584242353641817648
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -247,7 +248,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 34
+  <PrefabId>k__BackingField: 36
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 11443262067935171914
   SceneId: 0
@@ -417,6 +418,26 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2702949536719244835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6851723002121039906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0348b7123ab44686a8f46ec9bedef64d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LassoCharacterInteractable
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 300745829150570369}
+  _networkObjectCache: {fileID: 0}
+  holdDuration: 20
+  maxHoldDistance: 25
+  yankForce: 10
+  knockdownDuration: 3
+  rb: {fileID: 6019028366394575169}
 --- !u!1 &7070904914041509893
 GameObject:
   m_ObjectHideFlags: 0

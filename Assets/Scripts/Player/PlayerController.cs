@@ -37,6 +37,8 @@ public class PlayerController : NetworkBehaviour
     private Revolver _currentWeapon;
     public float _recoilBuff;
 
+    [SerializeField] private TutorialUISpawner uiSpawner;
+    
     private void ChangeRecoilBuff(float buff)
     {
         _recoilBuff = buff;
@@ -53,6 +55,7 @@ public class PlayerController : NetworkBehaviour
     public void UnequipWeapon()
     {
         _currentWeapon = null;
+        uiSpawner?.OnRevolverDroppedUp();
         IsArmed = false;
     }
 

@@ -217,6 +217,7 @@ public class PickupController : NetworkBehaviour
         if (revolverPickup != null)
         {
             ServerTryPickupRevolver(revolverPickup.NetworkObject);
+            uiSpawner?.OnRevolverPickedUp();
             return;
         }
         
