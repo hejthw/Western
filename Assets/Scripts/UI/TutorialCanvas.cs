@@ -21,7 +21,12 @@ public class TutorialCanvas : NetworkBehaviour
     
     public void Awake()
     {
+        OnAwake();
+    }
 
+    private void OnAwake()
+    {
+        if (!IsOwner) return;
         playerInput.enabled = false;
         foreach (var c in inputAxis.Controllers)
         {
