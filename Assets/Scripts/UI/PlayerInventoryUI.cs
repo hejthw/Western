@@ -13,6 +13,8 @@ public class PlayerInventoryUI : NetworkBehaviour
     [SerializeField] private Sprite emptySlotIcon;
     [SerializeField] private Sprite fallbackTypeRevolverIcon;
     [SerializeField] private Sprite fallbackTypeLootIcon;
+    [SerializeField] private Sprite goldIcon;
+    [SerializeField] private Sprite diamondIcon;
     [SerializeField] private Sprite[] slotNumberIcons;
     [SerializeField] private Vector2 slotNumberIconSize = new Vector2(126f, 72f);
 
@@ -176,6 +178,12 @@ public class PlayerInventoryUI : NetworkBehaviour
 
         if (iconDatabase != null && iconDatabase.TryGetIcon(prefab, out Sprite mappedIcon) && mappedIcon != null)
             return mappedIcon;
+        
+        if (prefab.GetComponent<GoldPickup>() != null)
+            return goldIcon != null ? goldIcon : emptySlotIcon;
+
+        if (prefab.GetComponent<DiamondPickup>() != null)
+            return diamondIcon != null ? diamondIcon : emptySlotIcon;
 
         if (prefab.GetComponent<RevolverPickup>() != null)
             return fallbackTypeRevolverIcon != null ? fallbackTypeRevolverIcon : emptySlotIcon;

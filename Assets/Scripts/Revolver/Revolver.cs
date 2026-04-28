@@ -76,7 +76,6 @@ public class Revolver: NetworkBehaviour, IWeapon
         _playerController = playerController;
         int playerObjId = playerController.GetComponent<NetworkObject>().ObjectId;
         AttachClientRpc(playerObjId, bullets);
-        
     }
 
     [ObserversRpc(BufferLast = true)]
@@ -114,7 +113,7 @@ public class Revolver: NetworkBehaviour, IWeapon
         if (_input != null)
         {
             _input.OnAttackEvent += Shoot;
-            _input.OnDropEvent += Drop;
+            _input.OnDropRevolver += Drop;
         }
     }
 
@@ -126,7 +125,7 @@ public class Revolver: NetworkBehaviour, IWeapon
 
         _recoil?.ResetImmediate();
         _input.OnAttackEvent -= Shoot;
-        _input.OnDropEvent -= Drop;
+        _input.OnDropRevolver -= Drop;
     }
     
     private void Shoot()
@@ -169,8 +168,8 @@ public class Revolver: NetworkBehaviour, IWeapon
 
     public void Drop()
     {
-        // Дроп револьвера вручную отключён: оружие убирается только через слоты/взаимодействие.
-        return;
+        if (_playerController == null || !_playerController.IsOwner) return;
+        DropServerRpc(transform.position, transform.rotation);
     }
 
     [ServerRpc]
@@ -231,7 +230,7 @@ public class Revolver: NetworkBehaviour, IWeapon
             if (input != null)
             {
                 input.OnAttackEvent -= Shoot;
-                input.OnDropEvent -= Drop;
+                input.OnDropRevolver -= Drop;
                 Debug.Log("[Revolver] Unsubscribed from input events");
             }
             pc.UnequipWeapon();

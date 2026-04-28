@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 5146475902699413490}
   - component: {fileID: 2634000551215871470}
   - component: {fileID: 2391439056702237949}
+  - component: {fileID: 2598048433907036776}
   m_Layer: 3
   m_Name: Gold
   m_TagString: Grabbable
@@ -174,7 +175,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584243937242332269
+  _initializedTimestamp: -8584242350385048264
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -190,7 +191,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 22
+  <PrefabId>k__BackingField: 23
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 8268717910445551545
   SceneId: 0
@@ -286,3 +287,15 @@ MonoBehaviour:
   semiFragile: 0
   thirdPersonVisualPrefab: {fileID: 7103095680108300308, guid: 8881b14c5a6333d46b1fd7ebf427542c, type: 3}
   value: 200
+--- !u!114 &2598048433907036776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911594545992232655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44a6800b02b640baadc08fc9b2ac764b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GoldPickup
