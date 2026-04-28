@@ -1438,6 +1438,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (13)
@@ -1498,7 +1502,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1789,6 +1794,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (9)
@@ -1849,7 +1858,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -4476,6 +4486,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (11)
@@ -4536,7 +4550,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -4646,6 +4661,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (2)
@@ -4706,7 +4725,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -7044,18 +7064,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 10.66568
       objectReference: {fileID: 0}
@@ -7094,10 +7102,6 @@ PrefabInstance:
     - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8599,6 +8603,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 699250205459573484, guid: aa334f3bd8250564886450a0821916b6, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7103095680108300308, guid: aa334f3bd8250564886450a0821916b6, type: 3}
       propertyPath: m_Name
       value: LigthObject_Pan (3)
@@ -8659,7 +8667,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5725561691456581795, guid: aa334f3bd8250564886450a0821916b6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -11530,6 +11539,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (7)
@@ -11590,7 +11603,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -11731,6 +11745,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (4)
@@ -11791,7 +11809,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -12365,6 +12384,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (6)
@@ -12425,7 +12448,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -12510,6 +12534,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (1)
@@ -12570,7 +12598,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -13368,18 +13397,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 10.86168
       objectReference: {fileID: 0}
@@ -13418,10 +13435,6 @@ PrefabInstance:
     - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14514,6 +14527,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (12)
@@ -14574,7 +14591,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -14698,18 +14716,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.285154
       objectReference: {fileID: 0}
@@ -14748,10 +14754,6 @@ PrefabInstance:
     - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17294,18 +17296,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 145
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: m_LocalPosition.x
       value: 17.59768
       objectReference: {fileID: 0}
@@ -17344,10 +17334,6 @@ PrefabInstance:
     - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7087322890227096004, guid: 26f7ba2a8a489954e8ae21652fbc1ba6, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -17741,7 +17727,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1589046124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17984,6 +17970,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 699250205459573484, guid: aa334f3bd8250564886450a0821916b6, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7103095680108300308, guid: aa334f3bd8250564886450a0821916b6, type: 3}
       propertyPath: m_Name
       value: LigthObject_Pan (1)
@@ -18044,7 +18034,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5725561691456581795, guid: aa334f3bd8250564886450a0821916b6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -18395,6 +18386,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (5)
@@ -18455,7 +18450,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -20056,6 +20052,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 699250205459573484, guid: aa334f3bd8250564886450a0821916b6, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7103095680108300308, guid: aa334f3bd8250564886450a0821916b6, type: 3}
       propertyPath: m_Name
       value: LigthObject_Pan (2)
@@ -20116,7 +20116,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5725561691456581795, guid: aa334f3bd8250564886450a0821916b6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -20202,6 +20203,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (10)
@@ -20262,7 +20267,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -21120,6 +21126,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (3)
@@ -21180,7 +21190,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -22631,6 +22642,10 @@ PrefabInstance:
       propertyPath: WasActiveDuringEdit
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3323535291510552653, guid: 778233c9799637645a8477a359d05161, type: 3}
+      propertyPath: 'NetworkBehaviours.Array.data[1]'
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5200761963660967739, guid: 778233c9799637645a8477a359d05161, type: 3}
       propertyPath: m_Name
       value: WhiskeyGlass (8)
@@ -22691,7 +22706,8 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 366474908630168656, guid: 778233c9799637645a8477a359d05161, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

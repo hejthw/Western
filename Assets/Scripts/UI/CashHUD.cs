@@ -10,9 +10,11 @@ public class CashHUD : MonoBehaviour
     [Header("Cash UI")]
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text cashProgressText;
+    [SerializeField] private GameObject cashProgressElements;
     [SerializeField] private TMP_Text cashDropHintText;
     [SerializeField] private TMP_Text finishHeistHintText;
     [SerializeField] private TMP_Text heistTimerText;
+    [SerializeField] private GameObject heistTimerElements;
     [SerializeField] private GameObject timerFinishedElement;
     [Header("Result UI")]
     [SerializeField] private GameObject winCanvas;
@@ -43,6 +45,8 @@ public class CashHUD : MonoBehaviour
 
         if (heistTimerText != null)
             heistTimerText.gameObject.SetActive(false);
+        if (heistTimerElements != null)
+            heistTimerElements.gameObject.SetActive(false);
         if (timerFinishedElement != null)
             timerFinishedElement.SetActive(false);
         if (winCanvas != null)
@@ -226,6 +230,8 @@ public class CashHUD : MonoBehaviour
     {
         if (cashProgressText != null)
             cashProgressText.gameObject.SetActive(visible);
+        if (cashProgressElements != null)
+            cashProgressText.gameObject.SetActive(true);
     }
 
     private void UpdateCashProgressText()
@@ -271,6 +277,8 @@ public class CashHUD : MonoBehaviour
 
         if (heistTimerText != null)
             heistTimerText.gameObject.SetActive(false);
+        if (heistTimerElements != null)
+            heistTimerElements.gameObject.SetActive(false);
         if (timerFinishedElement != null)
             timerFinishedElement.SetActive(false);
 
@@ -310,6 +318,8 @@ public class CashHUD : MonoBehaviour
 
         if (heistTimerText != null)
             heistTimerText.gameObject.SetActive(true);
+        if (heistTimerElements != null)
+            heistTimerElements.gameObject.SetActive(true);
 
         float remaining = Mathf.Max(0f, heistTimerSeconds);
         while (remaining > 0f)
@@ -323,6 +333,8 @@ public class CashHUD : MonoBehaviour
 
         if (heistTimerText != null)
             heistTimerText.gameObject.SetActive(false);
+        if (heistTimerElements != null)
+            heistTimerElements.gameObject.SetActive(false);
 
         if (timerFinishedElement != null)
         {
