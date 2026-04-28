@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7029638595027086001}
   - component: {fileID: 7376923014307466697}
   - component: {fileID: 645901072901513879}
+  - component: {fileID: 7242264813137645144}
   m_Layer: 3
   m_Name: Diamond
   m_TagString: Grabbable
@@ -174,7 +175,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584243937242332269
+  _initializedTimestamp: -8584242350385048264
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -286,3 +287,15 @@ MonoBehaviour:
   semiFragile: 0
   thirdPersonVisualPrefab: {fileID: 7103095680108300308, guid: 8881b14c5a6333d46b1fd7ebf427542c, type: 3}
   value: 200
+--- !u!114 &7242264813137645144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8028171942952735907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 260e3c2a06e44210a4be6836cb2e9485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DiamondPickup

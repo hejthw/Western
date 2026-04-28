@@ -23,6 +23,7 @@ public class TutorialUISpawner : MonoBehaviour
     [SerializeField] private GameObject throwHintPrefab;
     [SerializeField] private GameObject useHintPrefab;
     [SerializeField] private GameObject throwCashZonePrefab;
+    [SerializeField] private GameObject dropRevolverPrefab;
 
     private readonly List<GameObject> _spawnedInstances = new();
     private readonly Dictionary<string, GameObject> _map = new();
@@ -30,6 +31,7 @@ public class TutorialUISpawner : MonoBehaviour
 
     public bool _isInCashZone;
     public bool _isHolding;
+    private bool _isRevolverHolding;
 
     private void Awake()
     {
@@ -77,6 +79,23 @@ public class TutorialUISpawner : MonoBehaviour
             Spawn(useHintPrefab);
     }
 
+    public void OnRevolverPickedUp()
+    {
+        _isRevolverHolding = true;
+        ClearAll();
+
+        Spawn(dropRevolverPrefab);
+    }
+    
+    public void OnRevolverDroppedUp()
+    {
+        _isRevolverHolding = false;
+        ClearAll();
+        
+        if (_currentTarget != null)
+            HandleFocusChanged(_currentTarget);
+    }
+
     // Вызывать из PickupController когда игрок бросил/выбросил предмет
     public void OnItemDropped()
     {
@@ -93,7 +112,7 @@ public class TutorialUISpawner : MonoBehaviour
         _currentTarget = target;
 
         // Если сейчас держим предмет — фокус не меняет UI
-        if (pickupController.GetHeldObject() != null) return;
+        if (pickupController.GetHeldObject() != null || _isRevolverHolding) return;
 
         ClearAll();
 
@@ -104,10 +123,12 @@ public class TutorialUISpawner : MonoBehaviour
 
         Spawn(pickupHintPrefab);
     }
+    
 
     private void Spawn(GameObject prefab)
     {
         if (prefab == null) return;
+        Debug.Log($"Spawning {prefab.name}");
         var instance = Instantiate(prefab, container);
         _spawnedInstances.Add(instance);
     }

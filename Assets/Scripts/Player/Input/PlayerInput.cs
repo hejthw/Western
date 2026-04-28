@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -26,6 +27,7 @@ public class PlayerInput : MonoBehaviour
     public event Action<int> OnSlotKeyPressed;
     public event Action OnLassoPullStarted;
     public event Action OnLassoPullEnded;
+    public event Action OnDropRevolver;
 
     private UnityEngine.InputSystem.PlayerInput _systemPlayerInput;
 
@@ -44,6 +46,7 @@ public class PlayerInput : MonoBehaviour
     private InputAction _lassoPull;
     private InputAction _finish;
     private InputAction _escape;
+    private InputAction _dropRevolver;
 
     private bool _bound;
 
@@ -129,6 +132,12 @@ public class PlayerInput : MonoBehaviour
         if (_escape != null)
         {
             _escape.performed += EscapePerformed;
+        }
+        
+        _dropRevolver = map.FindAction("DropRevolver", throwIfNotFound: false);
+        if (_dropRevolver != null)
+        {
+            _dropRevolver.performed += DropRevolverPerformed;
         }
 
         _bound = true;
@@ -232,6 +241,12 @@ public class PlayerInput : MonoBehaviour
             _escape.performed -= FinishPerformed;
             _escape = null;
         }
+        
+        if (_dropRevolver != null)
+        {
+            _dropRevolver.performed -= DropRevolverPerformed;
+            _dropRevolver = null;
+        }
 
         _systemPlayerInput = null;
         _bound = false;
@@ -297,6 +312,12 @@ public class PlayerInput : MonoBehaviour
     private void DropPerformed(InputAction.CallbackContext ctx)
     {
         OnDropEvent?.Invoke();
+    }
+
+    private void DropRevolverPerformed(InputAction.CallbackContext ctx)
+    {
+        OnDropRevolver?.Invoke();
+        Debug.Log("called");
     }
 
     private void Slot1Performed(InputAction.CallbackContext ctx) => OnSlotKeyPressed?.Invoke(0);

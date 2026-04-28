@@ -7580,6 +7580,7 @@ MonoBehaviour:
   ropeDebugEveryNFrames: 12
   kinematicDelay: 3
   _recoilBuff: 0
+  uiSpawner: {fileID: 3467060877160725033}
 --- !u!114 &2479261188838793012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7729,6 +7730,8 @@ MonoBehaviour:
   emptySlotIcon: {fileID: 21300000, guid: 14bead82cc9e2e74aa99d8e2e8594eb3, type: 3}
   fallbackTypeRevolverIcon: {fileID: 21300000, guid: 21132263b5f3bab44894b759464ff290, type: 3}
   fallbackTypeLootIcon: {fileID: 21300000, guid: 4f1d9e687fc26544b9d34d4c5bea1395, type: 3}
+  goldIcon: {fileID: 21300000, guid: 3c82a668b1c711044a30c79e6ac635de, type: 3}
+  diamondIcon: {fileID: 21300000, guid: 00378c11d65593e40a3e214c637d852a, type: 3}
   slotNumberIcons:
   - {fileID: 21300000, guid: 91c3d3bf681de9845aae2b16f6e12f1b, type: 3}
   - {fileID: 21300000, guid: bc170da78c65fb54888bd00cc58264d0, type: 3}
@@ -8617,6 +8620,7 @@ MonoBehaviour:
   throwHintPrefab: {fileID: 316162190021660214, guid: 9a6a360a0e9dd1544a9756c453dcb1fb, type: 3}
   useHintPrefab: {fileID: 5652225022245577807, guid: 0c6a37ba03fdfb1428b4a757de6a080b, type: 3}
   throwCashZonePrefab: {fileID: 42124480809542728, guid: 725e2189806e6f048bb5bfce9406fb2f, type: 3}
+  dropRevolverPrefab: {fileID: 316162190021660214, guid: 235bae26164de3b4ca16e50aeee9cc2d, type: 3}
   _isInCashZone: 0
   _isHolding: 0
 --- !u!1 &8568745763334776463
