@@ -2828,7 +2828,7 @@ PrefabInstance:
     - target: {fileID: 6856290257989824021, guid: 24bbc8e678383eb359cd2fce00f9c13b, type: 3}
       propertyPath: 'managedReferences[3130484047327264849].m_Value.Array.data[0]'
       value: 
-      objectReference: {fileID: 812837503}
+      objectReference: {fileID: 0}
     - target: {fileID: 8855884429801940589, guid: 24bbc8e678383eb359cd2fce00f9c13b, type: 3}
       propertyPath: m_Name
       value: Security
