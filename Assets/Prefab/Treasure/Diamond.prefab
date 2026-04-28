@@ -175,7 +175,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242350385048264
+  _initializedTimestamp: -8584242261656294276
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -285,7 +285,7 @@ MonoBehaviour:
   fragile: 0
   pullSpeed: 15
   semiFragile: 0
-  thirdPersonVisualPrefab: {fileID: 7103095680108300308, guid: 8881b14c5a6333d46b1fd7ebf427542c, type: 3}
+  thirdPersonVisualPrefab: {fileID: 8028171942952735907, guid: b4b9ca5ea4f6b914cbd6b9ca5ee738d3, type: 3}
   value: 200
 --- !u!114 &7242264813137645144
 MonoBehaviour:

@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 3323535291510552653}
   - component: {fileID: 5054959219236590453}
   - component: {fileID: 8822038904440263988}
-  - component: {fileID: 366474908630168656}
   - component: {fileID: 5797999169629643145}
   m_Layer: 3
   m_Name: WhiskeyGlass
@@ -143,7 +142,7 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 5054959219236590453}
-  - {fileID: 366474908630168656}
+  - {fileID: 0}
   - {fileID: 5797999169629643145}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
@@ -155,7 +154,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242353641817648
+  _initializedTimestamp: -8584242261656294276
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -171,7 +170,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 38
+  <PrefabId>k__BackingField: 41
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 12641658835419776811
   SceneId: 0
@@ -247,24 +246,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.002426885, y: 0.0019512058, z: 0.003057007}
   m_Center: {x: -0.0000038083394, y: -0.000001488328, z: 0.0011271503}
---- !u!114 &366474908630168656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5200761963660967739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b328335d90303224a87f186e49ddea90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PushableObject
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 3323535291510552653}
-  _networkObjectCache: {fileID: 3323535291510552653}
-  rb: {fileID: 0}
-  pushForceMultiplier: 3
-  minPushForce: 1
 --- !u!114 &5797999169629643145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,4 +264,4 @@ MonoBehaviour:
   fragile: 1
   pullSpeed: 15
   semiFragile: 0
-  thirdPersonVisualPrefab: {fileID: 0}
+  thirdPersonVisualPrefab: {fileID: 5200761963660967739, guid: 36148f2da85061c4b9bb9b2000bcdd08, type: 3}
