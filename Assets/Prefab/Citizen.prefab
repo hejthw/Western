@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 1
+  WasActiveDuringEdit: 0
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
@@ -222,6 +222,7 @@ MonoBehaviour:
   - {fileID: 795490380925558475}
   - {fileID: 4822277112505486637}
   - {fileID: 4892289949281136317}
+  - {fileID: 2702949536719244835}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -232,7 +233,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242353641817648
+  _initializedTimestamp: -8584242236176625637
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -430,9 +431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0348b7123ab44686a8f46ec9bedef64d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LassoCharacterInteractable
-  _componentIndexCache: 255
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 300745829150570369}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 300745829150570369}
   holdDuration: 20
   maxHoldDistance: 25
   yankForce: 10

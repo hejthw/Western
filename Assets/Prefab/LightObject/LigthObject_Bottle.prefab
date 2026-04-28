@@ -160,7 +160,6 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 3431020220971677751}
-  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -171,7 +170,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584242396547661537
+  _initializedTimestamp: -8584242236176625637
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -194,7 +193,7 @@ MonoBehaviour:
   SerializedTransformProperties:
     Position: {x: 9.248236, y: 0.603, z: 1.458}
     Rotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-    Scale: {x: 300, y: 300, z: 300}
+    Scale: {x: 145, y: 145, z: 145}
     IsValid: 1
 --- !u!65 &8654108043942640926
 BoxCollider:
