@@ -24,6 +24,7 @@ public class CashHUD : MonoBehaviour
     [SerializeField] private float heistTimerSeconds = 40f;
     [SerializeField] private float timerFinishedElementSeconds = 3f;
     
+    
     private PickupController _pickupController;
     private PlayerController _playerController;
     private HeistDoor _heistDoor;
@@ -330,6 +331,8 @@ public class CashHUD : MonoBehaviour
             remaining -= Time.deltaTime;
             yield return null;
         }
+        
+        GameLogicEvents.RaiseTimerFinished();
 
         if (heistTimerText != null)
             heistTimerText.gameObject.SetActive(false);
