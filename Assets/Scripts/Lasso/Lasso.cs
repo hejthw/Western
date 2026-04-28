@@ -385,8 +385,16 @@ public class LassoNetwork : NetworkBehaviour
         Rigidbody rb = playerObj.GetComponent<Rigidbody>();
         if (rb == null) return;
 
-        rb.isKinematic = false;
         rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        if (!playerObj.IsOwner)
+        {
+            rb.isKinematic = true;
+            return;
+        }
+
+        rb.isKinematic = false;
         rb.AddForce(impulse, ForceMode.Impulse);
     }
 
@@ -524,6 +532,8 @@ public class LassoNetwork : NetworkBehaviour
         Rigidbody rb = playerObj.GetComponent<Rigidbody>();
         if (rb == null) return;
 
+        bool isOwner = playerObj.IsOwner;
+
         if (active)
         {
             rb.linearVelocity = Vector3.zero;
@@ -532,9 +542,9 @@ public class LassoNetwork : NetworkBehaviour
         }
         else
         {
-            rb.isKinematic = false;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = !isOwner;
         }
     }
     
