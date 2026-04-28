@@ -23512,11 +23512,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -7236469103543257386, guid: 43d45c873f472eb4e94345793b21a569, type: 3}
---- !u!4 &1574545108 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-  m_PrefabInstance: {fileID: 3755212600220626486}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1585782932 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2167691269689714152, guid: 43d45c873f472eb4e94345793b21a569, type: 3}
@@ -31518,75 +31513,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8452850605891656464}
   m_Mesh: {fileID: 4527037550955297809, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
---- !u!1001 &203066554879430082
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 543450651853050912}
-    m_Modifications:
-    - target: {fileID: 2836736443338457107, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: SceneId
-      value: 4093607798
-      objectReference: {fileID: 0}
-    - target: {fileID: 2836736443338457107, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: WasActiveDuringEdit
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -2.663
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.386
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 3.708
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7074170667335336760, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: m_Name
-      value: BankDoorRight
-      objectReference: {fileID: 0}
-    - target: {fileID: 7722200242882421919, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-      propertyPath: _addedNetworkObject
-      value: 
-      objectReference: {fileID: 1052955698}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
 --- !u!1 &272650111753253045
 GameObject:
   m_ObjectHideFlags: 0
@@ -31696,7 +31622,7 @@ Transform:
   - {fileID: 2750211863921535834}
   - {fileID: 1740884805}
   - {fileID: 1903196156980450409}
-  - {fileID: 1574545108}
+  - {fileID: 6548932300066766349}
   m_Father: {fileID: 439664983}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &803334165002864592
@@ -31752,6 +31678,14 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!33 &1011193460714194436
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820645704928778398}
+  m_Mesh: {fileID: -3422979468008101822, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
 --- !u!4 &1570417807821749350
 Transform:
   m_ObjectHideFlags: 0
@@ -31767,6 +31701,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1368456186}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!4 &1699317379914602040
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8971173644663012208}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.0008, y: 0.00005, z: 0.00068}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2311478401247755313}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1737787313188173750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6100533519447552491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 8269487537188526626}
+  _networkObjectCache: {fileID: 0}
+--- !u!1 &1820645704928778398
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4325381145299695372}
+  - component: {fileID: 1011193460714194436}
+  - component: {fileID: 8560868029474749812}
+  - component: {fileID: 6316951931680254786}
+  - component: {fileID: 7716070797656712999}
+  m_Layer: 0
+  m_Name: BANK_DOOR.013_low.014
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!4 &1903196156980450409
 Transform:
   m_ObjectHideFlags: 0
@@ -31782,11 +31766,71 @@ Transform:
   m_Children: []
   m_Father: {fileID: 543450651853050912}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &2311478401247755313 stripped
+--- !u!4 &2311478401247755313
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4766421815078771000, guid: a7f7b75d79a9a564b918d167f5cbb22c, type: 3}
-  m_PrefabInstance: {fileID: 203066554879430082}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3122693127039875965}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.663, y: 0.386, z: 3.708}
+  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1699317379914602040}
+  m_Father: {fileID: 543450651853050912}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &2719754775935363518
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8971173644663012208}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 4613936388072114001, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!4 &2750211863921535834
 Transform:
   m_ObjectHideFlags: 0
@@ -31823,6 +31867,24 @@ GameObject:
   - component: {fileID: 354540583789352700}
   m_Layer: 0
   m_Name: BANK_DOOR.013_low.013
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &3122693127039875965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2311478401247755313}
+  - component: {fileID: 3833730916328828165}
+  - component: {fileID: 3833730916328828166}
+  m_Layer: 0
+  m_Name: BankDoorRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31897,79 +31959,85 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1001 &3755212600220626486
-PrefabInstance:
+--- !u!114 &3833730916328828165
+MonoBehaviour:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 543450651853050912}
-    m_Modifications:
-    - target: {fileID: 5106570632533701652, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: SceneId
-      value: 4227661694
-      objectReference: {fileID: 0}
-    - target: {fileID: 5106570632533701652, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: WasActiveDuringEdit
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6968268324730855389, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_Name
-      value: BankDoorLeft
-      objectReference: {fileID: 0}
-    - target: {fileID: 7185321299055232372, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: openAngle
-      value: -90
-      objectReference: {fileID: 0}
-    - target: {fileID: 7185321299055232372, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: _addedNetworkObject
-      value: 
-      objectReference: {fileID: 1052955698}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -2.5877786
-      objectReference: {fileID: 0}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.40136886
-      objectReference: {fileID: 0}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.4867709
-      objectReference: {fileID: 0}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7998193705141342267, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5cb49c29b19b7ee4ab81894d7282e01f, type: 3}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3122693127039875965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours:
+  - {fileID: 3833730916328828166}
+  - {fileID: 8046441410193111272}
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: -8584242278552565641
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 31
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 9718013774241381366
+  SceneId: 4093607798
+  SerializedTransformProperties:
+    Position: {x: -2.663, y: 0.386, z: 3.708}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 100, y: 100, z: 100}
+    IsValid: 1
+--- !u!114 &3833730916328828166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3122693127039875965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a39c46bf52104ba8efe3100bce3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.EmptyNetworkBehaviour
+  _componentIndexCache: 0
+  _addedNetworkObject: {fileID: 3833730916328828165}
+  _networkObjectCache: {fileID: 3833730916328828165}
+--- !u!33 &4163948923645556710
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8971173644663012208}
+  m_Mesh: {fileID: -4137048538157249035, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
 --- !u!33 &4172020540135292507
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -31978,6 +32046,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6082491041633898180}
   m_Mesh: {fileID: -3492600048345479414, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
+--- !u!4 &4325381145299695372
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820645704928778398}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071069, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6548932300066766349}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &5239712676852194375
 Transform:
   m_ObjectHideFlags: 0
@@ -32328,6 +32411,24 @@ MonoBehaviour:
   useHeistDoorLogic: 0
   openAngle: -90
   openSpeed: 2
+--- !u!1 &6100533519447552491
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6548932300066766349}
+  - component: {fileID: 1737787313188173750}
+  - component: {fileID: 8269487537188526626}
+  m_Layer: 0
+  m_Name: BankDoorLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!33 &6213459115611669157
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -32336,6 +32437,41 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3034128040050106943}
   m_Mesh: {fileID: 2871998714980184848, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
+--- !u!114 &6316951931680254786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820645704928778398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f37591b86d751ce41b33bac0f1c02f81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeistDoor
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 1052955698}
+  _networkObjectCache: {fileID: 0}
+  doorVisual: {fileID: 6548932300066766349}
+  useHeistDoorLogic: 0
+  openAngle: -90
+  openSpeed: 2
+--- !u!4 &6548932300066766349
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6100533519447552491}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.5877786, y: 0.40136886, z: 1.4867709}
+  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4325381145299695372}
+  m_Father: {fileID: 543450651853050912}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6658448857418184456
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -32400,6 +32536,50 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 272650111753253045}
   m_Mesh: {fileID: -3691250575030394784, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
+--- !u!64 &7683446434515057929
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8971173644663012208}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -4137048538157249035, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
+--- !u!64 &7716070797656712999
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820645704928778398}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3422979468008101822, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
 --- !u!23 &7737575676301698258
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -32485,6 +32665,79 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2093974270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8046441410193111272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8971173644663012208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f37591b86d751ce41b33bac0f1c02f81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeistDoor
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 1052955698}
+  _networkObjectCache: {fileID: 3833730916328828165}
+  doorVisual: {fileID: 2311478401247755313}
+  useHeistDoorLogic: 0
+  openAngle: 90
+  openSpeed: 2
+--- !u!114 &8269487537188526626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6100533519447552491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
+  <IsNested>k__BackingField: 0
+  WasActiveDuringEdit: 1
+  WasActiveDuringEdit_Set1: 1
+  <ComponentIndex>k__BackingField: 0
+  <PredictedSpawn>k__BackingField: {fileID: 0}
+  <PredictedOwner>k__BackingField: {fileID: 0}
+  NetworkBehaviours: []
+  InitializedParentNetworkBehaviour: {fileID: 0}
+  InitializedNestedNetworkObjects: []
+  RuntimeParentNetworkBehaviour: {fileID: 0}
+  RuntimeChildNetworkBehaviours: []
+  _isNetworked: 1
+  _isSpawnable: 1
+  _isGlobal: 0
+  _initializeOrder: 0
+  _preventDespawnOnDisconnect: 0
+  _defaultDespawnType: 0
+  _initializedTimestamp: 0
+  NetworkObserver: {fileID: 0}
+  _enablePrediction: 0
+  _predictionType: 0
+  _localReconcileCorrectionType: 2
+  _graphicalObject: {fileID: 0}
+  _detachGraphicalObject: 0
+  _enableStateForwarding: 1
+  _networkTransform: {fileID: 0}
+  _ownerInterpolation: 1
+  _ownerSmoothedProperties: 255
+  _adaptiveInterpolation: 3
+  _spectatorSmoothedProperties: 255
+  _spectatorInterpolation: 2
+  _enableTeleport: 0
+  _teleportThreshold: 1
+  <PrefabId>k__BackingField: 65535
+  <SpawnableCollectionId>k__BackingField: 0
+  <AssetPathHash>k__BackingField: 0
+  SceneId: 4227661694
+  SerializedTransformProperties:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+    Scale: {x: 0, y: 0, z: 0}
+    IsValid: 0
 --- !u!1 &8452850605891656464
 GameObject:
   m_ObjectHideFlags: 0
@@ -32545,6 +32798,75 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0108963, y: 0.002811447, z: 0.020066403}
   m_Center: {x: 0.005448152, y: -0.0005000031, z: -0.010033203}
+--- !u!23 &8560868029474749812
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820645704928778398}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 4613936388072114001, guid: 33cd5279f207da64e9ae459cf5d117fc, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8971173644663012208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1699317379914602040}
+  - component: {fileID: 4163948923645556710}
+  - component: {fileID: 2719754775935363518}
+  - component: {fileID: 8046441410193111272}
+  - component: {fileID: 7683446434515057929}
+  m_Layer: 0
+  m_Name: BANK_DOOR.013_low
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!23 &8977284109612892014
 MeshRenderer:
   m_ObjectHideFlags: 0
