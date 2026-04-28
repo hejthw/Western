@@ -7,6 +7,7 @@ public class InteractionScanner : NetworkBehaviour
     [SerializeField] private float scanDistance = 5f;
     [SerializeField] private LayerMask scanLayers;
     [SerializeField] private string interactableTag = "Interactable";
+    [SerializeField] private string doorTag = "Door";
 
     private Transform _cam;
     private GameObject _current;
@@ -48,6 +49,11 @@ public class InteractionScanner : NetworkBehaviour
         GameObject obj = hit.collider.gameObject;
 
         if (obj.CompareTag(interactableTag))
+        {
+            return obj;
+        }
+
+        if (obj.CompareTag(doorTag))
         {
             return obj;
         }

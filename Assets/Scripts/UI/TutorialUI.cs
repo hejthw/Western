@@ -24,6 +24,7 @@ public class TutorialUISpawner : MonoBehaviour
     [SerializeField] private GameObject useHintPrefab;
     [SerializeField] private GameObject throwCashZonePrefab;
     [SerializeField] private GameObject dropRevolverPrefab;
+    [SerializeField] private GameObject doorPrefab;
 
     private readonly List<GameObject> _spawnedInstances = new();
     private readonly Dictionary<string, GameObject> _map = new();
@@ -118,8 +119,14 @@ public class TutorialUISpawner : MonoBehaviour
 
         if (target == null) return;
 
-        if (_map.TryGetValue(target.tag, out GameObject prefab))
-            Spawn(prefab);
+        // if (_map.TryGetValue(target.tag, out GameObject prefab))
+        //     Spawn(prefab);
+
+        if (target.CompareTag("Door"))
+        {
+            Spawn(doorPrefab);
+            return;
+        }
 
         Spawn(pickupHintPrefab);
     }

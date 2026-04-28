@@ -2722,7 +2722,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2866,8 +2866,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2802459893473935432}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.060949426, y: -0.936697, z: 0.20710024, w: 0.27566916}
-  m_LocalPosition: {x: 0.65777355, y: 0.73185945, z: 0.79921436}
+  m_LocalRotation: {x: 0.05159746, y: -0.8622384, z: 0.4958138, w: 0.08972988}
+  m_LocalPosition: {x: 0.2837332, y: 1.3037207, z: 0.81656647}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2950,7 +2950,7 @@ MonoBehaviour:
     SplineCurvature: 0.5
   RecenteringTarget: 2
   HorizontalAxis:
-    Value: -138.86967
+    Value: -159.78561
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -2960,7 +2960,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   VerticalAxis:
-    Value: -0.06535171
+    Value: 34.800495
     Center: 17.5
     Range: {x: -10, y: 45}
     Wrap: 0
@@ -2994,7 +2994,7 @@ MonoBehaviour:
   ReferenceFrame: 2
   RecenterTarget: 2
   PanAxis:
-    Value: -147.20178
+    Value: -168.11766
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -3004,7 +3004,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: 24.934637
+    Value: 59.80047
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -5171,7 +5171,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4782091303354485408}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.08337853, y: 0.810451, z: 0.5674839, w: 0.11907688}
+  m_LocalRotation: {x: -0.14893056, y: 0.38179585, z: 0.0624829, w: 0.91002613}
   m_LocalPosition: {x: 0, y: 0.000000059604645, z: -0.00000047311187}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5249,7 +5249,7 @@ MonoBehaviour:
   ReferenceFrame: 1
   RecenterTarget: 1
   PanAxis:
-    Value: 163.28305
+    Value: 45.52037
     Center: 0
     Range: {x: -180, y: 180}
     Wrap: 1
@@ -5259,7 +5259,7 @@ MonoBehaviour:
       Time: 2
     Restrictions: 0
   TiltAxis:
-    Value: -70
+    Value: -18.588726
     Center: 0
     Range: {x: -70, y: 70}
     Wrap: 0
@@ -5443,6 +5443,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   interactableTag: Grabbable
+  doorTag: Door
 --- !u!1 &5116922595024775588
 GameObject:
   m_ObjectHideFlags: 0
@@ -7946,7 +7947,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
   <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 0
+  WasActiveDuringEdit: 1
   WasActiveDuringEdit_Set1: 1
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
@@ -9133,9 +9134,10 @@ MonoBehaviour:
   entries: []
   pickupHintPrefab: {fileID: 42124480809542728, guid: 4f648adb49907ad49951f5268dc7d228, type: 3}
   throwHintPrefab: {fileID: 316162190021660214, guid: 9a6a360a0e9dd1544a9756c453dcb1fb, type: 3}
-  useHintPrefab: {fileID: 5652225022245577807, guid: 0c6a37ba03fdfb1428b4a757de6a080b, type: 3}
+  useHintPrefab: {fileID: 5652225022245577807, guid: 52d57bd8075beee428de1c4573e47646, type: 3}
   throwCashZonePrefab: {fileID: 42124480809542728, guid: 725e2189806e6f048bb5bfce9406fb2f, type: 3}
   dropRevolverPrefab: {fileID: 316162190021660214, guid: 235bae26164de3b4ca16e50aeee9cc2d, type: 3}
+  doorPrefab: {fileID: 42124480809542728, guid: 0054ec00a35be7a41aa58ae4771863db, type: 3}
   _isInCashZone: 0
   _isHolding: 0
 --- !u!1 &8545110929771277619
