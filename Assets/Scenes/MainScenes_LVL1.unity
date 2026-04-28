@@ -9809,6 +9809,7 @@ Transform:
   - {fileID: 397089912}
   - {fileID: 1740545876}
   - {fileID: 955317023}
+  - {fileID: 1849620675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &851188446 stripped
@@ -17740,7 +17741,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1589046124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24331,3 +24332,5 @@ SceneRoots:
   - {fileID: 1982589630}
   - {fileID: 1407808753}
   - {fileID: 811494450}
+  - {fileID: 749534858}
+  - {fileID: 2043152470}
