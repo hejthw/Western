@@ -6480,8 +6480,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 2}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 20.265753, y: 2, z: 13.324871}
+  m_Center: {x: -5.2014875, y: 0, z: -1.2159271}
 --- !u!4 &446653314
 Transform:
   m_ObjectHideFlags: 0
@@ -6491,7 +6491,7 @@ Transform:
   m_GameObject: {fileID: 446653310}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.08, y: 1.57, z: 0}
+  m_LocalPosition: {x: 34.5, y: 1.57, z: 30.58}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12305,7 +12305,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 55eaaafc522f9b9318ae4322c1d495a6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17683,6 +17683,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3530177380804955385, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
+      propertyPath: requiredHoldTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3578030848687599266, guid: f293d893e5452104db29bdb8e92530f5, type: 3}
       propertyPath: m_Name
       value: cashZone
@@ -22717,7 +22721,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1519873586}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.449036, y: -0.49664712, z: -0.33688802, w: 0.66197795}
+  m_LocalRotation: {x: -0.14893056, y: 0.38179585, z: 0.0624829, w: 0.91002613}
   m_LocalPosition: {x: -0.21768, y: 1.763, z: -10.574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -31832,8 +31836,6 @@ GameObject:
   - component: {fileID: 3222386724131734035}
   - component: {fileID: 5239712676852194377}
   - component: {fileID: 5239712676852194376}
-  - component: {fileID: 5239712676852194379}
-  - component: {fileID: 5239712676852194378}
   m_Layer: 3
   m_Name: BANK_DOOR.013_low.007
   m_TagString: Door
@@ -32310,75 +32312,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0030225941, y: 0.014599236, z: 0.01868585}
   m_Center: {x: 0.0015112999, y: 0.006704775, z: -0.00934293}
---- !u!114 &5239712676852194378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 803334165002864592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26b716c41e9b56b4baafaf13a523ba2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: FishNet.Runtime::FishNet.Object.NetworkObject
-  <IsNested>k__BackingField: 0
-  WasActiveDuringEdit: 1
-  WasActiveDuringEdit_Set1: 1
-  <ComponentIndex>k__BackingField: 0
-  <PredictedSpawn>k__BackingField: {fileID: 0}
-  <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
-  InitializedParentNetworkBehaviour: {fileID: 0}
-  InitializedNestedNetworkObjects: []
-  RuntimeParentNetworkBehaviour: {fileID: 0}
-  RuntimeChildNetworkBehaviours: []
-  _isNetworked: 1
-  _isSpawnable: 1
-  _isGlobal: 0
-  _initializeOrder: 0
-  _preventDespawnOnDisconnect: 0
-  _defaultDespawnType: 0
-  _initializedTimestamp: 0
-  NetworkObserver: {fileID: 0}
-  _enablePrediction: 0
-  _predictionType: 0
-  _localReconcileCorrectionType: 2
-  _graphicalObject: {fileID: 0}
-  _detachGraphicalObject: 0
-  _enableStateForwarding: 1
-  _networkTransform: {fileID: 0}
-  _ownerInterpolation: 1
-  _ownerSmoothedProperties: 255
-  _adaptiveInterpolation: 3
-  _spectatorSmoothedProperties: 255
-  _spectatorInterpolation: 2
-  _enableTeleport: 0
-  _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
-  <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 0
-  SceneId: 4160650862
-  SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
---- !u!114 &5239712676852194379
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 803334165002864592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65cd17c60f712af4fa44bc7c2b2fe3af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HeistDoorController
-  targetDoor: {fileID: 5239712676852194376}
-  autoFindDoor: 1
-  enableDebugLogs: 0
 --- !u!23 &5288261967032500922
 MeshRenderer:
   m_ObjectHideFlags: 0

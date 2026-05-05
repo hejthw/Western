@@ -38,7 +38,7 @@ public class HeistManager : NetworkBehaviour
     public void SetTotalValue(int value)
     {
         totalValue.Value = value;
-        requiredValue.Value = Mathf.RoundToInt(value * 0.7f);
+        requiredValue.Value = Mathf.RoundToInt(value * 0.45f);
 
         RpcSyncValues(totalValue.Value, collectedValue.Value, requiredValue.Value);
     }

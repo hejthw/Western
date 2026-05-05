@@ -28,6 +28,10 @@ public class PlayerHUD : NetworkBehaviour
     private Coroutine _knockTimerCoroutine;
     private bool _isKnocked;
 
+    [Header("Effects")]
+    [SerializeField] private Image knockoutEffect;
+    [SerializeField] private Image deadEffect;
+
     [Header("Team HUD")]
     [SerializeField] private Transform teamHUDContainer;
     [SerializeField] private TeamHUDEntry teamEntryPrefab;
@@ -82,6 +86,9 @@ public class PlayerHUD : NetworkBehaviour
         nameText.text = myName;
         SetHealthBarWidth(MaxHealthBarWidth, instant: true);
         SetState(PlayerState.Normal);
+
+        knockoutEffect.enabled = false;
+        deadEffect.enabled = false;
     }
 
     private void UpdateHealthText(int amount)
@@ -110,6 +117,9 @@ public class PlayerHUD : NetworkBehaviour
         knockIcon.enabled  = state == PlayerState.Knock;
         deadIcon.enabled   = state == PlayerState.Dead;
 
+        knockoutEffect.enabled = false;
+        deadEffect.enabled = false;
+
         bool knocked = state == PlayerState.Knock;
 
         if (_knockTimerCoroutine != null)
@@ -128,10 +138,12 @@ public class PlayerHUD : NetworkBehaviour
 
         if (knocked)
         {
+            knockoutEffect.enabled = true;
             _knockTimerCoroutine = StartCoroutine(KnockdownTimer());
         }
         else if (state == PlayerState.Dead)
         {
+            deadEffect.enabled = true;
             ApplyHealthBarWidth(0f);
         }
     }
@@ -144,12 +156,24 @@ public class PlayerHUD : NetworkBehaviour
         {
             elapsed += Time.deltaTime;
             float remaining = KnockdownDuration - elapsed;
-            ApplyHealthBarWidth((remaining / KnockdownDuration) * MaxHealthBarWidth);
+            float t = remaining / KnockdownDuration;
+
+            ApplyHealthBarWidth(t * MaxHealthBarWidth);
+            SetKnockoutEffectAlpha(t);
+
             yield return null;
         }
 
         ApplyHealthBarWidth(0f);
+        SetKnockoutEffectAlpha(0f);
         _knockTimerCoroutine = null;
+    }
+
+    private void SetKnockoutEffectAlpha(float alpha)
+    {
+        Color c = knockoutEffect.color;
+        c.a = alpha;
+        knockoutEffect.color = c;
     }
 
     private void SetHealthBarWidth(float targetWidth, bool instant = false)
