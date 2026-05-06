@@ -8,8 +8,9 @@ public class Revolver: NetworkBehaviour, IWeapon
     public RevolverData revolverData;
     [SerializeField] private Transform muzzle;
     [SerializeField] public NetworkObject revolverPickupPrefab;
-    
+    [SerializeField] private RevolverCylinder cylinder;
     [SerializeField] private NetworkObject bulletPrefab;
+    [SerializeField] private GameObject muzzleFlashPrefab;
 
     private PlayerInput _input;
     private PlayerController _playerController;
@@ -133,18 +134,26 @@ public class Revolver: NetworkBehaviour, IWeapon
         // Подписка на атаку идёт по IsOwner игрока; владение NetworkObject револьвера на клиенте может
         // при первом спавне (подбор с пола) ещё не совпасть — стрельбу разрешаем по владельцу игрока.
         if (_playerController == null || !_playerController.IsOwner || _fireTimer > 0f) return;
-        if (_clientAmmo <= 0) { Debug.Log("No bullets"); return; }
+        cylinder?.Spin();
+        SoundBus.Play(SoundID.RevolverCylinder);
+
+        if (_clientAmmo <= 0)
+        {
+            SoundBus.Play(SoundID.ShootNoBullets);
+            return;
+        }
 
         _recoil?.AddRecoil();
-
+        
         Vector3 origin = muzzle.position;
         Vector3 direction = muzzle.forward;
 
         _playerController.RequestRevolverShoot(NetworkObject, origin, direction);
         PlayerEvents.RaiseSuspicion(SuspicionType.RevolverShoot);
-        SoundBus.Play(SoundID.Shoot);
+
+        SoundBus.Play(_clientAmmo == 1 ? SoundID.ShootLastBullet : SoundID.Shoot);
+
         _fireTimer = revolverData.timeBeforeShot;
-        
     }
 
     [Server]
@@ -155,6 +164,7 @@ public class Revolver: NetworkBehaviour, IWeapon
         SaveBulletsToInventorySlot();
 
         SpawnBullet(pos, dir);
+        PlayMuzzleFlashRpc(pos, Quaternion.LookRotation(dir));
     }
     
     private void SpawnBullet(Vector3 pos, Vector3 dir)
@@ -257,6 +267,41 @@ public class Revolver: NetworkBehaviour, IWeapon
         if (Owner != null)
             TargetClearHeldObject(Owner);
         NetworkObject.Despawn();
+    }
+    
+    [ObserversRpc]
+    private void PlayMuzzleFlashRpc(Vector3 pos, Quaternion rot)
+    {
+        if (muzzleFlashPrefab == null) return;
+    
+        GameObject fx = Instantiate(muzzleFlashPrefab, pos, rot);
+    
+        float lifetime = 0f;
+        foreach (var ps in fx.GetComponentsInChildren<ParticleSystem>(true))
+        {
+            var main = ps.main;
+            float psLifetime = main.duration;
+        
+            // Учитываем все режимы startLifetime
+            switch (main.startLifetime.mode)
+            {
+                case ParticleSystemCurveMode.Constant:
+                    psLifetime += main.startLifetime.constant;
+                    break;
+                case ParticleSystemCurveMode.TwoConstants:
+                    psLifetime += main.startLifetime.constantMax;
+                    break;
+                case ParticleSystemCurveMode.Curve:
+                case ParticleSystemCurveMode.TwoCurves:
+                    psLifetime += main.startLifetime.curveMax.Evaluate(1f);
+                    break;
+            }
+        
+            if (!main.loop) // зацикленные системы не учитываем
+                lifetime = Mathf.Max(lifetime, psLifetime);
+        }
+    
+        Destroy(fx, lifetime > 0f ? lifetime : 2f);
     }
 
 }

@@ -1,6 +1,6 @@
 public enum SoundID
 {
-    Shoot, 
+    Shoot,
     PlayerJump,
     LassoThrow,
     LightObjectCaptured,
@@ -10,4 +10,7 @@ public enum SoundID
     RevolverImpactDefault,
     RevolverImpactSemiFragile,
     RevolverImpactFragile,
+    ShootLastBullet,
+    ShootNoBullets,
+    RevolverCylinder,
 }

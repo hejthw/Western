@@ -49,3 +49,12 @@ MonoBehaviour:
   - id: 9
     clips:
     - {fileID: 8300000, guid: 10cab29641cd60d418f10ff64a9598aa, type: 3}
+  - id: 10
+    clips:
+    - {fileID: 8300000, guid: fe2969d46d00c9247ab1aa7c966c6a86, type: 3}
+  - id: 12
+    clips:
+    - {fileID: 8300000, guid: 730988ffff9cd1b49b24125c658b31da, type: 3}
+  - id: 11
+    clips:
+    - {fileID: 8300000, guid: dd72e78d4376e8f4a936b3a7a1a84560, type: 3}
